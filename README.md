@@ -15,8 +15,8 @@ Zed will automatically compile the extension and its grammars.
 ## Features
 
 - **Pandoc-aware syntax highlighting** powered by `tree-sitter-pandoc-markdown@e602eb65`
-  - Standard Markdown structures: headings, links, code blocks, lists, emphasis, YAML front matter
-  - Quarto-specific constructs: fenced divs, attribute lists, citations, cross-references, shortcodes, chunk options
+  - Core Markdown structures: headings, links, code blocks, lists, emphasis, YAML front matter
+  - Pandoc extensions heavily used by Quarto: fenced divs, attribute lists, citations, cross-references, shortcodes, chunk options
 - **Embedded language injections** for common Quarto code chunks (Python, R, Julia, SQL)
 - **Quarto language server integration** via the official `quarto language-server`
 
