@@ -12,6 +12,14 @@ Quarto brings literate programming to Zed with first-class syntax highlighting a
 
 Zed will automatically compile the extension and its grammars.
 
+## Features
+
+- **Pandoc-aware syntax highlighting** powered by `tree-sitter-pandoc-markdown@e602eb65`
+  - Standard Markdown structures: headings, links, code blocks, lists, emphasis, YAML front matter
+  - Quarto-specific constructs: fenced divs, attribute lists, citations, cross-references, shortcodes, chunk options
+- **Embedded language injections** for common Quarto code chunks (Python, R, Julia, SQL)
+- **Quarto language server integration** via the official `quarto language-server`
+
 ## Configuration
 
 Add optional settings to `settings.json` when a custom CLI path or flags are required:
@@ -38,15 +46,6 @@ cargo test --workspace --all-features
 - **Preview/render workflows** are out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
 - **Grammar completeness**: `tree-sitter-pandoc-markdown` is a community project that extends `tree-sitter-markdown`. Some edge cases in Pandoc syntax may not be fully supported yet.
 - **No official tree-sitter-quarto**: Until an official Quarto grammar exists, we rely on Pandoc markdown as the closest approximation.
-- **Quarto-specific syntax highlighting**: The extension now provides enhanced highlighting for Quarto/Pandoc constructs using the Phase 1C+ features from `tree-sitter-pandoc-markdown@e602eb65`:
-  - **Standard markdown**: headings, links, code blocks, lists, emphasis, YAML frontmatter
-  - **Language injections**: Python, R, Julia, and SQL code chunks  
-  - **Fenced divs**: `:::{.callout-note}`, `:::{.column-margin}` (highlighted as markup blocks)
-  - **Attribute lists**: `{.class #id key=value}` (highlighted as attributes)
-  - **Citations**: `@smith2024`, `[@jones2023 p. 4]` (highlighted as symbols)
-  - **Cross-references**: `@fig-plot`, `@tbl-data`, `@eq-equation` (highlighted as symbols)
-  - **Shortcodes**: `{{< include file.qmd >}}`, `{{< video url >}}` (highlighted as macros)
-  - **Chunk options**: `#| echo: false`, `#| warning: false` (highlighted as documentation comments)
 
 ## Design Notes
 
