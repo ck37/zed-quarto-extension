@@ -7,7 +7,7 @@ description = "First-class Quarto authoring for Zed with syntax highlighting and
 repository = "https://github.com/ck37/zed-quarto-extension"
 
 [grammars.pandoc_markdown]
-repository = "https://github.com/jmbuhr/tree-sitter-pandoc-markdown"
+repository = "https://github.com/ck37/tree-sitter-pandoc-markdown"
 commit = "3af19dadd74477952126e8cf5da4149108a632ac"
 path = "tree-sitter-pandoc-markdown"
 

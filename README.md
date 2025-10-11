@@ -61,7 +61,7 @@ Quarto documents (`.qmd`) are **not** plain Markdown—they're based on [Pandoc'
 
 The [official Quarto VSCode extension](https://github.com/quarto-dev/quarto/tree/main/apps/vscode) uses **TextMate grammars** (`.tmLanguage` files), which are regex-based pattern matching systems. However, **Zed only supports tree-sitter grammars**, which are proper parsers.
 
-Since there is no official `tree-sitter-quarto` grammar yet, we use [`tree-sitter-pandoc-markdown`](https://github.com/jmbuhr/tree-sitter-pandoc-markdown), which extends `tree-sitter-markdown` with Pandoc-specific features that Quarto is built upon.
+Since there is no official `tree-sitter-quarto` grammar yet, we use [`tree-sitter-pandoc-markdown`](https://github.com/ck37/tree-sitter-pandoc-markdown), which extends `tree-sitter-markdown` with Pandoc-specific features that Quarto is built upon.
 
 This approach provides:
 - Proper parsing of Quarto/Pandoc syntax constructs
