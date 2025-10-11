@@ -18,7 +18,7 @@ fn highlight_configuration() -> HighlightConfiguration {
     let highlight_query = include_str!("../languages/quarto/highlights.scm");
     let injection_query = include_str!("../languages/quarto/injections.scm");
     let locals_query = "";
-    
+
     let mut config = HighlightConfiguration::new(
         language(),
         "quarto",
@@ -27,7 +27,7 @@ fn highlight_configuration() -> HighlightConfiguration {
         locals_query,
     )
     .expect("valid highlight configuration with pandoc-markdown grammar");
-    
+
     config.configure(&[
         "annotation",
         "attribute",
@@ -82,14 +82,17 @@ fn highlights_cover_quarto_constructs() {
     let rendered = rendered.join("");
 
     // Debug: print first 500 chars of rendered output
-    eprintln!("Rendered output (first 500 chars):\n{}", &rendered.chars().take(500).collect::<String>());
+    eprintln!(
+        "Rendered output (first 500 chars):\n{}",
+        &rendered.chars().take(500).collect::<String>()
+    );
 
     // Basic smoke test: verify we got some highlighting
     assert!(
         rendered.contains("<"),
         "document should have some syntax highlighting"
     );
-    
+
     // Verify pandoc-markdown specific features are highlighted
     if rendered.contains("text.title") {
         println!("✓ Headings are highlighted");
