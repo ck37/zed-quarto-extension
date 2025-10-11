@@ -1,12 +1,4 @@
 ;
-; Inject YAML into frontmatter blocks
-;
-
-((minus_metadata) @injection.content
-  (#set! injection.language "yaml")
-  (#set! injection.include-children))
-
-;
 ; Inject executable chunks into the embedded language they declare.
 ;
 

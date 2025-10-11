@@ -1,93 +1,43 @@
 ; Pandoc markdown highlights (from tree-sitter-pandoc-markdown)
 (atx_heading (inline) @text.title)
-(setext_heading (paragraph) @text.title)
+(setext_heading (inline) @text.title)
 
 [
-  (atx_h1_marker)
-  (atx_h2_marker)
-  (atx_h3_marker)
-  (atx_h4_marker)
-  (atx_h5_marker)
-  (atx_h6_marker)
-  (setext_h1_underline)
-  (setext_h2_underline)
+  (atx_heading_marker)
+  (setext_heading_marker)
 ] @punctuation.special
 
-[
-  (link_title)
-  (indented_code_block)
-  (fenced_code_block)
-] @text.literal
+[(fenced_code_block) (code_span)] @text.literal
+[(fenced_code_block_delimiter)] @punctuation.delimiter
 
-[
-  (fenced_code_block_delimiter)
-] @punctuation.delimiter
-
-[
-  (link_destination)
-] @text.uri
-
-[
-  (link_label)
-] @text.reference
-
-[
-  (list_marker_plus)
-  (list_marker_minus)
-  (list_marker_star)
-  (list_marker_dot)
-  (list_marker_parenthesis)
-  (thematic_break)
-] @punctuation.special
-
-[
-  (block_continuation)
-  (block_quote_marker)
-] @punctuation.special
-
-[
-  (backslash_escape)
-] @string.escape
+[(link)] @text.uri
+[(list_marker) (thematic_break) (block_quote_marker)] @punctuation.special
 
 ;
 ; Quarto / Pandoc specific constructs
+; NOTE: These node types are from tree-sitter-pandoc-markdown Phase 1C.
 ;
 
-;; Div or callout fences (:::
-((inline
-   ":" @punctuation.special
-   ":" @punctuation.special
-   ":" @punctuation.special
-   "{" @punctuation.delimiter
-   (_)*
-   "}" @punctuation.delimiter
-   (_)*))
+; Fenced divs (:::{.callout-note})
+(fenced_div) @markup.raw.block
 
-;; Closing ::: fences
-((inline
-   (_)+
-   ":" @punctuation.special
-   ":" @punctuation.special
-   ":" @punctuation.special))
+; Attribute lists {.class #id key=value}
+(attribute_list) @attribute
 
-;; Shortcodes {{< ... >}} / {{% ... %}}
-((inline
-   "{" @punctuation.delimiter
-   "{" @punctuation.delimiter
-   "<" @punctuation.delimiter
-   (_)*
-   ">" @punctuation.delimiter
-   "}" @punctuation.delimiter
-   "}" @punctuation.delimiter))
+; Citations [@smith2024] and @smith2024
+[
+  (citation_group)
+  (citation)
+] @string.special.symbol
 
-((inline
-   "{" @punctuation.delimiter
-   "{" @punctuation.delimiter
-   "%" @punctuation.delimiter
-   (_)*
-   "%" @punctuation.delimiter
-   "}" @punctuation.delimiter
-   "}" @punctuation.delimiter))
+; Cross-references @fig:plot, @tbl:data
+(cross_reference) @string.special.symbol
 
-;; Cross-reference marker
-((inline "@" @text.reference))
+; Shortcodes {{< include file.qmd >}}
+[
+  (shortcode_block)
+  (shortcode)
+] @function.macro
+
+; Chunk options #| echo: false
+(chunk_option) @comment.documentation

@@ -16,6 +16,9 @@ zed_extension_api = "0.7"
 [target.'cfg(not(target_os = "wasi"))'.dependencies]
 which = "6"
 
+[build-dependencies]
+cc = "1"
+
 [dev-dependencies]
 assert_cmd = "2"
 tempfile = "3"

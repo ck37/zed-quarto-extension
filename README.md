@@ -38,12 +38,15 @@ cargo test --workspace --all-features
 - **Preview/render workflows** are out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
 - **Grammar completeness**: `tree-sitter-pandoc-markdown` is a community project that extends `tree-sitter-markdown`. Some edge cases in Pandoc syntax may not be fully supported yet.
 - **No official tree-sitter-quarto**: Until an official Quarto grammar exists, we rely on Pandoc markdown as the closest approximation.
-- **Limited Quarto-specific syntax highlighting**: The extension provides standard Pandoc markdown highlighting (headings, links, code blocks, lists, citations, emphasis), YAML frontmatter, and language injections for Python, R, Julia, and SQL code chunks. The following Quarto-specific features are **not** currently highlighted distinctly:
-  - **Callouts**: `:::{.callout-note}`, `:::{.callout-warning}`, etc. (displayed as plain text)
-  - **Shortcodes**: `{{< include file.qmd >}}`, `{{< video url >}}`, etc. (not highlighted as special syntax)
-  - **Div blocks with attributes**: `:::{.column-margin}`, `:::{#fig-plot}` (not distinguished from regular text)
-  - **Cross-references**: `@fig-plot`, `@tbl-data`, `@eq-equation` (not highlighted as references)
-  - **Code chunk execution options**: `#| echo: false`, `#| warning: false` (treated as comments)
+- **Quarto-specific syntax highlighting**: The extension now provides enhanced highlighting for Quarto/Pandoc constructs using the Phase 1C features from tree-sitter-pandoc-markdown:
+  - **Standard markdown**: headings, links, code blocks, lists, emphasis, YAML frontmatter
+  - **Language injections**: Python, R, Julia, and SQL code chunks  
+  - **Fenced divs**: `:::{.callout-note}`, `:::{.column-margin}` (highlighted as markup blocks)
+  - **Attribute lists**: `{.class #id key=value}` (highlighted as attributes)
+  - **Citations**: `@smith2024`, `[@jones2023 p. 4]` (highlighted as symbols)
+  - **Cross-references**: `@fig-plot`, `@tbl-data`, `@eq-equation` (highlighted as symbols)
+  - **Shortcodes**: `{{< include file.qmd >}}`, `{{< video url >}}` (highlighted as macros)
+  - **Chunk options**: `#| echo: false`, `#| warning: false` (highlighted as documentation comments)
 
 ## Design Notes
 

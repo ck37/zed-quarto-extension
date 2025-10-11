@@ -585,6 +585,7 @@ name = "quarto-zed"
 version = "0.1.0"
 dependencies = [
  "assert_cmd",
+ "cc",
  "serde_json",
  "tempfile",
  "toml",
