@@ -13,6 +13,14 @@
 [(link)] @text.uri
 [(list_marker) (thematic_break) (block_quote_marker)] @punctuation.special
 
+; YAML front matter
+(yaml_front_matter_content) @comment.documentation
+
+[
+  (yaml_front_matter_start)
+  (yaml_front_matter_delimiter)
+] @punctuation.delimiter
+
 ;
 ; Quarto / Pandoc specific constructs
 ; NOTE: These node types are from tree-sitter-pandoc-markdown Phase 1C.

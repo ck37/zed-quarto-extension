@@ -2,6 +2,10 @@
 ; Inject executable chunks into the embedded language they declare.
 ;
 
+(yaml_front_matter
+  (yaml_front_matter_content) @injection.content
+  (#set! injection.language "yaml"))
+
 (fenced_code_block
   (info_string) @injection.language
   (code_fence_content) @injection.content

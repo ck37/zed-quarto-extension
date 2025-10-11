@@ -1,6 +1,9 @@
 use std::path::PathBuf;
 use std::process::Command;
 
+const REPO_URL: &str = "https://github.com/ck37/tree-sitter-pandoc-markdown";
+const COMMIT: &str = "e602eb65ed5837b711c82ccf8a1e90e38f71a6a4";
+
 fn main() {
     // Only compile the grammar for native tests, not for WASM
     let target = std::env::var("TARGET").unwrap_or_default();
@@ -12,33 +15,61 @@ fn main() {
     let pandoc_dir = dir.join("pandoc_markdown");
     let src_dir = pandoc_dir.join("tree-sitter-pandoc-markdown").join("src");
 
-    // Check if we need to fetch the grammar
-    if !src_dir.join("parser.c").exists() {
-        eprintln!("Fetching pandoc-markdown grammar for tests...");
-        std::fs::create_dir_all(&dir).ok();
+    std::fs::create_dir_all(&dir).ok();
 
-        // Clone the grammar repository at the specific commit
+    let repo_path = pandoc_dir.to_str().expect("path is valid utf-8");
+    if !pandoc_dir.join(".git").exists() {
+        eprintln!("Cloning pandoc-markdown grammar repository...");
         let status = Command::new("git")
-            .args([
-                "clone",
-                "https://github.com/ck37/tree-sitter-pandoc-markdown",
-                pandoc_dir.to_str().unwrap(),
-            ])
-            .status();
+            .args(["clone", "--recurse-submodules", REPO_URL, repo_path])
+            .status()
+            .expect("failed to spawn git clone");
 
-        if status.is_err() || !status.unwrap().success() {
+        if !status.success() {
             panic!("Could not clone pandoc-markdown grammar repository");
         }
+    }
 
-        // Checkout the specific commit used in extension.toml
-        let checkout_status = Command::new("git")
-            .current_dir(&pandoc_dir)
-            .args(["checkout", "031ae4a1636d8964955fd4e2f629b2b542b84d01"])
-            .status();
+    eprintln!("Ensuring pandoc-markdown grammar is at commit {COMMIT}...");
 
-        if checkout_status.is_err() || !checkout_status.unwrap().success() {
-            panic!("Could not checkout pandoc-markdown grammar commit 031ae4a");
-        }
+    let fetch_status = Command::new("git")
+        .current_dir(&pandoc_dir)
+        .args(["fetch", "origin"])
+        .status()
+        .expect("failed to fetch pandoc-markdown grammar");
+
+    if !fetch_status.success() {
+        panic!("Could not fetch pandoc-markdown grammar updates");
+    }
+
+    let checkout_status = Command::new("git")
+        .current_dir(&pandoc_dir)
+        .args(["checkout", COMMIT])
+        .status()
+        .expect("failed to checkout pandoc-markdown grammar commit");
+
+    if !checkout_status.success() {
+        panic!("Could not checkout pandoc-markdown grammar commit {COMMIT}");
+    }
+
+    let reset_status = Command::new("git")
+        .current_dir(&pandoc_dir)
+        .args(["reset", "--hard", COMMIT])
+        .status()
+        .expect("failed to reset pandoc-markdown grammar");
+
+    if !reset_status.success() {
+        panic!("Could not reset pandoc-markdown grammar to commit {COMMIT}");
+    }
+
+    let submodule_status = Command::new("git")
+        .current_dir(&pandoc_dir)
+        .args(["submodule", "update", "--init", "--recursive"])
+        .status()
+        .expect("failed to update pandoc-markdown submodules");
+
+    if !submodule_status.success() {
+        panic!("Could not update pandoc-markdown grammar submodules");
     }
 
     // Compile the pandoc-markdown grammar if source exists

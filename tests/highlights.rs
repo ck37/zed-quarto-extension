@@ -54,9 +54,32 @@ fn highlights_cover_quarto_constructs() {
     let mut parser = Parser::new();
     let lang = language();
     parser.set_language(&lang).expect("parser loads language");
-    parser
+    let tree = parser
         .parse(source.as_bytes(), None)
         .expect("parse succeeds");
+
+    let root = tree.root_node();
+    let mut seen_front_matter = false;
+    for i in 0..root.named_child_count() {
+        let child = root.named_child(i).expect("valid child");
+        if child.kind() == "yaml_front_matter" {
+            seen_front_matter = true;
+            let mut has_content = false;
+            for j in 0..child.named_child_count() {
+                if child
+                    .named_child(j)
+                    .map(|node| node.kind() == "yaml_front_matter_content")
+                    .unwrap_or(false)
+                {
+                    has_content = true;
+                    break;
+                }
+            }
+            assert!(has_content, "front matter should contain YAML content");
+            break;
+        }
+    }
+    assert!(seen_front_matter, "document should include yaml front matter");
 
     let config = highlight_configuration();
     let mut highlighter = Highlighter::new();

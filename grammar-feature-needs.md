@@ -8,6 +8,7 @@ This document outlines missing features in `tree-sitter-pandoc-markdown` that wo
 - Fenced divs with attributes (`:::`)
 - Attribute lists (`{.class #id key=value}`)
 - Citations (`@item`, `[@item p. 4]`)
+- YAML front matter (`---` metadata blocks with YAML payload)
 - Basic markdown (headings, lists, emphasis, links, code blocks)
 
 ### 🔴 Missing Features
@@ -18,56 +19,7 @@ The following features are part of Pandoc Markdown and essential for Quarto auth
 
 ## Critical Priority
 
-### 1. YAML Frontmatter
-
-**Syntax:**
-```yaml
----
-title: "My Document"
-author: "Jane Doe"
-date: "2024-01-15"
-format:
-  html:
-    toc: true
-    code-fold: true
-execute:
-  echo: false
-  warning: false
----
-```
-
-**Current State:** The `---` delimiters and YAML content are parsed as regular text/paragraphs.
-
-**Impact:** 
-- Every Quarto document has YAML metadata
-- Controls rendering, execution, and output formats
-- Contains critical document configuration
-
-**Required Node Types:**
-```
-yaml_metadata          # The entire frontmatter block
-yaml_metadata_delimiter # The --- markers
-yaml_content           # The YAML content between delimiters
-```
-
-**Highlighting Needs:**
-- YAML content should be injected with `yaml` language for proper syntax highlighting
-- Delimiters should be marked as special punctuation
-
-**Example Usage:**
-```scheme
-; In injections.scm
-((yaml_metadata
-  (yaml_content) @injection.content)
- (#set! injection.language "yaml"))
-
-; In highlights.scm
-(yaml_metadata_delimiter) @punctuation.delimiter
-```
-
----
-
-### 2. Inline Math
+### 1. Inline Math
 
 **Syntax:**
 ```markdown
@@ -110,7 +62,7 @@ math_content    # The LaTeX content
 
 ---
 
-### 3. Tables (Pipe Tables)
+### 2. Tables (Pipe Tables)
 
 **Syntax:**
 ```markdown
@@ -158,7 +110,7 @@ pipe_table_alignment # :--- or ---: or :---:
 
 ---
 
-### 4. Footnotes
+### 3. Footnotes
 
 **Syntax:**
 ```markdown
@@ -200,7 +152,7 @@ inline_footnote         # ^[content]
 
 ## High Priority
 
-### 5. Definition Lists
+### 4. Definition Lists
 
 **Syntax:**
 ```markdown
@@ -236,7 +188,7 @@ definition_description
 
 ---
 
-### 6. Strikethrough
+### 5. Strikethrough
 
 **Syntax:**
 ```markdown
@@ -261,7 +213,7 @@ strikethrough
 
 ---
 
-### 7. Subscript and Superscript
+### 6. Subscript and Superscript
 
 **Syntax:**
 ```markdown
@@ -291,7 +243,7 @@ superscript
 
 ## Medium Priority
 
-### 8. Spans with Attributes
+### 7. Spans with Attributes
 
 **Syntax:**
 ```markdown
@@ -322,7 +274,7 @@ span_attributes  # Reuse attribute_list
 
 ---
 
-### 9. Raw Inline and Raw Blocks
+### 8. Raw Inline and Raw Blocks
 
 **Syntax:**
 ```markdown
@@ -372,7 +324,7 @@ raw_format  # html, latex, etc.
 
 ---
 
-### 10. Line Blocks
+### 9. Line Blocks
 
 **Syntax:**
 ```markdown
@@ -407,7 +359,7 @@ line_block_line
 
 ## Lower Priority
 
-### 11. Grid Tables
+### 10. Grid Tables
 
 **Syntax:**
 ```markdown
@@ -424,7 +376,7 @@ line_block_line
 
 ---
 
-### 12. Simple Tables
+### 11. Simple Tables
 
 **Syntax:**
 ```markdown
@@ -441,7 +393,7 @@ Table: Demonstration of simple table syntax.
 
 ---
 
-### 13. Metadata Blocks (Percent Syntax)
+### 12. Metadata Blocks (Percent Syntax)
 
 **Syntax:**
 ```markdown
@@ -457,15 +409,14 @@ Table: Demonstration of simple table syntax.
 ## Implementation Recommendations
 
 ### Phase 1D (Immediate Next Steps)
-1. **YAML Frontmatter** - Highest impact, every document uses it
-2. **Inline/Display Math** - Core feature for scientific documents
-3. **Pipe Tables** - Essential for data presentation
+1. **Inline/Display Math** - Core feature for scientific documents
+2. **Pipe Tables** - Essential for data presentation
+3. **Footnotes** - Academic standard
 
 ### Phase 1E (Follow-up)
-4. **Footnotes** - Academic standard
-5. **Definition Lists** - Documentation feature
-6. **Strikethrough** - Common text decoration
-7. **Subscript/Superscript** - Scientific notation
+4. **Definition Lists** - Documentation feature
+5. **Strikethrough** - Common text decoration
+6. **Subscript/Superscript** - Scientific notation
 
 ## Quarto-Specific Features
 
@@ -509,3 +460,4 @@ For each new feature:
 - Critical, high, and medium priority sections focus on standard Pandoc Markdown extensions
 - This ensures the grammar remains useful for all Pandoc markdown users, while Quarto-only features are tracked separately
 - Quarto-specific features may ultimately be implemented in a future `tree-sitter-quarto` grammar or via downstream tooling
+- Current grammar baseline: `ck37/tree-sitter-pandoc-markdown@e602eb65` (adds YAML front matter support)
