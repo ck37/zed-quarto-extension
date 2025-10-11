@@ -36,7 +36,7 @@ cargo test --workspace --all-features
 - **Preview/render workflows** are out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
 - **Grammar completeness**: `tree-sitter-pandoc-markdown` is a community project that extends `tree-sitter-markdown`. Some edge cases in Pandoc syntax may not be fully supported yet.
 - **No official tree-sitter-quarto**: Until an official Quarto grammar exists, we rely on Pandoc markdown as the closest approximation.
-- **Limited Quarto-specific syntax highlighting**: The extension provides standard Pandoc markdown highlighting (headings, links, code blocks, lists, citations, emphasis) plus YAML frontmatter. The following Quarto-specific features are **not** currently highlighted distinctly:
+- **Limited Quarto-specific syntax highlighting**: The extension provides standard Pandoc markdown highlighting (headings, links, code blocks, lists, citations, emphasis), YAML frontmatter, and language injections for Python, R, Julia, and SQL code chunks. The following Quarto-specific features are **not** currently highlighted distinctly:
   - **Callouts**: `:::{.callout-note}`, `:::{.callout-warning}`, etc. (displayed as plain text)
   - **Shortcodes**: `{{< include file.qmd >}}`, `{{< video url >}}`, etc. (not highlighted as special syntax)
   - **Div blocks with attributes**: `:::{.column-margin}`, `:::{#fig-plot}` (not distinguished from regular text)

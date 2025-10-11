@@ -12,6 +12,18 @@ import math
 math.pi
 ```
 
+```{r}
+mean(c(1, 2, 3))
+```
+
+```{julia}
+sqrt(2)
+```
+
+```{sql}
+SELECT 1;
+```
+
 ::: {.callout-note}
 Remember to cite @fig-analysis.
 :::
