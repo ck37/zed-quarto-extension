@@ -2,6 +2,8 @@
 
 Quarto brings literate programming to Zed with first-class syntax highlighting and language server support for `.qmd` files. This extension uses `tree-sitter-pandoc-markdown` for syntax highlighting and launches the official `quarto language-server` for IDE features.
 
+> **Note**: This extension addresses [zed-industries/zed#12406](https://github.com/zed-industries/zed/issues/12406).
+
 ## Installation
 
 1. Install the [Quarto CLI](https://quarto.org/docs/get-started/) so that `quarto` is available on your `PATH`.
