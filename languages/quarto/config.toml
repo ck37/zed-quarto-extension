@@ -1,0 +1,13 @@
+name = "Quarto"
+grammar = "pandoc_markdown"
+path_suffixes = ["qmd"]
+line_comments = ["# "]
+completion_query_characters = ["-", "@"]
+block_comment = { start = "<!--", prefix = "", end = "-->", tab_size = 0 }
+autoclose_before = ";:.,=}])>"
+tab_size = 2
+hard_tabs = false
+word_characters = ["#", "$", "@"]
+
+[overrides.math]
+completion_query_characters = ["\\"]

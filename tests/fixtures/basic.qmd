@@ -1,0 +1,21 @@
+---
+title: "Test Document"
+format: html
+execute:
+  echo: false
+---
+
+# Intro
+
+```{python}
+import math
+math.pi
+```
+
+::: {.callout-note}
+Remember to cite @fig-analysis.
+:::
+
+Inline math $E = mc^2$.
+
+{{< video https://example.com/embed >}}

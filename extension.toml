@@ -1,0 +1,21 @@
+id = "quarto"
+name = "Quarto"
+version = "0.1.0"
+schema_version = 1
+authors = ["Chris Kennedy <chrisken@gmail.com>"]
+description = "First-class Quarto authoring for Zed with syntax highlighting and language-server support"
+repository = "https://github.com/ck37/zed-quarto-extension"
+
+[grammars.pandoc_markdown]
+repository = "https://github.com/jmbuhr/tree-sitter-pandoc-markdown"
+commit = "3af19dadd74477952126e8cf5da4149108a632ac"
+path = "tree-sitter-pandoc-markdown"
+
+[language_servers.quarto]
+name = "Quarto Language Server"
+languages = ["Quarto"]
+
+[[capabilities]]
+kind = "process:exec"
+command = "quarto"
+args = ["language-server"]
