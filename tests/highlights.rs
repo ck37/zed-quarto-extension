@@ -79,7 +79,10 @@ fn highlights_cover_quarto_constructs() {
             break;
         }
     }
-    assert!(seen_front_matter, "document should include yaml front matter");
+    assert!(
+        seen_front_matter,
+        "document should include yaml front matter"
+    );
 
     let config = highlight_configuration();
     let mut highlighter = Highlighter::new();

@@ -38,7 +38,7 @@ cargo test --workspace --all-features
 - **Preview/render workflows** are out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
 - **Grammar completeness**: `tree-sitter-pandoc-markdown` is a community project that extends `tree-sitter-markdown`. Some edge cases in Pandoc syntax may not be fully supported yet.
 - **No official tree-sitter-quarto**: Until an official Quarto grammar exists, we rely on Pandoc markdown as the closest approximation.
-- **Quarto-specific syntax highlighting**: The extension now provides enhanced highlighting for Quarto/Pandoc constructs using the Phase 1C features from tree-sitter-pandoc-markdown:
+- **Quarto-specific syntax highlighting**: The extension now provides enhanced highlighting for Quarto/Pandoc constructs using the Phase 1C+ features from `tree-sitter-pandoc-markdown@e602eb65`:
   - **Standard markdown**: headings, links, code blocks, lists, emphasis, YAML frontmatter
   - **Language injections**: Python, R, Julia, and SQL code chunks  
   - **Fenced divs**: `:::{.callout-note}`, `:::{.column-margin}` (highlighted as markup blocks)
@@ -93,12 +93,12 @@ This approach provides:
 
 ### Current State
 
-Our extension currently provides **basic Pandoc markdown highlighting** through `tree-sitter-pandoc-markdown` as a temporary solution. This covers core markdown syntax but lacks Quarto-specific features because the underlying grammar doesn't define them as separate node types.
+Our extension now ships with the upstream `tree-sitter-pandoc-markdown` grammar at commit `e602eb65`, enabling **Pandoc-aware highlighting** that understands Quarto-relevant constructs such as fenced divs, citations, shortcodes, chunk options, and YAML front matter. Additional Pandoc features (like math, advanced tables, footnotes, etc.) are still planned and tracked in `grammar-feature-needs.md`.
 
 ### Grammar Roadmap
 
 1. **Phase 1 – Strengthen `tree-sitter-pandoc-markdown`**
-   - Upstream missing Pandoc constructs that Quarto relies on (callout div fences, shortcodes, cross-references, attribute parsing, etc.).
+   - Upstream missing Pandoc constructs that Quarto relies on (callout div fences, shortcodes, cross-references, attribute parsing, YAML front matter, etc.).
    - Expose richer node types in the inline grammar so editors can apply differentiated highlighting immediately.
    - Share the improvements with every consumer of Pandoc Markdown while keeping the grammar strictly Pandoc-compatible.
 

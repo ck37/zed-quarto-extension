@@ -62,14 +62,28 @@ fn main() {
         panic!("Could not reset pandoc-markdown grammar to commit {COMMIT}");
     }
 
-    let submodule_status = Command::new("git")
+    let configure_submodule_status = Command::new("git")
+        .current_dir(&pandoc_dir)
+        .args([
+            "config",
+            "submodule.tree-sitter-markdown.url",
+            "https://github.com/tree-sitter-grammars/tree-sitter-markdown.git",
+        ])
+        .status()
+        .expect("failed to configure pandoc-markdown submodule url");
+
+    if !configure_submodule_status.success() {
+        panic!("Could not configure pandoc-markdown submodule url");
+    }
+
+    let update_submodule_status = Command::new("git")
         .current_dir(&pandoc_dir)
         .args(["submodule", "update", "--init", "--recursive"])
         .status()
-        .expect("failed to update pandoc-markdown submodules");
+        .expect("failed to update pandoc-markdown submodules after configuration");
 
-    if !submodule_status.success() {
-        panic!("Could not update pandoc-markdown grammar submodules");
+    if !update_submodule_status.success() {
+        panic!("Could not update pandoc-markdown grammar submodules after configuration");
     }
 
     // Compile the pandoc-markdown grammar if source exists
