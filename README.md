@@ -14,7 +14,7 @@ Zed will automatically compile the extension and its grammars.
 
 ## Features
 
-- **Pandoc-aware syntax highlighting** powered by `tree-sitter-pandoc-markdown@e602eb65`
+- **Pandoc-aware syntax highlighting** powered by [`tree-sitter-pandoc-markdown` (feat/phase-1-pandoc-grammar)](https://github.com/ck37/tree-sitter-pandoc-markdown/tree/feat/phase-1-pandoc-grammar)
   - Core Markdown structures: headings, links, code blocks, lists, emphasis, YAML front matter
   - Pandoc extensions heavily used by Quarto: fenced divs, attribute lists, citations, cross-references, shortcodes, chunk options
 - **Embedded language injections** for common Quarto code chunks (Python, R, Julia, SQL)
@@ -92,7 +92,7 @@ This approach provides:
 
 ### Current State
 
-Our extension now ships with the upstream `tree-sitter-pandoc-markdown` grammar at commit `e602eb65`, enabling **Pandoc-aware highlighting** that understands Quarto-relevant constructs such as fenced divs, citations, shortcodes, chunk options, and YAML front matter. Additional Pandoc features (like math, advanced tables, footnotes, etc.) are still planned and tracked in `grammar-feature-needs.md`.
+Our extension now ships with the upstream [`tree-sitter-pandoc-markdown` feat/phase-1-pandoc-grammar branch](https://github.com/ck37/tree-sitter-pandoc-markdown/tree/feat/phase-1-pandoc-grammar), enabling **Pandoc-aware highlighting** that understands Quarto-relevant constructs such as fenced divs, citations, shortcodes, chunk options, and YAML front matter. Additional Pandoc features (like math, advanced tables, footnotes, etc.) are still planned and tracked in `grammar-feature-needs.md`.
 
 ### Grammar Roadmap
 
