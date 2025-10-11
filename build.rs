@@ -19,7 +19,7 @@ fn main() {
         
         // Clone the grammar repository at the specific commit
         let status = Command::new("git")
-            .args(&[
+            .args([
                 "clone",
                 "https://github.com/ck37/tree-sitter-pandoc-markdown",
                 pandoc_dir.to_str().unwrap(),
@@ -33,7 +33,7 @@ fn main() {
         // Checkout the specific commit used in extension.toml
         let checkout_status = Command::new("git")
             .current_dir(&pandoc_dir)
-            .args(&["checkout", "031ae4a1636d8964955fd4e2f629b2b542b84d01"])
+            .args(["checkout", "031ae4a1636d8964955fd4e2f629b2b542b84d01"])
             .status();
             
         if checkout_status.is_err() || !checkout_status.unwrap().success() {

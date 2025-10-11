@@ -4,13 +4,10 @@ This document outlines missing features in `tree-sitter-pandoc-markdown` that wo
 
 ## Status Overview
 
-### ✅ Implemented (Phase 1C)
+### ✅ Implemented (Pandoc Markdown)
 - Fenced divs with attributes (`:::`)
 - Attribute lists (`{.class #id key=value}`)
 - Citations (`@item`, `[@item p. 4]`)
-- Cross-references (`@fig:name`, `@tbl:data`)
-- Shortcodes (`{{< include file.qmd >}}`)
-- Chunk options (`#| echo: false`)
 - Basic markdown (headings, lists, emphasis, links, code blocks)
 
 ### 🔴 Missing Features
@@ -470,7 +467,14 @@ Table: Demonstration of simple table syntax.
 6. **Strikethrough** - Common text decoration
 7. **Subscript/Superscript** - Scientific notation
 
-### Phase 2 Candidates (Quarto-specific)
+## Quarto-Specific Features
+
+### Currently Supported
+- Cross-references (`@fig:name`, `@tbl:data`) via Quarto crossref support
+- Shortcodes (`{{< include file.qmd >}}`)
+- Chunk options (`#| echo: false`)
+
+### Future Enhancements
 - Enhanced code chunk attributes (beyond `#|` options)
 - Quarto-specific shortcodes (beyond generic `{{< >}}`)
 - Cross-format conditional content
@@ -502,6 +506,6 @@ For each new feature:
 ## Notes
 
 - Features are ordered by **impact on Quarto authoring experience** rather than parsing complexity
-- All features listed are part of standard Pandoc Markdown (not Quarto extensions)
-- This ensures the grammar remains useful for all Pandoc markdown users, not just Quarto
-- Quarto-specific features should be deferred to a future `tree-sitter-quarto` grammar
+- Critical, high, and medium priority sections focus on standard Pandoc Markdown extensions
+- This ensures the grammar remains useful for all Pandoc markdown users, while Quarto-only features are tracked separately
+- Quarto-specific features may ultimately be implemented in a future `tree-sitter-quarto` grammar or via downstream tooling
