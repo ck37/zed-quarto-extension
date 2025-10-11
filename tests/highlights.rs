@@ -38,6 +38,8 @@ fn highlight_configuration() -> HighlightConfiguration {
         "punctuation.delimiter",
         "string.escape",
         "string.special.symbol",
+        "text.emphasis",
+        "text.strong",
         "text.literal",
         "text.reference",
         "text.title",
@@ -135,4 +137,12 @@ fn highlights_cover_quarto_constructs() {
     if rendered.contains("comment.documentation") {
         println!("✓ Chunk options are highlighted");
     }
+    assert!(
+        rendered.contains("<text.emphasis>"),
+        "italic text should be highlighted"
+    );
+    assert!(
+        rendered.contains("<text.strong>"),
+        "bold text should be highlighted"
+    );
 }

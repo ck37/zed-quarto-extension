@@ -21,6 +21,10 @@
   (yaml_front_matter_delimiter)
 ] @punctuation.delimiter
 
+; Emphasis
+(emphasis) @text.emphasis
+(strong_emphasis) @text.strong
+
 ;
 ; Quarto / Pandoc specific constructs
 ; NOTE: These node types are from tree-sitter-pandoc-markdown Phase 1C.

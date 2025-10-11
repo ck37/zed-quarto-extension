@@ -24,7 +24,10 @@ sqrt(2)
 SELECT 1;
 ```
 
+This line has *italic* text and **bold** text.
+
 ::: {.callout-note}
+
 Remember to cite @fig-analysis.
 :::
 
