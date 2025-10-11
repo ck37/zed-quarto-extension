@@ -48,3 +48,46 @@
 [
   (backslash_escape)
 ] @string.escape
+
+;
+; Quarto / Pandoc specific constructs
+;
+
+;; Div or callout fences (:::
+((inline
+   ":" @punctuation.special
+   ":" @punctuation.special
+   ":" @punctuation.special
+   "{" @punctuation.delimiter
+   (_)*
+   "}" @punctuation.delimiter
+   (_)*))
+
+;; Closing ::: fences
+((inline
+   (_)+
+   ":" @punctuation.special
+   ":" @punctuation.special
+   ":" @punctuation.special))
+
+;; Shortcodes {{< ... >}} / {{% ... %}}
+((inline
+   "{" @punctuation.delimiter
+   "{" @punctuation.delimiter
+   "<" @punctuation.delimiter
+   (_)*
+   ">" @punctuation.delimiter
+   "}" @punctuation.delimiter
+   "}" @punctuation.delimiter))
+
+((inline
+   "{" @punctuation.delimiter
+   "{" @punctuation.delimiter
+   "%" @punctuation.delimiter
+   (_)*
+   "%" @punctuation.delimiter
+   "}" @punctuation.delimiter
+   "}" @punctuation.delimiter))
+
+;; Cross-reference marker
+((inline "@" @text.reference))

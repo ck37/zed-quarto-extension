@@ -90,19 +90,30 @@ This approach provides:
 
 Our extension currently provides **basic Pandoc markdown highlighting** through `tree-sitter-pandoc-markdown` as a temporary solution. This covers core markdown syntax but lacks Quarto-specific features because the underlying grammar doesn't define them as separate node types.
 
-**This is temporary.** The proper solution is to create a dedicated `tree-sitter-quarto` grammar.
+### Grammar Roadmap
+
+1. **Phase 1 – Strengthen `tree-sitter-pandoc-markdown`**
+   - Upstream missing Pandoc constructs that Quarto relies on (callout div fences, shortcodes, cross-references, attribute parsing, etc.).
+   - Expose richer node types in the inline grammar so editors can apply differentiated highlighting immediately.
+   - Share the improvements with every consumer of Pandoc Markdown while keeping the grammar strictly Pandoc-compatible.
+
+2. **Phase 2 – Build `tree-sitter-quarto` on top of those improvements**
+   - Layer Quarto-only syntax (chunk option comment lines `#|`, cell attribute blocks, layout/new shortcode directives, execution option cascades) that are out of scope for Pandoc itself.
+   - Provide semantic nodes that unlock Quarto-specific tooling without fragmenting the Pandoc ecosystem.
+
+This staged plan avoids duplicating work, gives near-term wins for existing editors, and positions a Quarto grammar to focus solely on features Pandoc cannot represent.
 
 ### Planned: tree-sitter-quarto Grammar
 
-We plan to create an official `tree-sitter-quarto` grammar rather than extending `tree-sitter-pandoc-markdown`. This will:
+With the Pandoc grammar enriched, we can proceed with a dedicated `tree-sitter-quarto` that:
 
-- Provide first-class support for all Quarto syntax
-- Enable proper highlighting of Quarto-specific features
-- Allow the grammar to be adopted by other editors (Neovim, Helix, etc.)
-- Potentially be hosted in the official `tree-sitter-grammars` organization
-- Be maintained as an official Quarto project
+- Provides first-class support for all remaining Quarto syntax
+- Enables proper highlighting of Quarto-only features (chunk options, execution directives, layout rules)
+- Allows the grammar to be adopted by other editors (Neovim, Helix, etc.)
+- Potentially lives in the official `tree-sitter-grammars` organization
+- Is maintained in collaboration with the Quarto project
 
-**Why not extend tree-sitter-pandoc-markdown?** Quarto has enough unique syntax (callouts, shortcodes, execution options, cross-references) that a dedicated grammar is warranted. This also allows for cleaner separation and official support from the Quarto team.
+**Why a dedicated tree-sitter-quarto?** Even after Phase 1, Quarto introduces syntax (e.g., executable option lines, cell attribute cascades) that goes beyond Pandoc’s spec. Capturing those semantics cleanly warrants a separate grammar that can depend on—but not compromise—the upstream Pandoc parser.
 
 #### Implementation Plan
 
@@ -183,15 +194,13 @@ tree-sitter-quarto/
 
 #### Quarto-Specific Syntax to Implement
 
-The grammar needs to handle these Quarto-specific features:
+The dedicated grammar focuses on Quarto-only constructs that remain after Phase 1:
 
-1. **Callout syntax** - `:::{.callout-note}`, `:::{.callout-warning}`, etc.
-2. **Shortcodes** - `{{< include file.qmd >}}`, `{{< video url >}}`
-3. **Div blocks with attributes** - `:::{.column-margin}`, `:::{#fig-plot}`
-4. **Cross-references** - `@fig-plot`, `@tbl-data`, `@eq-equation`
-5. **Code chunk execution options** - `#| echo: false`, `#| warning: false`
-6. **YAML frontmatter** - Already supported via injection, but could be native
-7. **Embedded code execution** - R, Python, Julia chunks with special Quarto attributes
+1. **Executable chunk option lines** – `#| echo: false`, `#| warning: false`, multi-line option blocks.
+2. **Cell attribute blocks & layout directives** – column layout helpers, margins, and other Quarto-specific attribute cascades.
+3. **Extended shortcodes & publishing directives** – e.g., `{{< layout >}}`, conditional rendering helpers not part of upstream Pandoc.
+4. **Execution metadata plumbing** – links between YAML front matter defaults and chunk-level overrides.
+5. **Rich embedded language hooks** – Quarto’s fenced cells that carry execution semantics beyond standard fenced blocks.
 
 #### Next Steps
 
