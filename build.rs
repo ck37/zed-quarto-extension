@@ -21,7 +21,7 @@ fn main() {
     if !pandoc_dir.join(".git").exists() {
         eprintln!("Cloning pandoc-markdown grammar repository...");
         let status = Command::new("git")
-            .args(["clone", "--recurse-submodules", REPO_URL, repo_path])
+            .args(["clone", REPO_URL, repo_path])
             .status()
             .expect("failed to spawn git clone");
 
@@ -62,7 +62,17 @@ fn main() {
         panic!("Could not reset pandoc-markdown grammar to commit {COMMIT}");
     }
 
-    let configure_submodule_status = Command::new("git")
+    let sync_status = Command::new("git")
+        .current_dir(&pandoc_dir)
+        .args(["submodule", "sync", "--recursive"])
+        .status()
+        .expect("failed to sync pandoc-markdown submodules");
+
+    if !sync_status.success() {
+        panic!("Could not sync pandoc-markdown grammar submodules");
+    }
+
+    let configure_status = Command::new("git")
         .current_dir(&pandoc_dir)
         .args([
             "config",
@@ -72,17 +82,17 @@ fn main() {
         .status()
         .expect("failed to configure pandoc-markdown submodule url");
 
-    if !configure_submodule_status.success() {
+    if !configure_status.success() {
         panic!("Could not configure pandoc-markdown submodule url");
     }
 
-    let update_submodule_status = Command::new("git")
+    let update_status = Command::new("git")
         .current_dir(&pandoc_dir)
         .args(["submodule", "update", "--init", "--recursive"])
         .status()
         .expect("failed to update pandoc-markdown submodules after configuration");
 
-    if !update_submodule_status.success() {
+    if !update_status.success() {
         panic!("Could not update pandoc-markdown grammar submodules after configuration");
     }
 
