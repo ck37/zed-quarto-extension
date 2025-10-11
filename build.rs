@@ -2,7 +2,7 @@ use std::path::PathBuf;
 use std::process::Command;
 
 const REPO_URL: &str = "https://github.com/ck37/tree-sitter-pandoc-markdown";
-const COMMIT: &str = "9055205e5db8672621a169741d3a28632e55d2e4";
+const COMMIT: &str = "c325990ee8824f9746303d6785170ac43fcc8a93";
 
 fn main() {
     // Only compile the grammar for native tests, not for WASM
