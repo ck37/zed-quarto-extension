@@ -15,6 +15,7 @@ fn language() -> Language {
 }
 
 fn highlight_configuration() -> HighlightConfiguration {
+    // Use the extension's highlights directly; they already align with upstream Markdown scopes.
     let highlight_query = include_str!("../languages/quarto/highlights.scm");
     let injection_query = include_str!("../languages/quarto/injections.scm");
     let locals_query = "";
@@ -145,4 +146,5 @@ fn highlights_cover_quarto_constructs() {
         rendered.contains("<text.strong>"),
         "bold text should be highlighted"
     );
+    // Keep parity with Markdown: we expect text.* scopes so themes apply bold/italic styling.
 }

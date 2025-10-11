@@ -22,6 +22,8 @@
 ] @punctuation.delimiter
 
 ; Emphasis
+; Note: stick with `text.emphasis`/`text.strong` to match upstream Markdown
+; so editor themes highlight consistently between .md and .qmd files.
 (emphasis) @text.emphasis
 (strong_emphasis) @text.strong
 
