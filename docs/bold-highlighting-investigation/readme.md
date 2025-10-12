@@ -6,11 +6,13 @@ Investigation into why bold/italic text highlighting wasn't working in Quarto `.
 
 **Problem**: Bold (`**text**`) and italic (`*text*`) weren't highlighted in `.qmd` files.
 
-**Root Cause**: The pandoc-markdown grammar uses dual-grammar architecture (block + inline grammars). Zed extensions cannot inject custom grammars into other custom grammars—only built-in languages.
+**Root Cause (Confirmed)**: When extension grammars load asynchronously, the LanguageRegistry version wasn't incremented. This prevented SyntaxMap from rechecking pending injections after the grammar loaded. Built-in grammars worked because they're immediately available (no async loading needed).
 
-**Current Solution (70% coverage)**: Inject Zed's built-in `markdown-inline` grammar as workaround.
+**Current Solution (70% coverage)**: Inject Zed's built-in `markdown-inline` grammar as temporary workaround.
 
-**Long-term Solution**: Contribute PR to Zed enabling custom-to-custom grammar injection.
+**Fix Implemented**: One-line change in Zed to increment registry version when languages load. Fix is in branch `fix/extension-grammar-injection`, pending testing and PR.
+
+**Status**: Workaround active now; full solution expected within weeks after Zed PR review.
 
 ## Technical Background
 
@@ -22,31 +24,31 @@ The pandoc-markdown grammar uses two grammars:
 
 The inline grammar must be injected into `(inline)` nodes for emphasis highlighting to work.
 
-### The Limitation
+### The Root Cause
 
 **Zed's built-in markdown** (works):
 ```scheme
 ((inline) @injection.content
  (#set! injection.language "markdown-inline"))
 ```
-✅ Works because `"markdown-inline"` is bundled with Zed
+✅ Works because `"markdown-inline"` is immediately available (compiled into Zed binary)
 
-**Our extension** (doesn't work):
+**Our extension** (didn't work):
 ```scheme
 ((inline) @injection.content
  (#set! injection.language "pandoc_markdown_inline"))
 ```
-❌ Fails because `"pandoc_markdown_inline"` is extension-defined
+❌ Failed because `"pandoc_markdown_inline"` loads asynchronously as WASM, and the registry version wasn't incremented after loading
 
-### Evidence
+### The Investigation
 
-Research of all major Zed extensions found:
-- ✅ Extensions CAN inject built-in languages (JavaScript, Python, SQL, CSS, HTML)
-- ❌ Extensions CANNOT inject custom grammars into other custom grammars
-- All successful injections target built-in Zed languages only
-- [Issue #484](https://github.com/zed-industries/extensions/issues/484): Open bug about injection limitations
+Research confirmed the issue:
+1. **Extension grammars ARE registered** in the same language registry as built-ins
+2. **Loading IS triggered** when injection is first encountered
+3. **Missing piece**: Registry version wasn't incremented when loading completed
+4. **Result**: SyntaxMap never rechecked pending injections after grammar loaded
 
-See [extension-research.md](./extension-research.md) for detailed analysis.
+See [verification-findings.md](./verification-findings.md) for complete code analysis and [extension-research.md](./extension-research.md) for testing history.
 
 ## Current Solution: Built-in markdown-inline Injection
 
@@ -73,17 +75,28 @@ See [builtin-injection-test.md](./builtin-injection-test.md) for detailed test r
 3. **Works for most common use cases**: Simple emphasis
 4. **Can be improved later**: Switch to full Pandoc inline grammar once Zed adds support
 
-## Long-term Solution: Contribute to Zed
+## The Fix: Registry Version Increment
 
-**Plan**: Contribute PR to Zed to enable custom-to-custom grammar injection.
+**Implementation**: One-line change in `crates/language/src/language_registry.rs`:
 
-**Timeline**:
-- ✅ **Now**: Built-in injection workaround (70% coverage)
-- **1-2 months**: File Zed issue with research findings
-- **2-4 months**: Contribute PR to Zed
-- **Future**: Switch to full Pandoc inline grammar (100% coverage)
+```rust
+state.version += 1;  // Increment version so pending injections can be resolved
+```
 
-See [zed-modification-analysis.md](./zed-modification-analysis.md) for detailed contribution plan.
+**How it works**:
+1. Extension grammar not loaded → injection marked as "pending"
+2. Background task loads grammar asynchronously
+3. **NEW**: Version increments when loading completes
+4. SyntaxMap detects version change → rechecks pending injections
+5. Grammar now available → injection resolved ✅
+
+**Status**:
+- ✅ **Fix implemented** in branch `fix/extension-grammar-injection`
+- ⏳ **Testing**: Pending build and test with Quarto extension
+- 📝 **PR to Zed**: Will submit after testing confirms fix works
+- 🎯 **Timeline**: Weeks, not months
+
+See [zed-fix-implemented.md](./zed-fix-implemented.md) for complete implementation details.
 
 ## Alternative Approaches Considered
 
@@ -97,23 +110,29 @@ See [alternative-approaches.md](./alternative-approaches.md) for full analysis:
 
 ## Key Findings
 
-1. **Zed limitation confirmed**: Extensions cannot inject extension-defined grammars
-2. **No workaround exists**: Built-in injection is best available option
+1. **Root cause identified**: Registry version not incremented when extension grammars load asynchronously
+2. **Simple fix**: One-line change to increment version after loading completes
 3. **Architecture sound**: Pandoc's dual-grammar design is correct and intentional
-4. **Solution requires Zed change**: Must extend Zed's grammar resolution to include extension grammars
+4. **Fix implemented**: In branch `fix/extension-grammar-injection`, pending testing and PR
 
 ## Timeline
 
-- **2025-10-11**: Initial investigation
-- **2025-10-12**: Identified root cause (Zed limitation)
-- **2025-10-12**: Researched all major Zed extensions
-- **2025-10-12**: Implemented built-in injection workaround (70% coverage)
-- **Next**: File Zed issue and prepare contribution
+- **2025-10-11**: Initial investigation, implemented workaround
+- **2025-10-12**: Deep investigation, researched all major Zed extensions
+- **2025-10-12**: Code analysis of Zed's injection resolution system
+- **2025-10-12**: Confirmed root cause via source code examination
+- **2025-10-12**: Implemented fix (one-line change)
+- **Next**: Test fix, submit PR to Zed
 
 ## References
 
-- [builtin-injection-test.md](./builtin-injection-test.md) - Test results for current solution
+### Investigation Documents
+- [verification-findings.md](./verification-findings.md) - Complete code analysis confirming root cause
+- [verification-plan.md](./verification-plan.md) - Investigation methodology used
+- [extension-research.md](./extension-research.md) - Testing history and extension pattern analysis
+
+### Solution Documents
+- [zed-fix-implemented.md](./zed-fix-implemented.md) - **Implementation details for the fix**
+- [builtin-injection-test.md](./builtin-injection-test.md) - Test results for current workaround
 - [alternative-approaches.md](./alternative-approaches.md) - All approaches considered
-- [zed-modification-analysis.md](./zed-modification-analysis.md) - Plan for contributing to Zed
-- [extension-research.md](./extension-research.md) - Detailed extension pattern analysis
-- [Zed Issue #484](https://github.com/zed-industries/extensions/issues/484) - Injection limitations
+- [zed-modification-analysis.md](./zed-modification-analysis.md) - Original hypotheses and proposed solutions

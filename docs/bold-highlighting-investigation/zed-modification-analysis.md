@@ -1,6 +1,8 @@
 # Zed Custom Grammar Injection Analysis
 
-Analysis of why extension-to-extension grammar injection doesn't work in Zed, and proposal for contributing a fix.
+> **Update (2025-10-12)**: Root cause confirmed and fix implemented! See [zed-fix-implemented.md](./zed-fix-implemented.md) for the one-line fix. This document contains the original investigation and proposed solutions that led to the implementation.
+
+Analysis of why extension-to-extension grammar injection didn't work in Zed, the investigation that identified the root cause, and the implemented fix.
 
 ## The Problem
 
@@ -52,7 +54,9 @@ state
 
 ## Root Cause Analysis
 
-**Key finding**: Extension-to-extension grammar injection is **not supported** in Zed. This is confirmed through extensive testing, but the underlying technical reason is still a hypothesis requiring investigation.
+**Key finding (CONFIRMED)**: Extension-to-extension grammar injection failed because the LanguageRegistry version wasn't incremented when extension grammars finished loading asynchronously. This prevented SyntaxMap from rechecking pending injections.
+
+**The fix**: One line of code to increment `state.version` after language loading completes. See [verification-findings.md](./verification-findings.md) for complete code analysis.
 
 ### Evidence from Extension Research
 
