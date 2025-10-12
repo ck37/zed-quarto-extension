@@ -50,8 +50,6 @@ For technical details on the grammar architecture and roadmap, see:
 
 ## Contributing
 
-Contributions are welcome!
+Contributions are welcome! See [`CONTRIBUTING.md`](CONTRIBUTING.md) for development setup, testing, and architecture details.
 
-**For developers**: See [`CLAUDE.md`](CLAUDE.md) for development setup, testing, and architecture details.
-
-**Building a Quarto grammar**: If you're interested in helping create a dedicated `tree-sitter-quarto` grammar, see [`docs/tree-sitter-quarto-plan.md`](docs/tree-sitter-quarto-plan.md) for implementation details—this would benefit the entire Quarto ecosystem across all editors.
+If you're interested in helping create a dedicated `tree-sitter-quarto` grammar, see [`docs/tree-sitter-quarto-plan.md`](docs/tree-sitter-quarto-plan.md)—this would benefit the entire Quarto ecosystem across all editors.
