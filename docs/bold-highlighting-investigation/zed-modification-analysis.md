@@ -83,7 +83,13 @@ The infrastructure exists, but there's a limitation preventing extension-to-exte
 1. **Language registry access**: Extension grammars ARE in the registry, lookup code EXISTS
 2. **Built-in special case**: Built-in hidden languages (like `markdown-inline`) work fine
 3. **Extension limitation**: Extension-defined grammars not accessible as injection targets
-4. **Tree-sitter constraint**: Issue #484 reports injections don't work on nodes with children
+
+**About Issue #484**: Extensions Issue #484 reports "injections don't work on nodes with children", but this does NOT fully explain what we observe:
+
+- ✅ `pandoc_markdown` → `markdown-inline` (built-in) works on `(inline)` nodes
+- ❌ `pandoc_markdown` → `pandoc_markdown_inline` (extension) fails on same `(inline)` nodes
+
+If Issue #484 was the root cause, BOTH should fail because they target the same node structure. The distinguishing factor is **built-in vs extension-defined**, not node structure. Issue #484 may be related or contribute to limitations, but the primary issue is that extension-to-extension grammar injection is not supported.
 
 ## Relevant Zed Issues
 
@@ -113,8 +119,8 @@ The infrastructure exists, but there's a limitation preventing extension-to-exte
 2. **Document the limitation**:
    - All successful extension injections target built-in languages only
    - No examples found of extension-to-extension grammar injection
-   - Built-in `markdown-inline` works, but extension-defined grammars don't
-   - Issue #484 suggests tree-sitter limitations with complex injections
+   - Built-in `markdown-inline` works, but extension-defined grammars don't on same node structure
+   - Issue #484 may be related but doesn't fully explain the limitation (built-in works, extension fails on same nodes)
 
 3. **Present use case**:
    - Dual-grammar architectures are standard for markdown (CommonMark spec)
