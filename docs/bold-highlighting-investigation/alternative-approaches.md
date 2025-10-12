@@ -71,7 +71,7 @@ File an issue asking how to properly inject custom grammars.
 "How to inject custom grammar into another custom grammar in extensions?"
 
 ### Issue Content
-```markdown
+````markdown
 ## Problem
 I'm developing a Zed extension for Quarto (Pandoc Markdown) that uses a dual-grammar architecture:
 - Block grammar: parses document structure
@@ -106,7 +106,7 @@ The inline grammar needs to be injected into `(inline)` nodes created by the blo
 
 ## Repository
 https://github.com/ck37/zed-quarto-extension
-```
+````
 
 ### Pros
 ✅ Get authoritative answer from Zed team
