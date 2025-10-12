@@ -123,10 +123,13 @@ fn main() {
         eprintln!("Compiling pandoc-markdown grammar...");
 
         // Compile the grammar - cc::Build automatically handles linking
+        // Suppress warnings for unused functions/parameters in upstream grammar code
         cc::Build::new()
             .include(&src_dir)
             .file(src_dir.join("parser.c"))
             .file(src_dir.join("scanner.c"))
+            .flag_if_supported("-Wno-unused-parameter")
+            .flag_if_supported("-Wno-unused-function")
             .compile("tree-sitter-pandoc-markdown");
 
         println!("cargo:rerun-if-changed={}", src_dir.display());
