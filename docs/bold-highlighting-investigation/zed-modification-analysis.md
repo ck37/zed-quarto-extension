@@ -50,9 +50,9 @@ state
 - Uses name and extension matching
 - SHOULD find extension-loaded languages
 
-## Root Cause: Architectural Limitation Confirmed
+## Root Cause Analysis
 
-**Key finding**: Extension-to-extension grammar injection is **not supported** in Zed. This is not a timing issue or missing configuration - it's a fundamental limitation.
+**Key finding**: Extension-to-extension grammar injection is **not supported** in Zed. This is confirmed through extensive testing, but the underlying technical reason is still a hypothesis requiring investigation.
 
 ### Evidence from Extension Research
 
@@ -76,9 +76,9 @@ state
 - **Does** iterate through extension-loaded languages
 - **Should theoretically work** based on code structure
 
-### Why It Doesn't Work: Technical Analysis
+### Why It Doesn't Work: Hypotheses
 
-The infrastructure exists, but there's a limitation preventing extension-to-extension injection. Based on code analysis, here are the most likely explanations:
+The infrastructure exists, but there's a limitation preventing extension-to-extension injection. Based on code analysis and observed behavior, here are the most likely explanations (requiring investigation):
 
 #### Theory 1: WASM Grammar Loading Boundary ⭐ (Most Likely)
 
@@ -168,11 +168,11 @@ If Issue #484 was the root cause, BOTH should fail because they target the same 
    - Issue #484 may be related but doesn't fully explain the limitation (built-in works, extension fails on same nodes)
 
 3. **Present technical hypothesis**:
-   - Most likely cause: WASM grammar loading boundary
-   - Built-in grammars compiled into binary (immediately available)
-   - Extension grammars loaded as WASM at runtime (may not be loaded when injection resolution occurs)
-   - Injection resolution might only check already-loaded grammars
-   - See detailed technical analysis in "Why It Doesn't Work: Technical Analysis" section
+   - Most likely cause: WASM grammar loading boundary (needs confirmation)
+   - Built-in grammars: compiled into binary (immediately available)
+   - Extension grammars: loaded as WASM at runtime (may not be loaded when injection resolution occurs)
+   - Hypothesis: Injection resolution only checks already-loaded grammars
+   - See detailed analysis in "Why It Doesn't Work: Hypotheses" section
 
 4. **Present use case**:
    - Dual-grammar architectures are standard for markdown (CommonMark spec)
@@ -180,17 +180,17 @@ If Issue #484 was the root cause, BOTH should fail because they target the same 
    - This pattern aligns with tree-sitter best practices
    - Current workaround provides only 70% coverage
 
-5. **Propose solution**:
-   - See "Proposed Implementation" section for detailed code-level solution
-   - Core fix: Modify injection resolution to trigger WASM grammar loading
-   - Optional: Add injectable flag for explicit control (if Zed team prefers)
-   - Request feedback on implementation approach
+5. **Request investigation and guidance**:
+   - Can the Zed team confirm whether extension grammars are loaded when injection resolution occurs?
+   - See "Proposed Implementation" section for potential solutions based on hypothesis
+   - Would Zed team accept a PR to enable extension-to-extension injection?
+   - Request guidance on preferred implementation approach
 
 ### Proposed Implementation
 
-Based on technical analysis, the fix requires triggering WASM grammar loading during injection resolution.
+**Note:** The approaches below are based on our hypothesis that extension grammars aren't loaded when injection resolution occurs. This needs investigation/confirmation.
 
-#### Core Fix: Trigger Grammar Loading in Injection Resolution
+#### Approach 1: Trigger Grammar Loading in Injection Resolution
 
 **Files to modify:**
 
@@ -259,11 +259,12 @@ pub fn language_for_name_or_extension(&self, name: &str) -> Option<Arc<Language>
 }
 ```
 
-#### Optional Enhancement: Injectable Flag
+#### Approach 2: Eager Loading with Injectable Flag
 
-If the Zed team prefers explicit control, an `injectable = true` flag could be added to `extension.toml`:
+Alternative approach: Pre-load extension grammars marked as injectable:
 
 ```toml
+# extension.toml
 [grammars.pandoc_markdown_inline]
 repository = "https://github.com/ck37/tree-sitter-pandoc-markdown"
 commit = "..."
@@ -271,7 +272,9 @@ path = "inline"
 injectable = true  # Pre-load for injection use
 ```
 
-This would allow eager loading during registration, but the core fix above should work without requiring manifest changes.
+This would load the grammar during registration, making it available for injection without on-demand loading.
+
+**Which approach to use would depend on confirming the root cause and Zed team's architecture preferences.**
 
 ## Benefits of Contributing Fix
 
@@ -298,15 +301,15 @@ Note: Timeline assumes Zed team confirms this is fixable and not an intentional 
 **`crates/language/src/syntax_map.rs`**
 - Function: `get_injections()` - Processes injection queries and resolves language names
 - Calls: `language_registry.language_for_name_or_extension()`
-- **Issue**: Likely only checks already-loaded grammars
-- **Fix**: Trigger grammar loading if language exists but not loaded
+- **Hypothesis**: May only check already-loaded grammars
+- **Potential fix**: Trigger grammar loading if language exists but not loaded
 
 **`crates/language/src/language_registry.rs`**
 - Function: `language_for_name_or_extension()` - Looks up languages by name
 - Function: `register_language()` - Adds languages to available_languages list
 - Function: `get_or_load_grammar()` - Loads grammar (including WASM for extensions)
-- **Issue**: Lookup finds extension languages but doesn't ensure grammar is loaded
-- **Fix**: Add grammar loading check in lookup path, or new `load_grammar_for_injection()` method
+- **Hypothesis**: Lookup finds extension languages but may not ensure grammar is loaded
+- **Potential fix**: Add grammar loading check in lookup path, or new `load_grammar_for_injection()` method
 
 ### Related Files (Optional Enhancement)
 
