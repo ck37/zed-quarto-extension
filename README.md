@@ -23,16 +23,6 @@ Zed will automatically compile the extension and its grammars.
 
 > **Note**: This extension provides syntax highlighting only. For language server features (completions, hover, diagnostics), see [`docs/LSP_STATUS.md`](docs/LSP_STATUS.md) for the current state and options.
 
-## Testing
-
-Run the automated tests with:
-
-```bash
-cargo test --workspace --all-features
-```
-
-The test suite validates syntax highlighting coverage across Quarto/Pandoc markdown constructs.
-
 ## Known Limitations
 
 - **Bold/italic highlighting partially working**: The pandoc-markdown grammar uses a dual-grammar architecture (separate block and inline grammars), but Zed extensions cannot inject custom grammars into other custom grammars—they can only inject built-in languages.
@@ -60,4 +50,8 @@ For technical details on the grammar architecture and roadmap, see:
 
 ## Contributing
 
-Contributions are welcome! This extension currently uses `tree-sitter-pandoc-markdown` as the foundation. If you're interested in helping create a dedicated `tree-sitter-quarto` grammar, see [`docs/tree-sitter-quarto-plan.md`](docs/tree-sitter-quarto-plan.md) for implementation details—this would benefit the entire Quarto ecosystem across all editors.
+Contributions are welcome!
+
+**For developers**: See [`CLAUDE.md`](CLAUDE.md) for development setup, testing, and architecture details.
+
+**Building a Quarto grammar**: If you're interested in helping create a dedicated `tree-sitter-quarto` grammar, see [`docs/tree-sitter-quarto-plan.md`](docs/tree-sitter-quarto-plan.md) for implementation details—this would benefit the entire Quarto ecosystem across all editors.
