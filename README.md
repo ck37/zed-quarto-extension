@@ -33,6 +33,7 @@ Zed will automatically compile the extension and its grammars.
   - Fix implemented: One-line change to increment registry version when languages load, enabling pending injections to be resolved. See [zed-fix-implemented.md](docs/bold-highlighting-investigation/zed-fix-implemented.md)
   - Investigation: Complete technical analysis and verification in [`docs/bold-highlighting-investigation/`](docs/bold-highlighting-investigation/)
   - Status: Fix pending testing and PR to Zed. Once merged, this extension will switch to full `pandoc_markdown_inline` grammar for 100% coverage.
+  - **Branch with full grammar**: [`use-pandoc-inline-grammar`](https://github.com/ck37/zed-quarto-extension/tree/use-pandoc-inline-grammar) ready for when Zed fix is released (see [BRANCH_INFO.md](https://github.com/ck37/zed-quarto-extension/blob/use-pandoc-inline-grammar/BRANCH_INFO.md))
   - Timeline: Workaround active now (70% coverage); full fix expected within weeks pending Zed PR review
 - Preview/render workflows are out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
 - Grammar completeness: `tree-sitter-pandoc-markdown` is a community project that extends `tree-sitter-markdown`. Some edge cases in Pandoc syntax may not be fully supported yet.
