@@ -181,16 +181,16 @@ If Issue #484 was the root cause, BOTH should fail because they target the same 
    - Current workaround provides only 70% coverage
 
 5. **Propose solution**:
-   - See "Potential Implementation Approaches" section for detailed code-level solutions
-   - Primary approach: Modify injection resolution to trigger grammar loading
-   - Secondary approach: Eager loading with injectable flag
-   - Request Zed team guidance on preferred approach
+   - See "Proposed Implementation" section for detailed code-level solution
+   - Core fix: Modify injection resolution to trigger WASM grammar loading
+   - Optional: Add injectable flag for explicit control (if Zed team prefers)
+   - Request feedback on implementation approach
 
-### Potential Implementation Approaches (if Zed team confirms fixable)
+### Proposed Implementation
 
-Based on technical analysis, here are detailed implementation approaches:
+Based on technical analysis, the fix requires triggering WASM grammar loading during injection resolution.
 
-#### Primary Approach: Fix Injection Resolution + Grammar Loading
+#### Core Fix: Trigger Grammar Loading in Injection Resolution
 
 **Files to modify:**
 
@@ -216,7 +216,7 @@ fn get_injections(...) {
 
     // Check if language exists in registry (even if not loaded)
     if let Some(language_metadata) = self.language_registry.find_language_metadata(language_name) {
-        // Trigger loading if it's an extension grammar
+        // Trigger loading if it's an extension grammar (loads WASM)
         let language = self.language_registry.load_grammar_if_needed(language_metadata).await;
         // Use grammar
     }
@@ -225,7 +225,7 @@ fn get_injections(...) {
 
 **2. `crates/language/src/language_registry.rs`** (Secondary target)
 
-Add new method:
+Add new method to handle injection-specific grammar loading:
 ```rust
 pub fn load_grammar_for_injection(&self, language_name: &str) -> Result<Arc<Grammar>> {
     // Find language in available_languages
@@ -244,7 +244,7 @@ pub fn load_grammar_for_injection(&self, language_name: &str) -> Result<Arc<Gram
 }
 ```
 
-Update existing method:
+Update existing lookup method:
 ```rust
 pub fn language_for_name_or_extension(&self, name: &str) -> Option<Arc<Language>> {
     if let Some(language) = self.find_language(name) {
@@ -259,45 +259,19 @@ pub fn language_for_name_or_extension(&self, name: &str) -> Option<Arc<Language>
 }
 ```
 
-#### Secondary Approach: Eager Loading with Injectable Flag
+#### Optional Enhancement: Injectable Flag
 
-**Files to modify:**
+If the Zed team prefers explicit control, an `injectable = true` flag could be added to `extension.toml`:
 
-**1. `crates/extension/src/extension_manifest.rs`**
-
-Add to grammar config structure:
 ```toml
-# extension.toml
 [grammars.pandoc_markdown_inline]
 repository = "https://github.com/ck37/tree-sitter-pandoc-markdown"
 commit = "..."
 path = "inline"
-injectable = true  # NEW: Mark as available for injection
+injectable = true  # Pre-load for injection use
 ```
 
-**2. `crates/language/src/language_registry.rs`**
-
-Modify registration:
-```rust
-pub fn register_language(&mut self, language: Arc<Language>) {
-    self.available_languages.push(language.clone());
-
-    // NEW: Pre-load if injectable
-    if language.config.injectable {
-        self.load_grammar_async(language);
-    }
-}
-```
-
-#### Approach Comparison
-
-| Approach | Pros | Cons | Complexity |
-|----------|------|------|------------|
-| Fix injection resolution | Works for all cases, no manifest changes needed | May need async handling | Medium |
-| Eager loading with flag | Simple, explicit control | Requires manifest changes, uses more memory | Low |
-| Hybrid (both) | Best of both worlds | More code changes | Medium-High |
-
-**Recommended**: Start with Primary Approach (fix injection resolution), add injectable flag as optimization if needed.
+This would allow eager loading during registration, but the core fix above should work without requiring manifest changes.
 
 ## Benefits of Contributing Fix
 
@@ -334,29 +308,31 @@ Note: Timeline assumes Zed team confirms this is fixable and not an intentional 
 - **Issue**: Lookup finds extension languages but doesn't ensure grammar is loaded
 - **Fix**: Add grammar loading check in lookup path, or new `load_grammar_for_injection()` method
 
-### Secondary Files (Optional Enhancement)
+### Related Files (Optional Enhancement)
+
+If Zed team prefers explicit injectable flag:
 
 **`crates/extension/src/extension_manifest.rs`**
 - Parses `extension.toml` grammar declarations
-- **Enhancement**: Add support for `injectable = true` flag
+- Could add support for `injectable = true` flag
 
 **`crates/language/src/language.rs`**
 - Language structure and configuration
-- **Enhancement**: Add injectable flag to language config
+- Could add injectable field to language config
 
 ### Reference Files (Examples)
 
 ```
 zed-industries/zed/
 ├── crates/language/src/
-│   ├── syntax_map.rs               - PRIMARY TARGET
-│   ├── language_registry.rs        - PRIMARY TARGET
+│   ├── syntax_map.rs               - PRIMARY (injection resolution)
+│   ├── language_registry.rs        - PRIMARY (grammar loading)
 │   ├── language.rs                 - Structure definition
 │   └── markdown-inline/            - Example built-in hidden language
 │       ├── config.toml             - Has `hidden = true`
 │       └── highlights.scm
 ├── crates/extension/src/
-│   └── extension_manifest.rs       - OPTIONAL ENHANCEMENT
+│   └── extension_manifest.rs       - (optional: injectable flag)
 └── extensions/                      - Example extensions
     ├── vue/languages/vue/injections.scm      - Injects built-in JS/CSS
     └── svelte/languages/svelte/injections.scm - Injects built-in JS/CSS
