@@ -4,6 +4,8 @@
 
 **Quarto does not provide a built-in language server.** Running `quarto language-server` returns an error because this command doesn't exist in the Quarto CLI.
 
+> **Note**: This extension focuses on providing excellent syntax highlighting using [`tree-sitter-pandoc-markdown`](https://github.com/ck37/tree-sitter-pandoc-markdown). Phase 1 of the grammar is now complete, supporting most Pandoc markdown features that Quarto relies on.
+
 ## What is a Language Server?
 
 A Language Server Protocol (LSP) implementation provides IDE features:
@@ -106,14 +108,18 @@ Quarto LSP Server
 
 ## What This Extension Provides
 
-✅ **Syntax Highlighting** via `tree-sitter-pandoc-markdown`:
-- Headings, emphasis, bold, links
-- Code blocks with language injection
-- Pandoc-specific syntax (fenced divs, citations, cross-references, shortcodes)
-- YAML front matter
-- Attribute lists, raw blocks
+✅ **Syntax Highlighting** via `tree-sitter-pandoc-markdown` (Phase 1 complete):
+- **Core Markdown**: Headings, links, code blocks, lists, YAML front matter
+- **Math**: Inline (`$...$`) and display (`$$...$$`) with LaTeX syntax
+- **Tables**: Pipe tables with alignment markers
+- **Footnotes**: References (`[^1]`) and inline footnotes (`^[text]`)
+- **Pandoc extensions**: Fenced divs, citations, cross-references, shortcodes, attribute lists, raw blocks
+- **Language injections**: Python, R, Julia, SQL chunks with syntax highlighting
+- **Chunk options**: `#| echo: false` style options
 
-✅ **Document Outline** for navigation
+⚠️ **Known Limitation**: Bold/italic highlighting currently not working due to Zed's grammar injection limitation. See [`bold-highlighting-investigation/`](bold-highlighting-investigation/) for details.
+
+✅ **Document Outline** for navigation (headings structure)
 
 ## Future Possibilities
 
@@ -133,17 +139,33 @@ If there's strong demand, the Zed community could collaborate on a standalone im
 
 ## Recommendations
 
-**For Now:**
-1. Use this extension for syntax highlighting
-2. Use external tools for language-specific features:
-   - Python chunks: Open in Python-aware editor for LSP
-   - R chunks: Use RStudio or R-aware editor
-   - YAML validation: Use YAML linter
+**Using This Extension:**
+1. ✅ **Excellent syntax highlighting** for Quarto/Pandoc markdown (Phase 1 complete)
+2. ✅ **Language injections** provide syntax highlighting within code chunks
+3. ⚠️ **No code intelligence** - For LSP features within code chunks, use:
+   - **Python chunks**: Open in Python-aware editor with Pyright/pylance
+   - **R chunks**: Use RStudio or Positron for R LSP features
+   - **Julia chunks**: Use Julia-aware editor with Julia LSP
+4. 💡 **Workflow tip**: Edit Quarto structure in Zed, edit complex code chunks in language-specific editor
+
+**What Works Well:**
+- Document structure and navigation
+- Markdown formatting and organization
+- Quarto-specific syntax (callouts, divs, citations, cross-references)
+- Math and table editing
+- Quick edits to code chunks (with syntax highlighting)
+
+**What Requires External Tools:**
+- Code completion within chunks
+- Type checking and diagnostics for embedded languages
+- Go-to-definition for functions used in chunks
+- Refactoring tools for code within chunks
+- Document rendering and preview (use `quarto preview` or VSCode)
 
 **Contributing:**
-If you're interested in LSP support:
-1. Star/watch the [Quarto CLI issue #239](https://github.com/quarto-dev/quarto-cli/issues/239)
-2. Consider contributing to otter.nvim's standalone efforts
+If you're interested in LSP support for Quarto:
+1. Star/watch [Quarto CLI Issue #239: Language Server](https://github.com/quarto-dev/quarto-cli/issues/239)
+2. Consider contributing to [otter.nvim](https://github.com/jmbuhr/otter.nvim)'s standalone efforts
 3. Reach out if you want to collaborate on a Zed-specific solution
 
 ## Related Resources
