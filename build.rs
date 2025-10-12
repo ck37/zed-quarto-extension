@@ -2,7 +2,7 @@ use std::path::PathBuf;
 use std::process::Command;
 
 const REPO_URL: &str = "https://github.com/ck37/tree-sitter-pandoc-markdown";
-const COMMIT: &str = "f9d68613baef187daffcfbd4af09b5eab1005d38";
+const COMMIT: &str = "581a8279c7b689108ccca38053d2985518f17156";
 
 fn main() {
     // Only compile the grammar for native tests, not for WASM
@@ -118,21 +118,28 @@ fn main() {
         panic!("Could not update pandoc-markdown grammar submodules after configuration");
     }
 
-    // Compile the pandoc-markdown grammar if source exists
-    if src_dir.join("parser.c").exists() {
-        eprintln!("Compiling pandoc-markdown grammar...");
+    // Compile both grammars together into one library for easier linking
+    let inline_src_dir = pandoc_dir.join("tree-sitter-pandoc-markdown-inline").join("src");
 
-        // Compile the grammar - cc::Build automatically handles linking
-        // Suppress warnings for unused functions/parameters in upstream grammar code
+    if src_dir.join("parser.c").exists() && inline_src_dir.join("parser.c").exists() {
+        eprintln!("Compiling pandoc-markdown grammars (block + inline)...");
+
+        // Compile both grammars into one library
+        // Suppress warnings for unused functions/variables in upstream grammar code
         cc::Build::new()
             .include(&src_dir)
+            .include(&inline_src_dir)
             .file(src_dir.join("parser.c"))
             .file(src_dir.join("scanner.c"))
+            .file(inline_src_dir.join("parser.c"))
+            .file(inline_src_dir.join("scanner.c"))
             .flag_if_supported("-Wno-unused-parameter")
             .flag_if_supported("-Wno-unused-function")
+            .flag_if_supported("-Wno-unused-const-variable")
             .compile("tree-sitter-pandoc-markdown");
 
         println!("cargo:rerun-if-changed={}", src_dir.display());
+        println!("cargo:rerun-if-changed={}", inline_src_dir.display());
     } else {
         panic!("Pandoc-markdown grammar source not found. Run: git clone --depth=1 --branch=feat/phase-1-pandoc-grammar https://github.com/ck37/tree-sitter-pandoc-markdown grammars/pandoc_markdown");
     }

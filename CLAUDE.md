@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Zed editor extension that provides Quarto (`.qmd`) support with syntax highlighting via tree-sitter-pandoc-markdown and language server integration via the Quarto CLI's built-in language server.
+This is a Zed editor extension that provides Quarto (`.qmd`) support with syntax highlighting via tree-sitter-pandoc-markdown. Note: Quarto does not have a built-in language server (see `LSP_STATUS.md` for details).
 
 **Key Architecture Decision:** Quarto documents are based on Pandoc Markdown, not standard Markdown. This extension uses `tree-sitter-pandoc-markdown` (feat/phase-1-pandoc-grammar branch) to provide Pandoc-aware syntax highlighting. Zed requires tree-sitter grammars; it cannot use TextMate grammars like VSCode does.
 
@@ -12,15 +12,33 @@ This is a Zed editor extension that provides Quarto (`.qmd`) support with syntax
 
 ### Build and Test
 ```bash
-# Run all tests (includes highlight coverage and LSP smoke tests)
+# Run all tests (includes highlight coverage)
 cargo test --workspace --all-features
 
 # Build the extension (produces extension.wasm)
 cargo build --release
 
 # Install as dev extension in Zed
-# In Zed: Cmd+Shift+P -> "zed: install dev extension" -> select this directory
+./install-dev.sh
+# Then in Zed: Cmd+Shift+P -> "zed: install dev extension" -> select this directory
 ```
+
+### Installing Dev Extension in Zed
+
+**IMPORTANT**: Zed's grammar compiler conflicts with local development artifacts. Always clean before installing:
+
+```bash
+# Use the install script (recommended)
+./install-dev.sh
+
+# Or manually
+cargo clean
+rm -rf grammars/
+cargo build --release
+# Then install in Zed
+```
+
+**Why this is needed**: The `grammars/` directory is created during local development (`cargo build`, `cargo test`) for native compilation. Zed compiles grammars independently from `extension.toml` and gets confused by these artifacts. The directory is in `.gitignore` and not committed.
 
 ### Grammar Updates
 The pandoc-markdown grammar is fetched and compiled by `build.rs` at build time. To update to a new commit:
@@ -40,10 +58,9 @@ When creating commits for this repository:
 ### Extension Structure
 
 **Extension Entry Point** (`src/lib.rs`):
-- Implements `zed::Extension` trait
-- `language_server_command()` resolves `quarto` CLI path and returns `quarto language-server` command
-- Uses `which` crate on native platforms to locate Quarto CLI in PATH
-- Falls back to simple "quarto" string on WASM
+- Implements `zed::Extension` trait (minimal implementation)
+- No language server support (Quarto doesn't provide one)
+- Extension provides only syntax highlighting via grammar
 
 **Build System** (`build.rs`):
 - Clones `tree-sitter-pandoc-markdown` from GitHub at specific commit
@@ -82,14 +99,15 @@ The extension uses tree-sitter queries to map parsed nodes to semantic highlight
 - `@string.special.symbol` - Citations and cross-references
 - `@function.macro` - Shortcodes like `{{< include file.qmd >}}`
 
-### Language Server Integration
+### Language Server Support
 
-The Quarto CLI provides a built-in language server (`quarto language-server`). The extension:
-1. Locates `quarto` executable via PATH
-2. Spawns `quarto language-server` as subprocess
-3. Zed handles LSP communication (completions, diagnostics, hover, etc.)
+**This extension does not provide language server support.** Quarto does not have a built-in language server (`quarto language-server` command does not exist).
 
-No custom initialization options are passed to the language server.
+See `LSP_STATUS.md` for:
+- Why Quarto doesn't have an LSP
+- Existing LSP solutions (VS Code extension, otter.nvim)
+- What it would take to build one
+- Future possibilities
 
 ## Testing
 
@@ -100,10 +118,11 @@ No custom initialization options are passed to the language server.
 - Validates that highlighting produces output without errors
 - Ensures grammar nodes are covered by highlight queries
 
-**LSP Smoke Test** (`tests/lsp_smoke.rs`):
-- Verifies Quarto CLI is discoverable on PATH
-- Runs `quarto --version` to confirm installation
+**Quarto CLI Test** (`tests/lsp_smoke.rs`):
+- Verifies Quarto CLI is available (optional)
+- Runs `quarto --version` if installed
 - Skips gracefully if Quarto not installed
+- Note: Despite the filename, this doesn't test LSP (Quarto has no LSP)
 
 **Manifest Test** (`tests/manifest.rs`):
 - Validates `extension.toml` structure
