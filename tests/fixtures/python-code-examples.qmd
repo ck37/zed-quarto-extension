@@ -1,0 +1,178 @@
+---
+title: "Python Code Examples"
+format: html
+---
+
+# Python Code Blocks
+
+## Basic Python code
+
+```{python}
+# Simple calculation
+x = list(range(1, 11))
+sum(x) / len(x)
+```
+
+## Python with imports
+
+```{python}
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Create data
+data = np.random.randn(100)
+mean_val = np.mean(data)
+std_val = np.std(data)
+
+print(f"Mean: {mean_val:.2f}, Std: {std_val:.2f}")
+```
+
+## Python with chunk options
+
+```{python echo=TRUE, warning=FALSE}
+# Data frame manipulation
+df = pd.DataFrame({
+    'x': np.random.randn(100),
+    'y': np.random.randn(100),
+    'category': np.random.choice(['A', 'B', 'C'], 100)
+})
+
+# Group and summarize
+summary = df.groupby('category').agg({
+    'x': ['mean', 'std'],
+    'y': ['mean', 'std']
+})
+
+print(summary)
+```
+
+## Python with label and options
+
+```{python my-plot, fig-width=8, fig-height=6}
+# Create visualization
+plt.figure(figsize=(10, 6))
+plt.scatter(df['x'], df['y'], c=df['category'].astype('category').cat.codes, alpha=0.6)
+plt.xlabel('X values')
+plt.ylabel('Y values')
+plt.title('Scatter Plot')
+plt.colorbar(label='Category')
+plt.show()
+```
+
+## Inline Python code
+
+The mean is `{python} np.mean([1, 2, 3, 4, 5])` and the sum is `{python} sum(range(1, 6))`.
+
+## Python with list comprehension
+
+```{python}
+# List comprehension
+squares = [x**2 for x in range(10)]
+evens = [x for x in range(20) if x % 2 == 0]
+
+# Dictionary comprehension
+squared_dict = {x: x**2 for x in range(5)}
+
+# Generator expression
+sum_of_squares = sum(x**2 for x in range(100))
+
+print(f"Squares: {squares}")
+print(f"Evens: {evens}")
+print(f"Sum of squares: {sum_of_squares}")
+```
+
+## Python with functions and classes
+
+```{python}
+# Function definition
+def calculate_statistics(data):
+    """Calculate basic statistics for a dataset."""
+    return {
+        'mean': np.mean(data),
+        'median': np.median(data),
+        'std': np.std(data),
+        'min': np.min(data),
+        'max': np.max(data)
+    }
+
+# Class definition
+class DataProcessor:
+    def __init__(self, data):
+        self.data = np.array(data)
+
+    def normalize(self):
+        return (self.data - np.mean(self.data)) / np.std(self.data)
+
+    def get_stats(self):
+        return calculate_statistics(self.data)
+
+# Use the class
+processor = DataProcessor([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+normalized = processor.normalize()
+stats = processor.get_stats()
+
+print(f"Normalized data: {normalized}")
+print(f"Statistics: {stats}")
+```
+
+## Python with control flow
+
+```{python}
+# If-else
+x = 10
+if x > 5:
+    print("x is greater than 5")
+elif x == 5:
+    print("x equals 5")
+else:
+    print("x is less than 5")
+
+# For loop
+for i in range(5):
+    print(f"Iteration {i}")
+
+# While loop
+counter = 0
+while counter < 3:
+    print(f"Counter: {counter}")
+    counter += 1
+
+# Try-except
+try:
+    result = 10 / 2
+    print(f"Result: {result}")
+except ZeroDivisionError:
+    print("Cannot divide by zero")
+finally:
+    print("Cleanup")
+```
+
+## Python with string formatting
+
+```{python}
+# Various string formatting methods
+name = "Quarto"
+version = 1.4
+
+# f-strings
+msg1 = f"Welcome to {name} {version}"
+
+# format method
+msg2 = "Welcome to {} {}".format(name, version)
+
+# Old style
+msg3 = "Welcome to %s %.1f" % (name, version)
+
+# Multi-line strings
+long_text = """
+This is a multi-line
+string in Python.
+It can span multiple lines.
+"""
+
+print(msg1)
+print(msg2)
+print(msg3)
+print(long_text.strip())
+```

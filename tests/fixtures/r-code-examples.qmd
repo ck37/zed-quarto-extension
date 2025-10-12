@@ -1,0 +1,89 @@
+---
+title: "R Code Examples"
+format: html
+---
+
+# R Code Blocks
+
+## Basic R code
+
+```{r}
+# Simple calculation
+x <- 1:10
+mean(x)
+```
+
+## R code with options
+
+```{r echo=TRUE, warning=FALSE}
+# Data frame manipulation
+library(ggplot2)
+df <- data.frame(
+  x = rnorm(100),
+  y = rnorm(100)
+)
+
+# Create a plot
+ggplot(df, aes(x = x, y = y)) +
+  geom_point() +
+  theme_minimal()
+```
+
+## R code with label and options
+
+```{r my-analysis, fig.width=8, fig.height=6}
+# Statistical analysis
+model <- lm(mpg ~ wt + hp, data = mtcars)
+summary(model)
+
+# Predict values
+predict(model, newdata = data.frame(wt = 3, hp = 150))
+```
+
+## Inline R code
+
+The mean is `r mean(1:10)` and the sum is `r sum(1:5)`.
+
+## R with dplyr pipeline
+
+```{r}
+library(dplyr)
+
+mtcars %>%
+  filter(mpg > 20) %>%
+  select(mpg, cyl, wt) %>%
+  arrange(desc(mpg)) %>%
+  head(10)
+```
+
+## R with string operations
+
+```{r}
+# String manipulation
+text <- "Hello, Quarto!"
+toupper(text)
+gsub("Quarto", "World", text)
+```
+
+## R with control structures
+
+```{r}
+# For loop
+for (i in 1:5) {
+  print(paste("Iteration", i))
+}
+
+# If-else
+if (TRUE) {
+  message("Condition is true")
+} else {
+  message("Condition is false")
+}
+
+# Function definition
+my_function <- function(x, y = 2) {
+  x * y + sqrt(x)
+}
+
+my_function(4)
+```
