@@ -1,6 +1,9 @@
-; Basic heading outline support
-(atx_heading) @item
-(setext_heading) @item
+; Document outline for Quarto files
+; Zed requires a @name capture for each @item
 
-; Code blocks in outline
-(fenced_code_block) @item
+; Headings in outline
+(atx_heading
+  (inline) @name) @item
+
+(setext_heading
+  (inline) @name) @item

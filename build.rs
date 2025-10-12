@@ -71,16 +71,15 @@ fn main() {
     // Patch Cargo.toml to add edition if missing
     let cargo_toml_path = pandoc_dir.join("Cargo.toml");
     if cargo_toml_path.exists() {
-        let cargo_toml = std::fs::read_to_string(&cargo_toml_path)
-            .expect("failed to read grammar Cargo.toml");
+        let cargo_toml =
+            std::fs::read_to_string(&cargo_toml_path).expect("failed to read grammar Cargo.toml");
         if !cargo_toml.contains("edition = ") {
             // Insert edition after version line
             let patched = cargo_toml.replace(
                 "version = \"0.1.0\"\nauthors",
                 "version = \"0.1.0\"\nedition = \"2021\"\nauthors",
             );
-            std::fs::write(&cargo_toml_path, patched)
-                .expect("failed to patch grammar Cargo.toml");
+            std::fs::write(&cargo_toml_path, patched).expect("failed to patch grammar Cargo.toml");
             eprintln!("Patched pandoc-markdown Cargo.toml to add edition = \"2021\"");
         }
     }

@@ -14,8 +14,3 @@ path = "tree-sitter-pandoc-markdown"
 [language_servers.quarto]
 name = "Quarto Language Server"
 languages = ["Quarto"]
-
-[[capabilities]]
-kind = "process:exec"
-command = "quarto"
-args = ["language-server"]

@@ -13,9 +13,6 @@ name = "quarto_zed"
 serde_json = "1"
 zed_extension_api = "0.7"
 
-[target.'cfg(not(target_os = "wasi"))'.dependencies]
-which = "6"
-
 [build-dependencies]
 cc = "1"
 
