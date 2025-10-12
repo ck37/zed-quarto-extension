@@ -2,7 +2,7 @@ use std::path::PathBuf;
 use std::process::Command;
 
 const REPO_URL: &str = "https://github.com/ck37/tree-sitter-pandoc-markdown";
-const COMMIT: &str = "7c6e11edad9852da4dd661e000f340ded91f2705";
+const COMMIT: &str = "ad77572f97338eebd31cb711f9bae5bf1894880c";
 
 fn main() {
     // Only compile the grammar for native tests, not for WASM
@@ -42,6 +42,12 @@ fn main() {
         panic!("Could not fetch pandoc-markdown grammar updates");
     }
 
+    // Discard any local changes before checkout
+    let _clean_status = Command::new("git")
+        .current_dir(&pandoc_dir)
+        .args(["reset", "--hard"])
+        .status();
+
     let checkout_status = Command::new("git")
         .current_dir(&pandoc_dir)
         .args(["checkout", COMMIT])
@@ -60,6 +66,23 @@ fn main() {
 
     if !reset_status.success() {
         panic!("Could not reset pandoc-markdown grammar to commit {COMMIT}");
+    }
+
+    // Patch Cargo.toml to add edition if missing
+    let cargo_toml_path = pandoc_dir.join("Cargo.toml");
+    if cargo_toml_path.exists() {
+        let cargo_toml = std::fs::read_to_string(&cargo_toml_path)
+            .expect("failed to read grammar Cargo.toml");
+        if !cargo_toml.contains("edition = ") {
+            // Insert edition after version line
+            let patched = cargo_toml.replace(
+                "version = \"0.1.0\"\nauthors",
+                "version = \"0.1.0\"\nedition = \"2021\"\nauthors",
+            );
+            std::fs::write(&cargo_toml_path, patched)
+                .expect("failed to patch grammar Cargo.toml");
+            eprintln!("Patched pandoc-markdown Cargo.toml to add edition = \"2021\"");
+        }
     }
 
     let sync_status = Command::new("git")
