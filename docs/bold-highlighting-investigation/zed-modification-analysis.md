@@ -1,168 +1,14 @@
-# Modifying Zed to Support Custom Grammar Injection
+# Zed Custom Grammar Injection Analysis
 
-## Proposal
-Contribute a fix to Zed itself to support extension-to-extension grammar injection.
+Analysis of why extension-to-extension grammar injection doesn't work in Zed, and proposal for contributing a fix.
 
-## Current Limitation
+## The Problem
 
 **What works**: Extensions can inject built-in languages
 - Example: `vue` → `javascript`, `css`, `html`
 
-**What doesn't work**: Extensions can inject custom grammars
+**What doesn't work**: Extensions cannot inject custom grammars
 - Example: `pandoc_markdown` → `pandoc_markdown_inline`
-
-**Root cause**: Zed likely only resolves grammar names from its built-in language registry, not from extension-defined grammars.
-
----
-
-## Investigation Findings (2025-10-12)
-
-### 1. Injection Resolution Code
-
-**✅ FOUND**: `crates/language/src/language_registry.rs`
-
-**Key findings**:
-- `LanguageRegistry` has `get_or_load_grammar()` for loading grammars
-- Supports native and WASM grammar loading
-- Handles grammar loading states and caching
-- **However**: No specific logic found for resolving injection.language strings to extension grammars
-
-**Files examined**:
-```
-zed-industries/zed/
-├── crates/language/src/
-│   ├── language.rs          - Language structure and queries
-│   ├── language_registry.rs  - Grammar loading and registration
-│   └── markdown-inline/      - Built-in hidden language for injection
-│       └── config.toml       - Has `hidden = true`
-```
-
-### 2. Understand Grammar Registry
-
-**Current hypothesis**:
-```rust
-// Pseudocode - likely current behavior
-fn resolve_injection_language(name: &str) -> Option<Grammar> {
-    // Only checks built-in languages
-    BUILT_IN_LANGUAGES.get(name)
-}
-```
-
-**Needed behavior**:
-```rust
-// Pseudocode - desired behavior
-fn resolve_injection_language(name: &str) -> Option<Grammar> {
-    // First check built-in languages
-    if let Some(grammar) = BUILT_IN_LANGUAGES.get(name) {
-        return Some(grammar);
-    }
-
-    // Then check extension-defined grammars
-    EXTENSION_GRAMMARS.get(name)
-}
-```
-
-### 2. markdown-inline Mystery Solved
-
-**✅ CONFIRMED**: `markdown-inline` IS a built-in language in Zed
-
-**Key findings**:
-- Located at `crates/languages/src/markdown-inline/`
-- Configuration: `config.toml` with `hidden = true`
-- It's a separate built-in language, not loaded from extensions
-- This explains why markdown injection works but our extension injection doesn't
-
-**Evidence**:
-```toml
-# crates/languages/src/markdown-inline/config.toml
-name = "Markdown-Inline"
-grammar = "markdown-inline"
-hidden = true
-```
-
-**Implication**: When Zed resolves `injection.language = "markdown-inline"`, it finds it in the built-in language registry. Extension-defined grammars are not in this registry.
-
-### 3. Extension Grammar Loading
-
----
-
-## Research Strategy
-
-### Step 1: Search Zed Codebase
-
-```bash
-# Clone Zed repository
-git clone https://github.com/zed-industries/zed.git
-cd zed
-
-# Search for injection-related code
-rg "injection\.language" --type rust
-rg "resolve.*grammar" --type rust
-rg "language.*injection" --type rust
-
-# Search for grammar registration
-rg "register.*grammar" --type rust
-rg "GrammarRegistry" --type rust
-```
-
-### Step 2: Find Relevant Issues/PRs ✅ COMPLETED
-
-**Found issues and discussions**:
-
-1. **Issue #4612** - "Custom Treesitter language injection queries" (✅ RESOLVED)
-   - Custom injection queries ARE supported (like Helix/Neovim)
-   - Extensions can define custom `injections.scm` files
-   - Example: Nix extension uses custom injections
-
-2. **Discussion #14953** - "Writing a custom injection for specific language"
-   - Confirmed: Multiple language injections in a single extension are possible
-   - Documentation: https://zed.dev/docs/extensions/languages#code-injections
-   - Approach: Create subdirectory for each language with `injections.scm`
-
-3. **Issue #9656** - "Zed does not use standard capture nodes for injections"
-   - Zed had non-standard injection syntax
-   - Fixed in PR #22268 - added backwards compatibility
-
-4. **Extensions Issue #484** - Reports injection limitations
-   - Tree-sitter only applies injections to nodes without children
-   - Still an open limitation
-
-**Key discovery**: Extensions CAN define custom injections, BUT they only work for injecting **built-in** languages, not extension-defined grammars.
-
-### Step 3: Examine Built-in Markdown ✅ COMPLETED
-
-**How does markdown-inline work?**
-- ✅ It IS a separate built-in language in Zed's core
-- ✅ Located at `crates/languages/src/markdown-inline/`
-- ✅ Has its own `config.toml` with `hidden = true`
-- ✅ Registered as a hidden language (not shown in UI but available for injection)
-
-**Directory structure**:
-```
-crates/languages/src/
-├── markdown/
-│   ├── config.toml
-│   └── injections.scm    # Contains: ((inline) @injection.content
-│                         #           (#set! injection.language "markdown-inline"))
-├── markdown-inline/
-│   └── config.toml       # Contains: hidden = true
-└── [other languages...]
-```
-
-**Key insight**: This is the pattern we need to replicate for extension grammars. The parent language injects to a hidden child language for inline content.
-
----
-
-## Research Summary
-
-### What We Confirmed
-
-1. **Built-in markdown-inline exists**: Zed has a hidden `markdown-inline` language specifically for injection
-2. **Extension injections work**: Extensions CAN define custom `injections.scm` files
-3. **The limitation**: Extensions can only inject **built-in** languages, not other extension-defined grammars
-4. **Grammar registry**: Extension grammars are loaded but not added to the injection resolution registry
-
-### The Core Problem
 
 When Zed processes:
 ```scheme
@@ -170,191 +16,28 @@ When Zed processes:
  (#set! injection.language "pandoc_markdown_inline"))
 ```
 
-It looks for `"pandoc_markdown_inline"` in the built-in language registry. Extension grammars are not checked.
+The injection fails because `"pandoc_markdown_inline"` is extension-defined, not built-in.
 
-### Why This Matters
+## Research Findings (2025-10-12)
 
-- ✅ `"markdown-inline"` works → it's built-in
-- ✅ `"javascript"` works → it's built-in
-- ✅ `"python"` works → it's built-in
-- ❌ `"pandoc_markdown_inline"` fails → it's extension-defined
+### What We Discovered
 
-### The Fix Needed
+**1. Built-in markdown-inline exists**
+- Located at `crates/languages/src/markdown-inline/`
+- Has `hidden = true` in config.toml
+- Explains why `markdown-inline` injection works
 
-Extend Zed's injection resolution to check extension-loaded grammars in addition to built-in languages.
+**2. Extension injection infrastructure exists**
+- Extensions CAN define custom `injections.scm` files
+- Issue #4612 confirmed: Custom injections supported
+- BUT: Only works for injecting built-in languages
 
----
+**3. Extension languages ARE in the registry**
+- Extension languages added to same `available_languages` list as built-ins
+- Via `register_language()` method in `crates/language/src/language_registry.rs`
+- No separate registry for extensions
 
-## Potential Implementation Approaches
-
-### Approach A: Extend Language Registry
-
-**Location**: Wherever Zed maintains its language/grammar registry
-
-**Change**: Add extension grammars to the lookup pool
-
-**Pseudocode**:
-```rust
-struct LanguageRegistry {
-    built_in: HashMap<String, Grammar>,
-    extensions: HashMap<String, Grammar>,  // Add this
-}
-
-impl LanguageRegistry {
-    fn resolve_injection(&self, name: &str) -> Option<&Grammar> {
-        self.built_in.get(name)
-            .or_else(|| self.extensions.get(name))  // Add this
-    }
-}
-```
-
-**Pros**:
-- Clean separation of built-in vs extension grammars
-- Doesn't break existing code
-- Easy to understand
-
-**Cons**:
-- Need to find where registry is defined
-- May have multiple registries to update
-
-### Approach B: Lazy Grammar Loading
-
-**Concept**: When an injection language isn't found, check if an extension provides it
-
-**Pseudocode**:
-```rust
-fn resolve_injection(&self, name: &str) -> Option<Grammar> {
-    if let Some(grammar) = self.get_loaded_grammar(name) {
-        return Some(grammar);
-    }
-
-    // Try loading from extensions
-    if let Some(extension) = self.find_extension_with_grammar(name) {
-        return self.load_grammar_from_extension(extension, name);
-    }
-
-    None
-}
-```
-
-**Pros**:
-- Doesn't require pre-loading all extension grammars
-- More efficient memory usage
-
-**Cons**:
-- More complex
-- Need to handle async grammar loading
-
-### Approach C: Extension Manifest Declaration
-
-**Concept**: Extensions declare which grammars can be injected
-
-**In extension.toml**:
-```toml
-[grammars.pandoc_markdown_inline]
-repository = "..."
-commit = "..."
-path = "..."
-injectable = true  # New field
-```
-
-**Pros**:
-- Explicit control
-- Backward compatible (defaults to false)
-- Clear documentation
-
-**Cons**:
-- Requires schema change
-- All extensions would need to opt-in
-
----
-
-## Development Plan
-
-### Phase 1: Research (1-2 days)
-1. Clone Zed repository
-2. Find injection resolution code
-3. Understand grammar registry architecture
-4. Identify what needs to change
-5. Check if there are existing related issues/PRs
-
-### Phase 2: Design (1 day)
-1. Choose best approach (A, B, or C)
-2. Write detailed technical design
-3. Identify all files that need modification
-4. Consider edge cases and backward compatibility
-
-### Phase 3: Implementation (2-3 days)
-1. Make code changes
-2. Add tests
-3. Update documentation
-4. Test with our extension
-
-### Phase 4: Contribution (1-2 weeks)
-1. Open GitHub issue discussing the proposal
-2. Get feedback from Zed team
-3. Create PR with implementation
-4. Address review feedback
-5. Get merged
-
-**Total estimated time**: 2-4 weeks (depending on complexity and review process)
-
----
-
-## Risks & Considerations
-
-### Technical Risks
-
-**1. Architecture Mismatch**
-- Our assumptions about how Zed works might be wrong
-- The fix might be much more complex than anticipated
-- May require changes to WASM interface
-
-**2. Performance Concerns**
-- Loading extension grammars might impact performance
-- Need to ensure efficient lookup
-
-**3. Security Considerations**
-- Extension grammars running in WASM sandbox
-- Need to maintain security boundaries
-
-### Process Risks
-
-**1. Zed Team May Reject**
-- They might have reasons for current design
-- May prefer different approach
-- Could be considered out of scope
-
-**2. Long Review Process**
-- Zed is a popular project
-- PRs can take weeks to review
-- May need multiple iterations
-
-**3. Breaking Changes**
-- Fix might require breaking changes
-- Need careful backward compatibility
-
----
-
-## Alternative: Simpler Fix ✅ RESEARCHED
-
-### Investigation: Is it just a bug?
-
-**Original hypothesis**: Extension grammars ARE in registry, but injection resolution has a bug
-
-### Findings (2025-10-12)
-
-**✅ Injection resolution code found**:
-- Location: `crates/language/src/syntax_map.rs`
-- Method: `get_injections()` calls `language_registry.language_for_name_or_extension()`
-- Lookup: Searches through `available_languages` list
-
-**✅ Extension language registration confirmed**:
-- Extension languages ARE added to the same `available_languages` list
-- Via `register_language()` method in `language_registry.rs`
-- Same registry used for both built-in and extension languages
-
-**✅ The lookup SHOULD work**:
+**4. The lookup code EXISTS**
 ```rust
 // From language_registry.rs - language_for_name_or_extension()
 state
@@ -363,186 +46,116 @@ state
     .rev()
     .fold(None, |best_language_match, language| { ... })
 ```
-- Iterates through ALL available languages (both built-in and extensions)
+- Iterates through ALL available languages (built-in + extensions)
 - Uses name and extension matching
-- Should find extension-loaded languages
+- SHOULD find extension-loaded languages
 
-### So why doesn't it work?
+## Root Cause: NOT a Missing Feature
 
-**Possible explanations**:
+**Key insight**: The infrastructure for extension-to-extension injection already exists. This is a timing/visibility issue, not missing functionality.
 
-1. **Timing Issue** ⚠️ **Most Likely**
-   - Extension grammars might not be loaded when injection resolution runs
-   - Languages registered but not yet available
-   - Async loading race condition
+### Most Likely Cause: Timing/Loading Order
 
-2. **Hidden Language Check**
-   - Extension languages might have `hidden = true`
-   - Injection resolution might skip hidden languages from extensions
-   - Built-in hidden languages (like `markdown-inline`) work differently
+**Injection resolution location**: `crates/language/src/syntax_map.rs`
+- Method: `get_injections()` calls `language_registry.language_for_name_or_extension()`
+- Searches through all available languages
 
-3. **Name Mismatch**
-   - Extension might register grammar under different name
-   - Example: `"pandoc_markdown_inline"` vs `"Pandoc Markdown Inline"`
-   - Case sensitivity or formatting differences
+**The problem**: Extension grammars likely aren't loaded when injection resolution runs
+- Languages registered but not yet available
+- Async loading race condition
+- `loaded: false` flag preventing access
 
-4. **Lazy Loading**
-   - Languages registered but grammars not loaded
-   - `loaded: false` flag preventing injection
-   - Need to trigger grammar load before injection
+### Other Possible Causes
 
-### Conclusion: NOT A SIMPLE BUG
+1. **Hidden language handling**: Extension languages with `hidden = true` might be treated differently than built-in hidden languages
+2. **Name mismatch**: Case sensitivity or formatting differences (e.g., `"pandoc_markdown_inline"` vs `"Pandoc Markdown Inline"`)
+3. **Lazy loading**: Grammars need to be triggered to load before injection
 
-This is likely an **architectural limitation** around:
-- Extension loading timing
-- Hidden language handling for extensions
-- Lazy grammar loading
+## Relevant Zed Issues
 
-**Fix complexity**: Medium (not simple 10-50 lines)
-- Need to ensure extension grammars are loaded before injection resolution
-- Might need to modify extension loading order
-- Could require changes to async grammar loading
+- **Issue #4612** - Custom Treesitter language injection queries (resolved - confirmed working for built-ins)
+- **Discussion #14953** - Writing custom injection for specific language
+- **Issue #9656** / **PR #22268** - Added standard injection.language support with backwards compatibility
+- **Extensions Issue #484** - Reports injection limitations (still open)
 
----
+## Path Forward
 
-## Validation Strategy
+### Current Workaround (Implemented)
+- ✅ Using built-in `markdown-inline` injection
+- ✅ Provides ~70% coverage for bold/italic
+- ✅ Solves primary user complaint
 
-### Before Starting Development
+### Proposed Fix to Zed
 
-**Test in Zed codebase**:
-1. Add debug logging to injection resolution
-2. Install our extension
-3. Check logs to see what happens when it tries to resolve "pandoc_markdown_inline"
-4. Confirm it's failing to find extension grammar
+**Recommended approach for Zed issue**:
 
-**Expected findings**:
-```
-[DEBUG] Resolving injection language: "pandoc_markdown_inline"
-[DEBUG] Checked built-in languages: not found
-[DEBUG] Extension grammars: [skipped/not checked]  ← This is the bug
-[WARN] Injection failed: unknown language "pandoc_markdown_inline"
-```
+1. **Present findings**:
+   - Extension grammars ARE in the same registry as built-ins
+   - Lookup code EXISTS and should work
+   - Infrastructure is present, not a missing feature
 
----
+2. **Propose hypothesis**:
+   - Most likely a timing/loading order issue
+   - Extension grammars not yet loaded when injection resolution runs
+   - Possible hidden language handling difference
 
-## Documentation Needs
+3. **Request guidance**:
+   - Ask Zed team about extension loading order
+   - Clarify when extension grammars become available for injection
+   - Understand if there's intentional limitation
 
-### If We Contribute Fix
+4. **Offer to contribute**:
+   - Willing to implement fix with team guidance
+   - Estimated 1-2 days to identify exact cause
+   - 1-2 weeks implementation depending on root cause
 
-**1. Update Zed docs**:
-- Add example of extension-to-extension injection
-- Document that extensions can now inject custom grammars
-- Update extension development guide
+### Implementation Approaches (if confirmed fixable)
 
-**2. Update our extension**:
-- Document that it requires Zed version X.Y.Z+
-- Provide instructions for users on older versions
+**Option 1: Fix loading order**
+- Ensure extension grammars loaded before injection resolution
+- May need to modify extension initialization sequence
 
-**3. Update issue #484**:
-- Reference our PR
-- Close or update the issue
+**Option 2: Lazy grammar loading**
+- Check and load extension grammar on-demand during injection
+- Handle async loading appropriately
 
----
+**Option 3: Hidden language support**
+- Allow extensions to declare `hidden = true` languages for injection
+- Ensure they're accessible the same way built-in hidden languages are
 
-## Decision Criteria
+## Benefits of Contributing Fix
 
-### Should we pursue this?
-
-**✅ Reasons TO modify Zed**:
-1. Proper long-term solution
-2. Benefits all Zed extension developers
-3. Makes extensions more powerful
-4. Our use case is legitimate (Pandoc dual-grammar is standard)
-5. Learning opportunity - understand Zed internals
-
-**❌ Reasons NOT TO modify Zed**:
-1. Time investment (2-4 weeks)
-2. Uncertain acceptance
-3. Users need fix now, not in weeks
-4. We can work around it (Approach 1: merged highlights)
-5. May be technically complex
-
-### Hybrid Approach
-
-**Best of both worlds**:
-1. Implement **Approach 1** (merged highlights) NOW
-   - Users get working bold highlighting immediately
-   - Extension is functional
-
-2. THEN contribute Zed fix
-   - Proper solution for future
-   - Helps broader community
-   - Once merged, we can switch to dual-grammar
-
----
-
-## Next Steps
-
-### Recommended Path
-
-**Immediate** (this week):
-1. Implement Approach 1 (merged highlights)
-2. Release working version to users
-3. Document limitation in README
-
-**Short-term** (next 2 weeks):
-1. Research Zed codebase (Phase 1)
-2. Open Zed issue proposing the fix
-3. Get feedback from Zed team
-
-**If Zed team is receptive**:
-1. Implement the fix (Phase 2-3)
-2. Submit PR
-3. Once merged, update extension to use dual-grammar
-
-**If Zed team rejects**:
-1. Keep using merged highlights approach
-2. Document why dual-grammar isn't possible
-3. Consider upstream grammar modification (Approach 3)
-
----
-
-## Conclusion
-
-**Research completed** (2025-10-12): We now have a clear understanding of the problem.
-
-### What We Learned
-
-1. **Root cause confirmed**: Zed's injection resolution only checks built-in languages
-2. **Built-in pattern identified**: `markdown-inline` is a hidden built-in language
-3. **Extension support exists**: Custom `injections.scm` files work for built-in languages
-4. **The gap**: Extension-to-extension grammar injection is not supported
-
-### Path Forward
-
-**Current workaround** (implemented):
-- ✅ Using built-in `markdown-inline` injection (~70% coverage)
-- ✅ Solves primary user complaint (bold/italic highlighting)
-- ✅ Good enough for now
-
-**Long-term solution** (planned):
-1. File Zed issue with research findings
-2. Propose extending injection resolution to check extension grammars
-3. Contribute PR if Zed team is receptive
-4. Switch to full `pandoc_markdown_inline` grammar when supported
-
-**Why this matters**:
+- Enables dual-grammar architectures in extensions (like Pandoc markdown)
 - Benefits all Zed extension developers
-- Enables dual-grammar architectures in extensions
 - Makes Zed extensions more powerful
 - Aligns with tree-sitter best practices
 
-**Estimated effort**:
-- Investigation phase: 1-2 days to identify exact cause (timing vs hidden vs name mismatch)
-- Implementation: 1-2 weeks depending on root cause
-- PR review: 1-2 weeks
+## Timeline
 
-**Status**: Research complete, ready to file issue when desired
+- **Research**: ✅ Complete
+- **File Zed issue**: Ready when desired
+- **Investigation**: 1-2 days (identify exact root cause)
+- **Implementation**: 1-2 weeks (depending on cause)
+- **PR review**: 1-2 weeks
+- **Switch to full grammar**: After Zed fix released
 
-**Recommended approach for Zed issue**:
-1. Present findings: Extension grammars ARE in registry, lookup code EXISTS
-2. Propose hypothesis: Timing/loading issue most likely
-3. Request guidance: Ask Zed team about extension loading order
-4. Offer to contribute: Willing to implement fix with guidance
+## For Reference: File Locations
 
-**Key insight**: This isn't a missing feature, it's a loading order/visibility issue. The infrastructure exists, but extension-loaded grammars aren't visible to injection resolution at the right time.
+```
+zed-industries/zed/
+├── crates/language/src/
+│   ├── syntax_map.rs          - Injection resolution (get_injections)
+│   ├── language_registry.rs   - Language lookup and registration
+│   ├── language.rs             - Language structure
+│   └── markdown-inline/        - Example of built-in hidden language
+│       └── config.toml
+├── crates/extension/src/
+│   └── extension_manifest.rs  - Extension manifest loading
+└── extensions/                 - Example extensions with injections
+```
+
+## Related Documentation
+
+- [Zed Extension Languages](https://zed.dev/docs/extensions/languages#code-injections)
+- [tree-sitter-pandoc-markdown](https://github.com/ck37/tree-sitter-pandoc-markdown)
+- [alternative-approaches.md](./alternative-approaches.md) - Other approaches considered
