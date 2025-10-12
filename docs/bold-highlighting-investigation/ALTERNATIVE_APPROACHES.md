@@ -19,7 +19,7 @@ After 7 failed test attempts and extensive research, we've determined:
 4. **Issue #484** - Open bug about injection limitations
 5. **Zed's markdown** - Uses bundled `markdown-inline`, not extension-defined
 
-See `EXTENSION_RESEARCH.md` and `BOLD_HIGHLIGHTING_TEST_LOG.md` for full details.
+See `EXTENSION_RESEARCH.md` for full details.
 
 ---
 

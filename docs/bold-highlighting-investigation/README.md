@@ -1,62 +1,18 @@
 # Bold Highlighting Investigation
 
-This directory contains the complete investigation into why bold text highlighting wasn't working in the Quarto extension.
+Investigation into why bold/italic text highlighting wasn't working in Quarto `.qmd` files, and the workaround implemented.
 
 ## Summary
 
-**Problem**: Bold text (`**bold**`) and italic text (`*italic*`) were not being highlighted in `.qmd` files.
+**Problem**: Bold (`**text**`) and italic (`*text*`) weren't highlighted in `.qmd` files.
 
-**Root Cause**: The pandoc-markdown grammar uses a dual-grammar architecture (block + inline grammars). Zed extensions cannot inject custom grammars into other custom grammars - they can only inject built-in languages.
+**Root Cause**: The pandoc-markdown grammar uses dual-grammar architecture (block + inline grammars). Zed extensions cannot inject custom grammars into other custom grammars—only built-in languages.
 
-**Workaround (70% coverage)**: Inject Zed's built-in `markdown-inline` grammar. Works for basic bold/italic, but not links or mixed content.
+**Current Solution (70% coverage)**: Inject Zed's built-in `markdown-inline` grammar as workaround.
 
-**Long-term Solution**: Contribute PR to Zed to enable custom-to-custom grammar injection.
+**Long-term Solution**: Contribute PR to Zed enabling custom-to-custom grammar injection.
 
-## Investigation Documents
-
-### 1. [TEST_LOG.md](./BOLD_HIGHLIGHTING_TEST_LOG.md)
-Complete log of all 7 test attempts with configurations and results. Documents what we tried and why each approach failed.
-
-**Key findings**:
-- Test 1-7: All configurations with injection failed
-- No configuration with dual grammars produced bold highlighting
-- Issue is not about configuration but about Zed's capabilities
-
-### 2. [EXTENSION_RESEARCH.md](./EXTENSION_RESEARCH.md)
-Analysis of popular Zed extensions (Java, C#, Ruby, PHP, Vue, Svelte) to understand injection patterns.
-
-**Key findings**:
-- ✅ Extensions CAN inject built-in languages (JavaScript, Python, SQL, etc.)
-- ❌ Extensions CANNOT inject custom grammars into other custom grammars
-- All extensions only inject to built-in Zed languages
-- Issue #484: Known limitation in Zed's injection system
-
-### 3. [ALTERNATIVE_APPROACHES.md](./ALTERNATIVE_APPROACHES.md)
-5 possible solutions with pros/cons and implementation details.
-
-**Approaches**:
-1. **Merged Grammar Highlights** (Recommended) - Use single grammar, no injection
-2. **Ask Zed Team** - File issue requesting custom-to-custom injection support
-3. **Modify Upstream Grammar** - Combine both grammars into one
-4. **Wait for Zed Fix** - Monitor Issue #484
-5. **Use Built-in Markdown** - Extend Zed's markdown (not feasible)
-
-### 4. [ZED_MODIFICATION_ANALYSIS.md](./ZED_MODIFICATION_ANALYSIS.md)
-Detailed plan for contributing a fix to Zed itself to support custom grammar injection.
-
-**Includes**:
-- Technical analysis of what needs to change
-- 3 implementation approaches
-- Development timeline (2-4 weeks)
-- Hybrid approach: ship quick fix first, then contribute proper fix
-
-### 5. [DEBUG_STEPS.md](./DEBUG_STEPS.md)
-Diagnostic procedures for debugging highlighting issues.
-
-### 6. [BOLD_HIGHLIGHTING_DIAGNOSIS.md](./BOLD_HIGHLIGHTING_DIAGNOSIS.md)
-Early diagnosis document (superseded by other docs).
-
-## Key Technical Insights
+## Technical Background
 
 ### Dual Grammar Architecture
 
@@ -64,70 +20,100 @@ The pandoc-markdown grammar uses two grammars:
 - **Block grammar** (`tree-sitter-pandoc-markdown`): Parses document structure, creates `(inline)` nodes
 - **Inline grammar** (`tree-sitter-pandoc-markdown-inline`): Parses inline content like bold, italic, links
 
-### Why It Doesn't Work in Zed
+The inline grammar must be injected into `(inline)` nodes for emphasis highlighting to work.
 
-**Zed's built-in markdown**:
+### The Limitation
+
+**Zed's built-in markdown** (works):
 ```scheme
 ((inline) @injection.content
  (#set! injection.language "markdown-inline"))
 ```
-- ✅ Works because `"markdown-inline"` is bundled with Zed
+✅ Works because `"markdown-inline"` is bundled with Zed
 
-**Our extension**:
+**Our extension** (doesn't work):
 ```scheme
 ((inline) @injection.content
  (#set! injection.language "pandoc_markdown_inline"))
 ```
-- ❌ Fails because `"pandoc_markdown_inline"` is extension-defined
+❌ Fails because `"pandoc_markdown_inline"` is extension-defined
 
 ### Evidence
 
-1. **No extension found** doing custom-to-custom grammar injection
-2. **Vue/Svelte** - Only inject built-in languages (JS, CSS, HTML)
-3. **PHP** - Injects `phpdoc`, but it may be built-in or special-cased
-4. **Issue #484** - Open bug report about injection limitations
-5. **7 test attempts** - All failed despite various configurations
+Research of all major Zed extensions found:
+- ✅ Extensions CAN inject built-in languages (JavaScript, Python, SQL, CSS, HTML)
+- ❌ Extensions CANNOT inject custom grammars into other custom grammars
+- All successful injections target built-in Zed languages only
+- [Issue #484](https://github.com/zed-industries/extensions/issues/484): Open bug about injection limitations
 
-## Current Solution
+See [EXTENSION_RESEARCH.md](./EXTENSION_RESEARCH.md) for detailed analysis.
 
-**Built-in markdown-inline injection** (Approach 5 in ALTERNATIVE_APPROACHES.md):
+## Current Solution: Built-in markdown-inline Injection
 
-✅ **Implemented and working:**
-- Bold with `**` and `__` - ✅ Works
-- Italic with `*` and `_` - ✅ Works
-- Inline code - ✅ Works
-- **Coverage: 70%** of inline features
+**Implementation**: Inject Zed's built-in `markdown-inline` grammar into Pandoc's `(inline)` nodes.
 
-⚠️ **Known limitations:**
-- Links - ❌ Don't highlight
-- Mixed content - ⚠️ Partially broken
-- Pandoc extensions (strikethrough, subscript, superscript) - ❌ Don't work
+**Coverage**: ~70% of inline formatting works
 
-**This is a practical workaround** that solves the primary user complaint (no bold/italic) while we work on the proper fix.
+✅ **Works**:
+- Bold with `**` and `__`
+- Italic with `*` and `_`
+- Inline code
 
-## Planned Solution
+❌ **Doesn't work**:
+- Links
+- Mixed content (partially)
+- Pandoc extensions (strikethrough, subscript, superscript)
 
-**Contribute to Zed:** Enable custom-to-custom grammar injection
+See [BUILTIN_INJECTION_TEST.md](./BUILTIN_INJECTION_TEST.md) for detailed test results.
 
-See [ZED_MODIFICATION_ANALYSIS.md](./ZED_MODIFICATION_ANALYSIS.md) for detailed plan to:
-1. File Zed issue with our thorough research
-2. Contribute PR implementing custom injection support
-3. Switch to full Pandoc inline grammar (100% coverage) once supported
+### Why This Is Acceptable
 
-## Future Work
+1. **Significant improvement**: 0% → 70% coverage
+2. **Solves primary user complaint**: Bold and italic now work
+3. **Works for most common use cases**: Simple emphasis
+4. **Can be improved later**: Switch to full Pandoc inline grammar once Zed adds support
 
-If Zed adds support for custom-to-custom grammar injection:
-1. We can switch back to dual-grammar approach
-2. This will provide more precise parsing
-3. Better matches upstream grammar's intended architecture
+## Long-term Solution: Contribute to Zed
 
-See ZED_MODIFICATION_ANALYSIS.md for plan to contribute this fix to Zed.
+**Plan**: Contribute PR to Zed to enable custom-to-custom grammar injection.
+
+**Timeline**:
+- ✅ **Now**: Built-in injection workaround (70% coverage)
+- **1-2 months**: File Zed issue with research findings
+- **2-4 months**: Contribute PR to Zed
+- **Future**: Switch to full Pandoc inline grammar (100% coverage)
+
+See [ZED_MODIFICATION_ANALYSIS.md](./ZED_MODIFICATION_ANALYSIS.md) for detailed contribution plan.
+
+## Alternative Approaches Considered
+
+See [ALTERNATIVE_APPROACHES.md](./ALTERNATIVE_APPROACHES.md) for full analysis:
+
+1. ❌ **Merged Grammar** - Violates grammar architecture, technically infeasible
+2. ✅ **Built-in markdown-inline** - Current workaround (implemented)
+3. 📋 **Ask Zed Team** - Will file issue as part of contribution
+4. 📋 **Contribute to Zed** - Long-term proper fix (planned)
+5. ⏸️ **Wait for Zed Fix** - Being proactive by contributing ourselves
+
+## Key Findings
+
+1. **Zed limitation confirmed**: Extensions cannot inject extension-defined grammars
+2. **No workaround exists**: Built-in injection is best available option
+3. **Architecture sound**: Pandoc's dual-grammar design is correct and intentional
+4. **Solution requires Zed change**: Must extend Zed's grammar resolution to include extension grammars
 
 ## Timeline
 
-- **2025-10-11**: Initial diagnosis
-- **2025-10-12**: 7 test attempts, all failed
-- **2025-10-12**: Extensive research of all Zed extensions
+- **2025-10-11**: Initial investigation
 - **2025-10-12**: Identified root cause (Zed limitation)
-- **2025-10-12**: Documented alternative approaches
-- **Next**: Implement merged grammar approach
+- **2025-10-12**: Researched all major Zed extensions
+- **2025-10-12**: Implemented built-in injection workaround (70% coverage)
+- **Next**: File Zed issue and prepare contribution
+
+## References
+
+- [BUILTIN_INJECTION_TEST.md](./BUILTIN_INJECTION_TEST.md) - Test results for current solution
+- [ALTERNATIVE_APPROACHES.md](./ALTERNATIVE_APPROACHES.md) - All approaches considered
+- [ZED_MODIFICATION_ANALYSIS.md](./ZED_MODIFICATION_ANALYSIS.md) - Plan for contributing to Zed
+- [EXTENSION_RESEARCH.md](./EXTENSION_RESEARCH.md) - Detailed extension pattern analysis
+- [Zed Issue #484](https://github.com/zed-industries/extensions/issues/484) - Injection limitations
