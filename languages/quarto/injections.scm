@@ -4,6 +4,11 @@
 ; Language injection reference: https://zed.dev/docs/extensions/languages
 ;
 
+; Try injecting Zed's built-in markdown-inline grammar for emphasis, links, etc.
+; This should work since extensions CAN inject built-in languages.
+((inline) @injection.content
+ (#set! injection.language "markdown-inline"))
+
 (yaml_front_matter
   (yaml_front_matter_content) @injection.content
   (#set! injection.language "yaml"))

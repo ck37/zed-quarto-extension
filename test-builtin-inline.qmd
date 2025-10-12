@@ -1,0 +1,49 @@
+---
+title: "Test Built-in Markdown Inline Injection"
+---
+
+# Testing Bold and Italic with Built-in markdown-inline
+
+This document tests whether injecting Zed's built-in `markdown-inline` grammar works for emphasis.
+
+## Basic Emphasis
+
+This is **bold text** using double asterisks.
+
+This is __bold text__ using double underscores.
+
+This is *italic text* using single asterisk.
+
+This is _italic text_ using single underscore.
+
+This is ***bold and italic*** using triple asterisks.
+
+## Mixed Content
+
+Here's a sentence with **bold**, *italic*, and ***bold italic*** text all together.
+
+Links should work: [link text](https://example.com)
+
+Inline code should work: `code here`
+
+## Pandoc Extensions
+
+These might NOT work with standard markdown-inline:
+
+Strikethrough: ~~deleted text~~
+
+Subscript: H~2~O
+
+Superscript: E=mc^2^
+
+## Expected Results
+
+If the built-in injection works:
+- ✅ Bold with ** and __ should highlight
+- ✅ Italic with * and _ should highlight
+- ✅ Links should highlight
+- ✅ Inline code should highlight
+- ❌ Pandoc-specific features (strikethrough, sub/super) might not work
+
+If it fails:
+- ❌ Bold and italic won't highlight (same as before)
