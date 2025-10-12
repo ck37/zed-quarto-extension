@@ -35,7 +35,7 @@ Zed will automatically compile the extension and its grammars.
   - Status: Fix pending testing and PR to Zed. Once merged, this extension will switch to full `pandoc_markdown_inline` grammar for 100% coverage.
   - **Branch with full grammar**: [`use-pandoc-inline-grammar`](https://github.com/ck37/zed-quarto-extension/tree/use-pandoc-inline-grammar) ready for when Zed fix is released (see [BRANCH_INFO.md](https://github.com/ck37/zed-quarto-extension/blob/use-pandoc-inline-grammar/BRANCH_INFO.md))
   - Timeline: Workaround active now (70% coverage); full fix expected within weeks pending Zed PR review
-- Triple asterisks for bold+italic (`***text***`): Not supported by tree-sitter-pandoc-markdown grammar. **Workaround**: Use mixed delimiters like `**_text_**` or `*__text__*`, which are valid Pandoc/CommonMark syntax and parse correctly as nested emphasis.
+- Triple asterisks for bold+italic (`***text***`): Not supported by tree-sitter-pandoc-markdown grammar ([issue #1](https://github.com/ck37/tree-sitter-pandoc-markdown/issues/1)). **Workaround**: Use mixed delimiters like `**_text_**` or `*__text__*`, which are valid Pandoc/CommonMark syntax and parse correctly as nested emphasis.
 - Preview/render workflows are out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
 - Grammar completeness: `tree-sitter-pandoc-markdown` is a community project that extends `tree-sitter-markdown`. Some edge cases in Pandoc syntax may not be fully supported yet.
 - No official tree-sitter-quarto: Until an official Quarto grammar exists, we rely on Pandoc markdown as the closest approximation.
