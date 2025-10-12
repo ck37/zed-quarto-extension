@@ -25,14 +25,15 @@ Zed will automatically compile the extension and its grammars.
 
 ## Known Limitations
 
-- Bold/italic highlighting partially working: The pandoc-markdown grammar uses a dual-grammar architecture (separate block and inline grammars), but Zed extensions cannot inject custom grammars into other custom grammars—they can only inject built-in languages.
+- Bold/italic highlighting partially working: The pandoc-markdown grammar uses a dual-grammar architecture (separate block and inline grammars), but extension-to-extension grammar injection didn't work in Zed.
   - Current workaround: Injecting Zed's built-in `markdown-inline` grammar provides ~70% coverage:
     - ✅ Works: Bold (`**`/`__`), italic (`*`/`_`), inline code
     - ❌ Doesn't work: Links, mixed content (partially), Pandoc extensions (strikethrough, subscript, superscript)
-  - Root cause: Zed's grammar injection system only supports extension-to-builtin injection, not extension-to-extension (see [Zed Issue #484](https://github.com/zed-industries/zed/issues/484))
-  - Investigation: Complete technical analysis documented in [`docs/bold-highlighting-investigation/`](docs/bold-highlighting-investigation/)
-  - Long-term solution: Contributing PR to Zed to enable custom-to-custom grammar injection (see [zed-modification-analysis.md](docs/bold-highlighting-investigation/zed-modification-analysis.md))
-  - Timeline: Workaround active now (70% coverage); Zed contribution planned for 1-3 months
+  - Root cause (confirmed): When extension grammars load asynchronously, the LanguageRegistry version wasn't incremented, so pending injections were never resolved. Built-in grammars worked because they're immediately available.
+  - Fix implemented: One-line change to increment registry version when languages load, enabling pending injections to be resolved. See [zed-fix-implemented.md](docs/bold-highlighting-investigation/zed-fix-implemented.md)
+  - Investigation: Complete technical analysis and verification in [`docs/bold-highlighting-investigation/`](docs/bold-highlighting-investigation/)
+  - Status: Fix pending testing and PR to Zed. Once merged, this extension will switch to full `pandoc_markdown_inline` grammar for 100% coverage.
+  - Timeline: Workaround active now (70% coverage); full fix expected within weeks pending Zed PR review
 - Preview/render workflows are out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
 - Grammar completeness: `tree-sitter-pandoc-markdown` is a community project that extends `tree-sitter-markdown`. Some edge cases in Pandoc syntax may not be fully supported yet.
 - No official tree-sitter-quarto: Until an official Quarto grammar exists, we rely on Pandoc markdown as the closest approximation.
