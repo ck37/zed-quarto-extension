@@ -336,21 +336,72 @@ injectable = true  # New field
 
 ---
 
-## Alternative: Simpler Fix
+## Alternative: Simpler Fix ✅ RESEARCHED
 
-### What if it's just a bug?
+### Investigation: Is it just a bug?
 
-**Hypothesis**: Extension grammars ARE in registry, but injection resolution has a bug
+**Original hypothesis**: Extension grammars ARE in registry, but injection resolution has a bug
 
-**Simpler fix**: Just fix the lookup logic
+### Findings (2025-10-12)
 
-**Steps**:
-1. Find where injection.language is resolved
-2. Check if it's querying the right registry
-3. Fix the query to include extension grammars
-4. Test
+**✅ Injection resolution code found**:
+- Location: `crates/language/src/syntax_map.rs`
+- Method: `get_injections()` calls `language_registry.language_for_name_or_extension()`
+- Lookup: Searches through `available_languages` list
 
-**If this is the case**: Fix could be 10-50 lines of code, much simpler!
+**✅ Extension language registration confirmed**:
+- Extension languages ARE added to the same `available_languages` list
+- Via `register_language()` method in `language_registry.rs`
+- Same registry used for both built-in and extension languages
+
+**✅ The lookup SHOULD work**:
+```rust
+// From language_registry.rs - language_for_name_or_extension()
+state
+    .available_languages
+    .iter()
+    .rev()
+    .fold(None, |best_language_match, language| { ... })
+```
+- Iterates through ALL available languages (both built-in and extensions)
+- Uses name and extension matching
+- Should find extension-loaded languages
+
+### So why doesn't it work?
+
+**Possible explanations**:
+
+1. **Timing Issue** ⚠️ **Most Likely**
+   - Extension grammars might not be loaded when injection resolution runs
+   - Languages registered but not yet available
+   - Async loading race condition
+
+2. **Hidden Language Check**
+   - Extension languages might have `hidden = true`
+   - Injection resolution might skip hidden languages from extensions
+   - Built-in hidden languages (like `markdown-inline`) work differently
+
+3. **Name Mismatch**
+   - Extension might register grammar under different name
+   - Example: `"pandoc_markdown_inline"` vs `"Pandoc Markdown Inline"`
+   - Case sensitivity or formatting differences
+
+4. **Lazy Loading**
+   - Languages registered but grammars not loaded
+   - `loaded: false` flag preventing injection
+   - Need to trigger grammar load before injection
+
+### Conclusion: NOT A SIMPLE BUG
+
+This is likely an **architectural limitation** around:
+- Extension loading timing
+- Hidden language handling for extensions
+- Lazy grammar loading
+
+**Fix complexity**: Medium (not simple 10-50 lines)
+- Need to ensure extension grammars are loaded before injection resolution
+- Might need to modify extension loading order
+- Could require changes to async grammar loading
 
 ---
 
@@ -481,6 +532,17 @@ injectable = true  # New field
 - Makes Zed extensions more powerful
 - Aligns with tree-sitter best practices
 
-**Estimated effort**: 1-2 weeks for PR (after Zed team approval)
+**Estimated effort**:
+- Investigation phase: 1-2 days to identify exact cause (timing vs hidden vs name mismatch)
+- Implementation: 1-2 weeks depending on root cause
+- PR review: 1-2 weeks
 
 **Status**: Research complete, ready to file issue when desired
+
+**Recommended approach for Zed issue**:
+1. Present findings: Extension grammars ARE in registry, lookup code EXISTS
+2. Propose hypothesis: Timing/loading issue most likely
+3. Request guidance: Ask Zed team about extension loading order
+4. Offer to contribute: Willing to implement fix with guidance
+
+**Key insight**: This isn't a missing feature, it's a loading order/visibility issue. The infrastructure exists, but extension-loaded grammars aren't visible to injection resolution at the right time.
