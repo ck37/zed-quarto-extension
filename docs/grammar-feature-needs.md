@@ -13,13 +13,14 @@ This document outlines missing features in `tree-sitter-pandoc-markdown` that wo
 - YAML front matter (`---` metadata blocks with YAML payload)
 - Basic markdown (headings, lists, links, code blocks)
 - **Inline formatting** (emphasis, strong, strikethrough, highlight, subscript, superscript, underline)
-  - ⚠️ Note: Bold/italic highlighting currently not working in Zed due to grammar injection limitations (see `docs/bold-highlighting-investigation/`)
+  - ⚠️ Note: Bold/italic highlighting partially working (~70% coverage) in Zed using built-in markdown-inline injection workaround (see `docs/bold-highlighting-investigation/` and README)
 - **Math** - Inline (`$...$`) and display (`$$...$$`) with LaTeX content
 - **Pipe tables** - Headers, cells, alignment markers
 - **Footnotes** - References (`[^1]`) and inline footnotes (`^[text]`)
 - **Raw blocks and inline** - Format-specific output (`{=html}`, `{=latex}`)
 - **Shortcodes** (`{{< include file.qmd >}}`)
 - **Chunk options** (`#| echo: false`)
+- **Percent metadata blocks** - Alternative to YAML frontmatter (`% Title`, `% Author`, `% Date`)
 
 ### 🔴 Missing Features
 
@@ -134,20 +135,6 @@ Table: Demonstration of simple table syntax.
 
 **Impact:** Simpler syntax than pipe tables for basic tables.
 
----
-
-### 5. Metadata Blocks (Percent Syntax)
-
-**Syntax:**
-```markdown
-% Title
-% Author1; Author2
-% Date
-```
-
-**Impact:** Alternative to YAML frontmatter, less common in Quarto.
-
----
 
 ## Implementation Recommendations
 
@@ -158,12 +145,11 @@ Most Pandoc features critical for Quarto are now implemented. Remaining features
 1. **Definition Lists** - Useful for glossaries and documentation
 2. **Line Blocks** - For poetry and addresses (preserves line breaks)
 3. **Grid/Simple Tables** - Alternative table formats (pipe tables already supported)
-4. **Metadata Blocks** - Percent syntax (YAML frontmatter already supported)
 
 ## Quarto-Specific Features
 
 ### Currently Supported
-- Cross-references (`@fig:name`, `@tbl:data`) via Quarto crossref support
+- Cross-references (`@fig-plot`, `@tbl-data`) via Quarto crossref support
 - Shortcodes (`{{< include file.qmd >}}`)
 - Chunk options (`#| echo: false`)
 
@@ -192,7 +178,7 @@ For each new feature:
 - [Pandoc Manual - Pandoc's Markdown](https://pandoc.org/MANUAL.html#pandocs-markdown)
 - [Quarto Documentation](https://quarto.org/docs/guide/)
 - [Tree-sitter Grammar Development](https://tree-sitter.github.io/tree-sitter/creating-parsers)
-- [Phase 1 Grammar Plan](https://github.com/ck37/tree-sitter-pandoc-markdown/blob/feat/phase-1-pandoc-grammar/plan.md)
+- [tree-sitter-pandoc-markdown Repository](https://github.com/ck37/tree-sitter-pandoc-markdown)
 
 ---
 
@@ -203,4 +189,4 @@ For each new feature:
 - Remaining features are lower priority alternatives to already-supported syntax
 - Quarto-specific features may ultimately be implemented in a future `tree-sitter-quarto` grammar or via downstream tooling
 - Current grammar version: `ck37/tree-sitter-pandoc-markdown@581a8279` (Phase 1 completion + pipe tables)
-- **Known limitation**: Bold/italic highlighting requires grammar injection which is not yet supported in Zed extensions (see `docs/bold-highlighting-investigation/`)
+- **Known limitation**: Bold/italic highlighting partially working (~70% coverage) using built-in markdown-inline injection workaround; custom-to-custom grammar injection not yet supported in Zed extensions (see `docs/bold-highlighting-investigation/` and README)
