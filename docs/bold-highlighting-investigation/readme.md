@@ -46,7 +46,7 @@ Research of all major Zed extensions found:
 - All successful injections target built-in Zed languages only
 - [Issue #484](https://github.com/zed-industries/extensions/issues/484): Open bug about injection limitations
 
-See [EXTENSION_RESEARCH.md](./EXTENSION_RESEARCH.md) for detailed analysis.
+See [extension-research.md](./extension-research.md) for detailed analysis.
 
 ## Current Solution: Built-in markdown-inline Injection
 
@@ -64,7 +64,7 @@ See [EXTENSION_RESEARCH.md](./EXTENSION_RESEARCH.md) for detailed analysis.
 - Mixed content (partially)
 - Pandoc extensions (strikethrough, subscript, superscript)
 
-See [BUILTIN_INJECTION_TEST.md](./BUILTIN_INJECTION_TEST.md) for detailed test results.
+See [builtin-injection-test.md](./builtin-injection-test.md) for detailed test results.
 
 ### Why This Is Acceptable
 
@@ -83,11 +83,11 @@ See [BUILTIN_INJECTION_TEST.md](./BUILTIN_INJECTION_TEST.md) for detailed test r
 - **2-4 months**: Contribute PR to Zed
 - **Future**: Switch to full Pandoc inline grammar (100% coverage)
 
-See [ZED_MODIFICATION_ANALYSIS.md](./ZED_MODIFICATION_ANALYSIS.md) for detailed contribution plan.
+See [zed-modification-analysis.md](./zed-modification-analysis.md) for detailed contribution plan.
 
 ## Alternative Approaches Considered
 
-See [ALTERNATIVE_APPROACHES.md](./ALTERNATIVE_APPROACHES.md) for full analysis:
+See [alternative-approaches.md](./alternative-approaches.md) for full analysis:
 
 1. ❌ **Merged Grammar** - Violates grammar architecture, technically infeasible
 2. ✅ **Built-in markdown-inline** - Current workaround (implemented)
@@ -112,8 +112,8 @@ See [ALTERNATIVE_APPROACHES.md](./ALTERNATIVE_APPROACHES.md) for full analysis:
 
 ## References
 
-- [BUILTIN_INJECTION_TEST.md](./BUILTIN_INJECTION_TEST.md) - Test results for current solution
-- [ALTERNATIVE_APPROACHES.md](./ALTERNATIVE_APPROACHES.md) - All approaches considered
-- [ZED_MODIFICATION_ANALYSIS.md](./ZED_MODIFICATION_ANALYSIS.md) - Plan for contributing to Zed
-- [EXTENSION_RESEARCH.md](./EXTENSION_RESEARCH.md) - Detailed extension pattern analysis
+- [builtin-injection-test.md](./builtin-injection-test.md) - Test results for current solution
+- [alternative-approaches.md](./alternative-approaches.md) - All approaches considered
+- [zed-modification-analysis.md](./zed-modification-analysis.md) - Plan for contributing to Zed
+- [extension-research.md](./extension-research.md) - Detailed extension pattern analysis
 - [Zed Issue #484](https://github.com/zed-industries/extensions/issues/484) - Injection limitations

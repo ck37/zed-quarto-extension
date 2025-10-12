@@ -79,5 +79,5 @@ The built-in `markdown-inline` grammar IS being injected (proven by italic worki
 
 ## Related Issues
 
-- Original investigation: [README.md](./README.md)
+- Original investigation: [readme.md](./readme.md)
 - Zed limitation: [Issue #484](https://github.com/zed-industries/zed/issues/484)

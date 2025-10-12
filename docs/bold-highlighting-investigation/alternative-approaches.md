@@ -19,7 +19,7 @@ After 7 failed test attempts and extensive research, we've determined:
 4. **Issue #484** - Open bug about injection limitations
 5. **Zed's markdown** - Uses bundled `markdown-inline`, not extension-defined
 
-See `EXTENSION_RESEARCH.md` for full details.
+See `extension-research.md` for full details.
 
 ---
 
@@ -46,7 +46,7 @@ As the grammar maintainer states: "The split block/inline architecture is intent
 - Reason: Block grammar creates `(inline)` nodes with unparsed text; inline grammar must parse that text
 
 **Attempt 2: Inject built-in markdown-inline**
-- See `BUILTIN_INJECTION_TEST.md`
+- See `builtin-injection-test.md`
 - Result: Only 10% coverage (single asterisk italic only)
 - Reason: Built-in grammar incompatible with Pandoc's tokenization
 
@@ -176,7 +176,7 @@ Inject Zed's built-in `markdown-inline` grammar into Pandoc's `(inline)` nodes.
 
 ### Test Results
 
-**Tested** - See `BUILTIN_INJECTION_TEST.md`
+**Tested** - See `builtin-injection-test.md`
 
 ✅ **Works (70% coverage)**:
 - Bold with `**` and `__`
@@ -225,7 +225,7 @@ Inject Zed's built-in `markdown-inline` grammar into Pandoc's `(inline)` nodes.
 
 **Contribute to Zed: Enable Custom-to-Custom Grammar Injection**
 
-See [`ZED_MODIFICATION_ANALYSIS.md`](./ZED_MODIFICATION_ANALYSIS.md) for detailed plan.
+See [`zed-modification-analysis.md`](./zed-modification-analysis.md) for detailed plan.
 
 **Strategy:**
 1. Contribute PR to Zed to support extension-to-extension grammar injection
@@ -233,7 +233,7 @@ See [`ZED_MODIFICATION_ANALYSIS.md`](./ZED_MODIFICATION_ANALYSIS.md) for detaile
    - The limitation (only built-in injection works)
    - Our research (no extensions do custom-to-custom injection)
    - Use case (dual-grammar architectures like Pandoc markdown)
-   - Proposed solution (from ZED_MODIFICATION_ANALYSIS.md)
+   - Proposed solution (from zed-modification-analysis.md)
 
 **Timeline:**
 - Short term (now): Keep built-in injection workaround (70% coverage)
@@ -263,7 +263,7 @@ See [`ZED_MODIFICATION_ANALYSIS.md`](./ZED_MODIFICATION_ANALYSIS.md) for detaile
 1. ✅ **Keep built-in injection** (70% coverage, implemented)
 2. 📝 **Update documentation** to reflect current state and limitations
 3. 🐛 **File Zed issue** with thorough research and use case
-4. 💻 **Prepare PR** following ZED_MODIFICATION_ANALYSIS.md
+4. 💻 **Prepare PR** following zed-modification-analysis.md
 5. 🔄 **Switch to Pandoc inline grammar** once Zed supports custom injection
 
 **User expectation management**: Explain that bold highlighting requires workaround due to Zed limitation.

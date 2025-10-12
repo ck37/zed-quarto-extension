@@ -31,7 +31,7 @@ Zed will automatically compile the extension and its grammars.
     - ❌ Doesn't work: Links, mixed content (partially), Pandoc extensions (strikethrough, subscript, superscript)
   - Root cause: Zed's grammar injection system only supports extension-to-builtin injection, not extension-to-extension (see [Zed Issue #484](https://github.com/zed-industries/zed/issues/484))
   - Investigation: Complete technical analysis documented in [`docs/bold-highlighting-investigation/`](docs/bold-highlighting-investigation/)
-  - Long-term solution: Contributing PR to Zed to enable custom-to-custom grammar injection (see [ZED_MODIFICATION_ANALYSIS.md](docs/bold-highlighting-investigation/ZED_MODIFICATION_ANALYSIS.md))
+  - Long-term solution: Contributing PR to Zed to enable custom-to-custom grammar injection (see [zed-modification-analysis.md](docs/bold-highlighting-investigation/zed-modification-analysis.md))
   - Timeline: Workaround active now (70% coverage); Zed contribution planned for 1-3 months
 - Preview/render workflows are out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
 - Grammar completeness: `tree-sitter-pandoc-markdown` is a community project that extends `tree-sitter-markdown`. Some edge cases in Pandoc syntax may not be fully supported yet.
