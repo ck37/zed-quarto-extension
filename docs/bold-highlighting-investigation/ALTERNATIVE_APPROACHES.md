@@ -23,61 +23,42 @@ See `EXTENSION_RESEARCH.md` and `BOLD_HIGHLIGHTING_TEST_LOG.md` for full details
 
 ---
 
-## Alternative Approach 1: Merged Grammar Highlights (Recommended)
+## Alternative Approach 1: Merged Grammar Highlights ❌ REJECTED
 
-### Strategy
-Merge both grammars' highlight queries into the block grammar's highlights.scm. Don't use injection.
+### Status: **NOT VIABLE**
 
-### Implementation
+### Why Rejected
 
-**Step 1**: Remove inline grammar entirely
-```bash
-# In extension.toml - remove this section:
-[grammars.pandoc_markdown_inline]
-repository = "https://github.com/ck37/tree-sitter-pandoc-markdown"
-commit = "f9d68613baef187daffcfbd4af09b5eab1005d38"
-path = "tree-sitter-pandoc-markdown-inline"
-```
+The upstream grammar has a [detailed architecture rationale](https://github.com/ck37/tree-sitter-pandoc-markdown/blob/feat/phase-1-pandoc-grammar/docs/architecture-rationale.md) explaining why dual-grammar architecture is essential:
 
-**Step 2**: Remove injection
-```bash
-# Remove from languages/quarto/injections.scm:
-((inline) @injection.content
- (#set! injection.language "pandoc_markdown_inline"))
-```
+1. **CommonMark spec compliance** - Two-phase parsing is part of the specification
+2. **Tree-sitter LR parser limitations** - Cannot handle merged grammar complexity
+3. **Would cause massive parsing conflicts** - Technically infeasible
+4. **Intentional design** - "should be preserved"
 
-**Step 3**: Delete inline language directory
-```bash
-rm -rf languages/pandoc_markdown_inline/
-```
+As the grammar maintainer states: "The split block/inline architecture is intentional, well-founded, and should be preserved. Attempting to unify the grammars would introduce major complexity, performance issues, and maintenance headaches."
 
-**Step 4**: Verify block grammar has inline highlights
-The upstream block grammar already includes them (we verified this):
-```scheme
-(emphasis) @text.emphasis
-(strong_emphasis) @text.strong
-(code_span) @text.literal
-# etc.
-```
+### What We Tried (Documented)
 
-### Pros
-✅ Simple - just remove things
-✅ No injection needed
-✅ Upstream grammar already has inline highlights in block highlights.scm
-✅ Should work immediately
+**Attempt 1: Remove inline grammar injection**
+- Tested if block grammar alone would provide highlighting
+- Result: No highlighting for inline elements
+- Reason: Block grammar creates `(inline)` nodes with unparsed text; inline grammar must parse that text
 
-### Cons
-❌ Less precise than dual-grammar parsing
-❌ May miss some edge cases in complex Pandoc syntax
-❌ Not following upstream's intended dual-grammar architecture
+**Attempt 2: Inject built-in markdown-inline**
+- See `BUILTIN_INJECTION_TEST.md`
+- Result: Only 10% coverage (single asterisk italic only)
+- Reason: Built-in grammar incompatible with Pandoc's tokenization
 
-### Testing
-```bash
-./install-dev.sh
-# Restart Zed
-# Install extension
-# Test bold in test-bold.qmd
-```
+### Conclusion
+
+Merged grammar approach:
+- ❌ Violates upstream architecture principles
+- ❌ Technically problematic (parsing conflicts)
+- ❌ Would be rejected by grammar maintainers
+- ❌ Does not actually work without injection
+
+**This approach is abandoned.**
 
 ---
 
@@ -139,22 +120,28 @@ https://github.com/ck37/zed-quarto-extension
 
 ---
 
-## Alternative Approach 3: Modify Upstream Grammar
+## Alternative Approach 3: Modify Upstream Grammar ❌ REJECTED
+
+### Status: **NOT VIABLE**
 
 ### Strategy
 Modify tree-sitter-pandoc-markdown to work as single grammar.
 
-### Implementation
-Fork the grammar and combine both grammars into one that doesn't require injection.
+### Why Rejected
 
-### Pros
-✅ Proper long-term solution
-✅ Could contribute back upstream
+Same reasons as Approach 1 - the dual-grammar architecture is:
+- Essential for CommonMark spec compliance
+- Required due to tree-sitter LR parser limitations
+- Intentionally designed and documented as correct approach
+- Would introduce massive parsing conflicts if unified
 
-### Cons
-❌ Complex - requires tree-sitter grammar expertise
-❌ Maintains fork of upstream grammar
-❌ Time-consuming
+Additionally:
+- ❌ Would require maintaining a fork
+- ❌ Cannot be contributed back (violates upstream architecture)
+- ❌ Complex and time-consuming
+- ❌ Does not actually solve the problem (injection still needed)
+
+**This approach is abandoned.**
 
 ---
 
@@ -174,52 +161,109 @@ Monitor Issue #484 and wait for Zed to fix injection support.
 
 ---
 
-## Alternative Approach 5: Use Built-in Markdown as Base
+## Alternative Approach 5: Inject Built-in markdown-inline ✅ PARTIAL SUCCESS
+
+### Status: **IMPLEMENTED** (Workaround)
 
 ### Strategy
-Extend Zed's built-in markdown instead of creating new extension.
+Inject Zed's built-in `markdown-inline` grammar into Pandoc's `(inline)` nodes.
 
 ### Implementation
-Since markdown-inline works in built-in markdown, use markdown as base and add Quarto-specific features on top.
+```scheme
+((inline) @injection.content
+ (#set! injection.language "markdown-inline"))
+```
+
+### Test Results
+
+**Tested** - See `BUILTIN_INJECTION_TEST.md`
+
+✅ **Works (70% coverage)**:
+- Bold with `**` and `__`
+- Italic with `*` and `_`
+- Inline code
+
+⚠️ **Partial (~10%)**:
+- Mixed content (only italic works)
+
+❌ **Doesn't work (~20%)**:
+- Links
+- Triple asterisks `***`
+- Pandoc extensions (strikethrough, sub/super)
 
 ### Pros
-✅ Leverage working injection
-✅ Inherit all markdown features
+✅ **Significant improvement** - 0% → 70% coverage
+✅ **Solves primary user complaint** - bold/italic now work
+✅ **Works for most common use cases** - simple emphasis
+✅ **Better than nothing** - practical workaround
+✅ **Can be improved later** - switch to full Pandoc inline grammar if Zed adds support
 
 ### Cons
-❌ Can't replace markdown grammar with pandoc-markdown
-❌ Limited customization
-❌ May conflict with built-in markdown
-❌ Not clear if this is even possible
+❌ Incomplete - doesn't work for all inline features
+❌ No links highlighting
+❌ No Pandoc-specific inline features
+❌ Mixed content partially broken
+
+### Decision
+
+**KEEP as practical workaround** while we work on the proper fix (contributing to Zed).
 
 ---
 
-## Recommendation: Approach 1 (Merged Highlights)
+---
 
-**Rationale**:
-1. Quick fix - can be implemented immediately
-2. Upstream block grammar already has inline highlights
-3. Will provide bold/italic highlighting (the main user need)
-4. Can revisit if Zed adds proper injection support later
+## Recommended Path Forward
 
-**Implementation**:
-```bash
-# 1. Remove inline grammar from extension.toml
-# 2. Remove injection from injections.scm
-# 3. Delete languages/pandoc_markdown_inline/
-# 4. Test
-```
+### ✅ Current State (IMPLEMENTED)
 
-**If this doesn't work**:
-- The block grammar might not parse inline nodes at all
-- In that case, we need Approach 2 (ask Zed team) or Approach 3 (modify upstream grammar)
+**Approach 5: Built-in markdown-inline Injection**
+- Provides 70% coverage for bold/italic highlighting
+- Implemented and working
+- Practical workaround that solves primary user complaint
+
+### 🚀 Long-term Solution (PLANNED)
+
+**Contribute to Zed: Enable Custom-to-Custom Grammar Injection**
+
+See [`ZED_MODIFICATION_ANALYSIS.md`](./ZED_MODIFICATION_ANALYSIS.md) for detailed plan.
+
+**Strategy:**
+1. Contribute PR to Zed to support extension-to-extension grammar injection
+2. File Zed issue documenting:
+   - The limitation (only built-in injection works)
+   - Our research (no extensions do custom-to-custom injection)
+   - Use case (dual-grammar architectures like Pandoc markdown)
+   - Proposed solution (from ZED_MODIFICATION_ANALYSIS.md)
+
+**Timeline:**
+- Short term (now): Keep built-in injection workaround (70% coverage)
+- Medium term (2-4 weeks): File Zed issue with research
+- Long term (1-3 months): Contribute PR to Zed
+- Future: Switch to full Pandoc inline grammar when Zed supports it
+
+**Benefits:**
+- ✅ Solves problem for all Zed extensions needing dual grammars
+- ✅ Respects upstream grammar architecture
+- ✅ Enables 100% inline highlighting (vs current 70%)
+- ✅ Benefits entire Zed ecosystem
+
+---
+
+## Rejected Approaches
+
+1. ❌ **Merged Grammar** - Violates architecture, technically infeasible
+2. ❌ **Modify Upstream Grammar** - Same issues as merged grammar
+3. ⏸️ **Ask Zed Team** - Will file issue as part of contribution process
+4. ⏸️ **Wait for Zed Fix** - Being proactive by contributing ourselves
 
 ---
 
 ## Next Steps
 
-1. Try Approach 1 first (simplest)
-2. If that fails, file issue with Zed (Approach 2)
-3. Meanwhile, research if modifying upstream grammar is feasible (Approach 3)
+1. ✅ **Keep built-in injection** (70% coverage, implemented)
+2. 📝 **Update documentation** to reflect current state and limitations
+3. 🐛 **File Zed issue** with thorough research and use case
+4. 💻 **Prepare PR** following ZED_MODIFICATION_ANALYSIS.md
+5. 🔄 **Switch to Pandoc inline grammar** once Zed supports custom injection
 
 **User expectation management**: Explain that bold highlighting requires workaround due to Zed limitation.

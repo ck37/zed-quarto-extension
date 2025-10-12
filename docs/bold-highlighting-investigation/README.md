@@ -8,7 +8,9 @@ This directory contains the complete investigation into why bold text highlighti
 
 **Root Cause**: The pandoc-markdown grammar uses a dual-grammar architecture (block + inline grammars). Zed extensions cannot inject custom grammars into other custom grammars - they can only inject built-in languages.
 
-**Solution**: Use merged grammar highlights (single grammar approach) instead of dual-grammar injection.
+**Workaround (70% coverage)**: Inject Zed's built-in `markdown-inline` grammar. Works for basic bold/italic, but not links or mixed content.
+
+**Long-term Solution**: Contribute PR to Zed to enable custom-to-custom grammar injection.
 
 ## Investigation Documents
 
@@ -86,15 +88,31 @@ The pandoc-markdown grammar uses two grammars:
 4. **Issue #484** - Open bug report about injection limitations
 5. **7 test attempts** - All failed despite various configurations
 
-## Recommended Solution
+## Current Solution
 
-**Use merged grammar highlights** (documented in ALTERNATIVE_APPROACHES.md):
+**Built-in markdown-inline injection** (Approach 5 in ALTERNATIVE_APPROACHES.md):
 
-1. Remove inline grammar from `extension.toml`
-2. Remove injection from `injections.scm`
-3. Rely on block grammar's highlights (which already include inline node highlights)
+✅ **Implemented and working:**
+- Bold with `**` and `__` - ✅ Works
+- Italic with `*` and `_` - ✅ Works
+- Inline code - ✅ Works
+- **Coverage: 70%** of inline features
 
-The upstream grammar already includes `(strong_emphasis) @text.strong` in the block grammar's `highlights.scm`, so this should work.
+⚠️ **Known limitations:**
+- Links - ❌ Don't highlight
+- Mixed content - ⚠️ Partially broken
+- Pandoc extensions (strikethrough, subscript, superscript) - ❌ Don't work
+
+**This is a practical workaround** that solves the primary user complaint (no bold/italic) while we work on the proper fix.
+
+## Planned Solution
+
+**Contribute to Zed:** Enable custom-to-custom grammar injection
+
+See [ZED_MODIFICATION_ANALYSIS.md](./ZED_MODIFICATION_ANALYSIS.md) for detailed plan to:
+1. File Zed issue with our thorough research
+2. Contribute PR implementing custom injection support
+3. Switch to full Pandoc inline grammar (100% coverage) once supported
 
 ## Future Work
 

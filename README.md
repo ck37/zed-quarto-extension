@@ -35,11 +35,14 @@ The test suite validates syntax highlighting coverage across Quarto/Pandoc markd
 
 ## Known Limitations
 
-- **Bold/italic highlighting currently not working**: The pandoc-markdown grammar uses a dual-grammar architecture (separate block and inline grammars), but Zed extensions cannot inject custom grammars into other custom grammars—they can only inject built-in languages like JavaScript or Python. We've tested 7 different configurations and researched all popular Zed extensions to confirm this limitation.
+- **Bold/italic highlighting partially working**: The pandoc-markdown grammar uses a dual-grammar architecture (separate block and inline grammars), but Zed extensions cannot inject custom grammars into other custom grammars—they can only inject built-in languages.
+  - **Current workaround**: Injecting Zed's built-in `markdown-inline` grammar provides ~70% coverage:
+    - ✅ **Works**: Bold (`**`/`__`), italic (`*`/`_`), inline code
+    - ❌ **Doesn't work**: Links, mixed content (partially), Pandoc extensions (strikethrough, subscript, superscript)
   - **Root cause**: Zed's grammar injection system only supports extension-to-builtin injection, not extension-to-extension (see [Zed Issue #484](https://github.com/zed-industries/zed/issues/484))
   - **Investigation**: Complete technical analysis documented in [`docs/bold-highlighting-investigation/`](docs/bold-highlighting-investigation/)
-  - **Solution path**: We're implementing a merged grammar approach (single grammar instead of injection) as a quick fix, with plans to contribute proper custom grammar injection support to Zed itself
-  - **Timeline**: Quick fix coming soon; proper Zed contribution estimated 2-4 weeks
+  - **Long-term solution**: Contributing PR to Zed to enable custom-to-custom grammar injection (see [ZED_MODIFICATION_ANALYSIS.md](docs/bold-highlighting-investigation/ZED_MODIFICATION_ANALYSIS.md))
+  - **Timeline**: Workaround active now (70% coverage); Zed contribution planned for 1-3 months
 - **Preview/render workflows** are out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
 - **Grammar completeness**: `tree-sitter-pandoc-markdown` is a community project that extends `tree-sitter-markdown`. Some edge cases in Pandoc syntax may not be fully supported yet.
 - **No official tree-sitter-quarto**: Until an official Quarto grammar exists, we rely on Pandoc markdown as the closest approximation.

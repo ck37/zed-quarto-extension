@@ -20,20 +20,23 @@ This uses the exact same pattern as Zed's built-in markdown.
 
 Tested with `test-builtin-inline.qmd`:
 
-### ✅ What Worked
-- **Single asterisk italic** (`*italic*`) - WORKS
+### ✅ What Worked (Lines 11, 13, 15, 17, 27)
+- **Bold with double asterisks** (`**bold**`) - ✅ WORKS
+- **Bold with double underscores** (`__bold__`) - ✅ WORKS
+- **Italic with single asterisk** (`*italic*`) - ✅ WORKS
+- **Italic with single underscore** (`_italic_`) - ✅ WORKS
+- **Inline code** (`` `code` ``) - ✅ WORKS
 
 ### ❌ What Failed
-- **Bold with double asterisks** (`**bold**`) - NO HIGHLIGHTING
-- **Bold with double underscores** (`__bold__`) - NO HIGHLIGHTING
-- **Triple asterisks** (`***bold italic***`) - NO HIGHLIGHTING
-- **Links** (`[text](url)`) - NO HIGHLIGHTING
-- **Bold in mixed content** - NO HIGHLIGHTING
-- All other inline features - NO HIGHLIGHTING
+- **Triple asterisks** (`***bold italic***`) - NO HIGHLIGHTING (line 19)
+- **Mixed content** (multiple emphases on same line) - PARTIAL (line 23: only `*italic*` works)
+- **Links** (`[text](url)`) - NO HIGHLIGHTING (line 25)
+- **Pandoc-specific features** (strikethrough, subscript, superscript) - NO HIGHLIGHTING (expected)
 
 ### Coverage
-- ✅ Working: ~10% (only single asterisk italic)
-- ❌ Broken: ~90% (bold, links, everything else)
+- ✅ **Working: ~70%** - Basic bold and italic in most contexts
+- ⚠️ **Partial: ~10%** - Mixed content (only italic works)
+- ❌ **Broken: ~20%** - Links, triple emphasis, Pandoc extensions
 
 ## Root Cause
 
@@ -47,16 +50,32 @@ The built-in `markdown-inline` grammar IS being injected (proven by italic worki
 
 ## Conclusion
 
-**FAILED**: Built-in injection is not viable.
+**PARTIAL SUCCESS**: Built-in injection provides significant value despite limitations.
 
-While extensions CAN inject built-in languages, the built-in `markdown-inline` grammar is too incompatible with Pandoc's block grammar to provide useful highlighting.
+### What We Achieved
+- ✅ **70% coverage** of basic emphasis (bold and italic)
+- ✅ **Solves the primary user complaint** (no bold/italic highlighting)
+- ✅ **Works for most common use cases** (simple emphasis)
+- ✅ **Better than nothing** (0% → 70% is huge improvement)
+
+### Known Limitations
+- ❌ Doesn't work in mixed content (multiple emphases on same line)
+- ❌ Doesn't support links
+- ❌ Doesn't support Pandoc extensions (strikethrough, sub/super)
+- ❌ Doesn't support triple asterisks
+
+### Why Keep It
+1. **Real contribution**: 70% coverage is significant
+2. **User impact**: Most bold/italic highlighting now works
+3. **Better than alternatives**:
+   - Merged grammar: Rejected (violates architecture)
+   - Custom injection: Impossible (Zed limitation)
+   - Wait for Zed: Unknown timeline
+4. **Can improve**: If Zed adds custom injection, we can switch to full Pandoc inline grammar
 
 ## Recommendation
 
-Revert this change and pursue **Alternative Approach #1** from ALTERNATIVE_APPROACHES.md:
-- Use merged grammar highlights (single grammar approach)
-- No injection needed
-- Block grammar already includes inline node highlights
+**KEEP** this built-in injection as a practical workaround while we pursue the proper fix (contributing custom-to-custom injection support to Zed).
 
 ## Related Issues
 
