@@ -26,6 +26,10 @@ SELECT 1;
 
 This line has *italic* text and **bold** text.
 
+This is **_bold and italic_** using mixed delimiters.
+
+Links should work: [link text](https://example.com)
+
 ::: {.callout-note}
 
 Remember to cite @fig-analysis.
