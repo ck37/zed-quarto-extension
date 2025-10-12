@@ -8,7 +8,7 @@ repository = "https://github.com/ck37/zed-quarto-extension"
 
 [grammars.pandoc_markdown]
 repository = "https://github.com/ck37/tree-sitter-pandoc-markdown"
-commit = "5aefcdab23acf53dce1d3f601cfddc4e08161d5c"
+commit = "7c6e11edad9852da4dd661e000f340ded91f2705"
 path = "tree-sitter-pandoc-markdown"
 
 [language_servers.quarto]
