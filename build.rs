@@ -119,7 +119,9 @@ fn main() {
     }
 
     // Compile both grammars together into one library for easier linking
-    let inline_src_dir = pandoc_dir.join("tree-sitter-pandoc-markdown-inline").join("src");
+    let inline_src_dir = pandoc_dir
+        .join("tree-sitter-pandoc-markdown-inline")
+        .join("src");
 
     if src_dir.join("parser.c").exists() && inline_src_dir.join("parser.c").exists() {
         eprintln!("Compiling pandoc-markdown grammars (block + inline)...");

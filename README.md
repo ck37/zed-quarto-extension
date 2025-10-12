@@ -1,14 +1,13 @@
 # Quarto extension for Zed
 
-Quarto brings literate programming to Zed with first-class syntax highlighting and language server support for `.qmd` files. This extension uses `tree-sitter-pandoc-markdown` for syntax highlighting and launches the official `quarto language-server` for IDE features.
+Quarto brings literate programming to Zed with first-class syntax highlighting for `.qmd` files. This extension uses `tree-sitter-pandoc-markdown` for Pandoc-aware syntax highlighting.
 
 > **Note**: This extension addresses [zed-industries/zed#12406](https://github.com/zed-industries/zed/issues/12406).
 
 ## Installation
 
-1. Install the [Quarto CLI](https://quarto.org/docs/get-started/) so that `quarto` is available on your `PATH`.
-2. Clone this repository locally.
-3. In Zed, open the command palette and run `zed: install dev extension`, then select this repository directory.
+1. Clone this repository locally.
+2. In Zed, open the command palette and run `zed: install dev extension`, then select this repository directory.
 
 Zed will automatically compile the extension and its grammars.
 
@@ -17,29 +16,22 @@ Zed will automatically compile the extension and its grammars.
 - **Pandoc-aware syntax highlighting** powered by [`tree-sitter-pandoc-markdown` (feat/phase-1-pandoc-grammar)](https://github.com/ck37/tree-sitter-pandoc-markdown/tree/feat/phase-1-pandoc-grammar)
   - Core Markdown structures: headings, links, code blocks, lists, emphasis, YAML front matter
   - Pandoc extensions heavily used by Quarto: fenced divs, attribute lists, citations, cross-references, shortcodes, chunk options
+  - Math support: inline (`$...$`) and display (`$$...$$`) with LaTeX syntax
+  - Pipe tables with alignment markers
+  - Footnotes and cross-references
 - **Embedded language injections** for common Quarto code chunks (Python, R, Julia, SQL)
-- **Quarto language server integration** via the official `quarto language-server`
 
-## Configuration
-
-Add optional settings to `settings.json` when a custom CLI path or flags are required:
-
-```json
-"quarto": {
-  "server_path": "/custom/path/to/quarto",
-  "additional_args": ["--log-level", "info"]
-}
-```
+> **Note**: This extension provides syntax highlighting only. For language server features (completions, hover, diagnostics), see [`docs/LSP_STATUS.md`](docs/LSP_STATUS.md) for the current state and options.
 
 ## Testing
 
-Run the automated checks with:
+Run the automated tests with:
 
 ```bash
 cargo test --workspace --all-features
 ```
 
-`tests/highlights.rs` validates highlighting coverage, while `tests/lsp_smoke.rs` ensures the Quarto CLI can be discovered on the current system.
+The test suite validates syntax highlighting coverage across Quarto/Pandoc markdown constructs.
 
 ## Known Limitations
 
@@ -97,7 +89,7 @@ This approach provides:
 
 ### Current State
 
-Our extension now ships with the upstream [`tree-sitter-pandoc-markdown` feat/phase-1-pandoc-grammar branch](https://github.com/ck37/tree-sitter-pandoc-markdown/tree/feat/phase-1-pandoc-grammar), enabling **Pandoc-aware highlighting** that understands Quarto-relevant constructs such as fenced divs, citations, shortcodes, chunk options, and YAML front matter. Additional Pandoc features (like math, advanced tables, footnotes, etc.) are still planned and tracked in `grammar-feature-needs.md`.
+Our extension now ships with the upstream [`tree-sitter-pandoc-markdown` feat/phase-1-pandoc-grammar branch](https://github.com/ck37/tree-sitter-pandoc-markdown/tree/feat/phase-1-pandoc-grammar), enabling **Pandoc-aware highlighting** that understands Quarto-relevant constructs such as fenced divs, citations, shortcodes, chunk options, YAML front matter, math, pipe tables, and footnotes. Phase 1 is now complete! Remaining features are tracked in [`docs/grammar-feature-needs.md`](docs/grammar-feature-needs.md).
 
 ### Grammar Roadmap
 

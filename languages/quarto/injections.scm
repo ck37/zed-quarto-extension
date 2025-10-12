@@ -1,6 +1,8 @@
 ;
 ; Inject executable chunks into the embedded language they declare.
 ;
+; Language injection reference: https://zed.dev/docs/extensions/languages
+;
 
 (yaml_front_matter
   (yaml_front_matter_content) @injection.content
@@ -34,4 +36,11 @@
    (code_fence_content) @injection.content)
  (#match? @injection.language "(?i)^\\{?sql(?:[\\s,}]|$)")
  (#set! injection.language "sql"))
+
+; Math content injections
+((display_math (math_content) @injection.content)
+  (#set! injection.language "latex"))
+
+((inline_math (math_content) @injection.content)
+  (#set! injection.language "latex"))
 
