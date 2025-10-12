@@ -46,10 +46,8 @@
 (thematic_break) @punctuation.special
 
 ; Emphasis and strong emphasis
-; Note: stick with `text.emphasis`/`text.strong` to match upstream Markdown
-; so editor themes highlight consistently between .md and .qmd files.
 (emphasis) @text.emphasis
-(strong_emphasis) @text.strong
+(strong_emphasis) @emphasis.strong
 (strikethrough) @text.strike
 (highlight) @text.highlight
 (subscript) @text.subscript

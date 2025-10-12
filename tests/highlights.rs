@@ -40,7 +40,7 @@ fn highlight_configuration() -> HighlightConfiguration {
         "string.escape",
         "string.special.symbol",
         "text.emphasis",
-        "text.strong",
+        "emphasis.strong",
         "text.literal",
         "text.reference",
         "text.title",
@@ -143,8 +143,7 @@ fn highlights_cover_quarto_constructs() {
         "italic text should be highlighted"
     );
     assert!(
-        rendered.contains("<text.strong>"),
+        rendered.contains("<emphasis.strong>"),
         "bold text should be highlighted"
     );
-    // Keep parity with Markdown: we expect text.* scopes so themes apply bold/italic styling.
 }
