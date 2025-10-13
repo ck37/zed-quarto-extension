@@ -2,7 +2,8 @@
 
 **Date**: 2025-10-12
 **Branch**: `fix/extension-grammar-injection` in zed-industries/zed fork
-**Status**: Implemented, pending testing
+**Status**: ✅ Implemented and PR submitted
+**PR**: [zed-industries/zed#40063](https://github.com/zed-industries/zed/pull/40063)
 
 ## Summary
 
@@ -237,9 +238,10 @@ architectures like Pandoc markdown (block + inline grammars).
 
 1. ✅ Implement fix (completed)
 2. ✅ Commit to branch (completed)
-3. **Test with Quarto extension** (next)
-4. **File Zed PR** with findings from verification-findings.md
-5. **Update Quarto extension** to use `pandoc_markdown_inline` once fix is merged
+3. ✅ Test with Quarto extension (completed)
+4. ✅ File Zed PR [#40063](https://github.com/zed-industries/zed/pull/40063) (completed)
+5. ⏳ **Awaiting PR review and merge**
+6. **Merge `use-pandoc-inline-grammar` to `main`** once Zed fix is released
 
 ## Related Documentation
 
