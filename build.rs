@@ -2,7 +2,7 @@ use std::path::PathBuf;
 use std::process::Command;
 
 const REPO_URL: &str = "https://github.com/ck37/tree-sitter-pandoc-markdown";
-const COMMIT: &str = "77de308d04c994a2a3fa2056e66fae6a5630fb87";
+const COMMIT: &str = "481e75808b86bded1f9ba9d5aaad772bb253ea87";
 
 fn main() {
     // Only compile the grammar for native tests, not for WASM
@@ -82,6 +82,42 @@ fn main() {
             std::fs::write(&cargo_toml_path, patched).expect("failed to patch grammar Cargo.toml");
             eprintln!("Patched pandoc-markdown Cargo.toml to add edition = \"2021\"");
         }
+    }
+
+    // Patch inline grammar's highlights.scm to use Zed-compatible scopes
+    // The upstream grammar uses modern nvim-treesitter conventions (@markup.italic, @markup.bold)
+    // but Zed's themes currently only support legacy scopes (@text.emphasis, @emphasis.strong)
+    // See docs/scope-naming-decision.md for full rationale and future migration path
+    let inline_highlights_path = pandoc_dir
+        .join("tree-sitter-pandoc-markdown-inline")
+        .join("queries")
+        .join("highlights.scm");
+    if inline_highlights_path.exists() {
+        let highlights = std::fs::read_to_string(&inline_highlights_path)
+            .expect("failed to read inline highlights.scm");
+
+        // Replace nvim-treesitter scopes with Zed-compatible scopes
+        // When Zed adopts nvim-treesitter conventions, remove this patching code
+        let patched = highlights
+            .replace("@markup.italic", "@text.emphasis")
+            .replace("@markup.bold", "@emphasis.strong")
+            .replace("@markup.raw.inline", "@text.literal")
+            .replace("@markup.link.label", "@text.reference")
+            .replace("@markup.link.url", "@text.uri")
+            .replace("@markup.reference.citation", "@text.reference")
+            .replace("@markup.reference.cross_ref", "@text.reference")
+            .replace("@markup.reference.footnote", "@text.reference")
+            .replace("@markup.strikethrough", "@text.strike")
+            .replace("@markup.highlight", "@text.highlight")
+            .replace("@markup.subscript", "@text.subscript")
+            .replace("@markup.superscript", "@text.super")
+            .replace("@markup.underline", "@text.underline")
+            .replace("@markup.math.inline", "@string")
+            .replace("@attribute", "@property");
+
+        std::fs::write(&inline_highlights_path, patched)
+            .expect("failed to patch inline highlights.scm");
+        eprintln!("Patched inline grammar highlights.scm to use Zed-compatible scopes");
     }
 
     let sync_status = Command::new("git")

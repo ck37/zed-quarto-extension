@@ -33,6 +33,14 @@ fn injection_languages_are_valid() {
         "rust",
         "go",
         "bash",
+        "c",
+        "cpp",
+        "ruby",
+        "java",
+        "lua",
+        "vim",
+        "xml",
+        "regex",
     ];
 
     // Extract language names from (#set! injection.language "LANGUAGE_NAME") predicates

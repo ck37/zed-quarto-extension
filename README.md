@@ -2,7 +2,7 @@
 
 [![Documentation](https://img.shields.io/badge/docs-available-blue)](docs/)
 [![Zed PR](https://img.shields.io/badge/Zed_PR-40063-green)](https://github.com/zed-industries/zed/pull/40063)
-[![Grammar](https://img.shields.io/badge/grammar-77de308-orange)](https://github.com/ck37/tree-sitter-pandoc-markdown/commit/77de308d04c994a2a3fa2056e66fae6a5630fb87)
+[![Grammar](https://img.shields.io/badge/grammar-481e758-orange)](https://github.com/ck37/tree-sitter-pandoc-markdown/commit/481e75808b86bded1f9ba9d5aaad772bb253ea87)
 
 Quarto brings literate programming to Zed with first-class syntax highlighting for `.qmd` files. This extension uses `tree-sitter-pandoc-markdown` for Pandoc-aware syntax highlighting.
 
@@ -39,7 +39,7 @@ Zed will automatically compile the extension and its grammars.
   - Status: Fix submitted to Zed in [PR #40063](https://github.com/zed-industries/zed/pull/40063). Once merged, this extension will switch to full `pandoc_markdown_inline` grammar for 100% coverage.
   - Timeline: Workaround active now (70% coverage); full fix expected within weeks pending Zed PR review
   - **Branch with full grammar**: [`use-pandoc-inline-grammar`](https://github.com/ck37/zed-quarto-extension/tree/use-pandoc-inline-grammar) (this branch) uses the full `pandoc_markdown_inline` grammar with triple asterisk support
-- Triple asterisks for bold+italic (`***text***`): ✅ Now supported in the grammar as of commit [77de308](https://github.com/ck37/tree-sitter-pandoc-markdown/commit/77de308d04c994a2a3fa2056e66fae6a5630fb87) (available on `use-pandoc-inline-grammar` branch). Will work in main branch once Zed PR merges.
+- Triple asterisks for bold+italic (`***text***`): ✅ Fully supported in the grammar as of commit [481e758](https://github.com/ck37/tree-sitter-pandoc-markdown/commit/481e75808b86bded1f9ba9d5aaad772bb253ea87) (now on `use-pandoc-inline-grammar` branch). Will work in main branch once Zed PR merges.
 - Preview/render workflows are out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
 - Grammar completeness: `tree-sitter-pandoc-markdown` is a community project that extends `tree-sitter-markdown`. Some edge cases in Pandoc syntax may not be fully supported yet.
 - No official tree-sitter-quarto: Until an official Quarto grammar exists, we rely on Pandoc markdown as the closest approximation.

@@ -1,5 +1,8 @@
 ; Pandoc markdown highlights (from tree-sitter-pandoc-markdown)
-; This file uses the grammar's upstream queries to ensure proper highlighting.
+;
+; NOTE: This file uses Zed's legacy scope names (@text.*, @emphasis.strong) instead of
+; modern nvim-treesitter conventions (@markup.*) because Zed's themes don't yet support
+; the newer scopes. See docs/scope-naming-decision.md for rationale and migration path.
 
 (atx_heading
   (inline) @text.title)
