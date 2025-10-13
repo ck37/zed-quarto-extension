@@ -84,9 +84,11 @@ fn main() {
         }
     }
 
-    // Patch inline grammar's highlights.scm to use Zed-compatible scopes
+    // Patch inline grammar's highlights.scm to use Zed-compatible scopes (for native tests only)
     // The upstream grammar uses modern nvim-treesitter conventions (@markup.italic, @markup.bold)
     // but Zed's themes currently only support legacy scopes (@text.emphasis, @emphasis.strong)
+    // Note: This patching is only for native tests. For Zed runtime, we provide
+    //       languages/pandoc_markdown_inline/highlights.scm which overrides the grammar's version.
     // See docs/scope-naming-decision.md for full rationale and future migration path
     let inline_highlights_path = pandoc_dir
         .join("tree-sitter-pandoc-markdown-inline")

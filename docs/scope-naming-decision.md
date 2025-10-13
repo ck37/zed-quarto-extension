@@ -53,16 +53,19 @@ We handle the scope mismatch at two levels:
 - Manually maintained with Zed-compatible scopes
 - Directly controls highlighting for block-level elements (headings, code blocks, etc.)
 
-#### 2. Inline Grammar (Automatic Patching)
+#### 2. Inline Grammar (`languages/pandoc_markdown_inline/highlights.scm`)
 - The upstream `tree-sitter-pandoc-markdown-inline` grammar uses modern `@markup.*` scopes
-- Our `build.rs` **automatically patches** the inline grammar's `highlights.scm` during compilation
-- Replaces modern scopes with Zed-compatible ones:
-  ```rust
-  .replace("@markup.italic", "@text.emphasis")
-  .replace("@markup.bold", "@emphasis.strong")
-  .replace("@markup.raw.inline", "@text.literal")
-  // ... etc
-  ```
+- We provide an **override file** in the extension that uses Zed-compatible scopes
+- When Zed loads the inline grammar, it uses our override instead of the upstream version
+- Contains mappings like:
+  - `(emphasis) @text.emphasis` instead of `(emphasis) @markup.italic`
+  - `(strong_emphasis) @emphasis.strong` instead of `(strong_emphasis) @markup.bold`
+  - etc.
+
+#### 3. Build-time Patching (for Tests Only)
+- Our `build.rs` also patches the inline grammar during native test compilation
+- This ensures tests work with Zed-compatible scopes
+- Not used by Zed at runtime (Zed uses the override file instead)
 
 ## Future Migration Path
 
@@ -75,11 +78,15 @@ Eventually, Zed will likely migrate to nvim-treesitter scope conventions. When t
    - Replace `@emphasis.strong` with `@markup.bold`
    - Follow the nvim-treesitter conventions document
 
-2. **Remove patching from `build.rs`**:
-   - Delete the scope replacement code (lines 87-117)
-   - Let the inline grammar use its native `@markup.*` scopes
+2. **Delete `languages/pandoc_markdown_inline/highlights.scm`**:
+   - Remove the override file entirely
+   - Let Zed use the upstream grammar's native `@markup.*` scopes
 
-3. **Update tests**:
+3. **Remove patching from `build.rs`** (optional cleanup):
+   - Delete the scope replacement code (lines 87-120)
+   - Or keep it if you want tests to continue working during the transition
+
+4. **Update tests**:
    - Update scope names in `tests/emphasis_highlighting.rs`
    - Update scope names in `tests/highlights.rs`
 
@@ -130,7 +137,8 @@ For future migration, here's the complete mapping:
 ## Related Files
 
 - **Block grammar highlights**: `languages/quarto/highlights.scm`
-- **Inline grammar patching**: `build.rs` (lines 87-117)
+- **Inline grammar highlights override**: `languages/pandoc_markdown_inline/highlights.scm`
+- **Test-time patching**: `build.rs` (lines 87-120)
 - **Test scope assertions**: `tests/emphasis_highlighting.rs`, `tests/highlights.rs`
 - **Grammar source**: `tree-sitter-pandoc-markdown` repository
 
