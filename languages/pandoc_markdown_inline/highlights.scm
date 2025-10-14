@@ -8,6 +8,8 @@
 ; Emphasis & Strong
 ; ============================================================================
 
+; Use container node captures (simpler and matches upstream structure)
+; The new grammar handles overlaps properly, so we can capture containers
 (emphasis) @text.emphasis
 (strong_emphasis) @emphasis.strong
 

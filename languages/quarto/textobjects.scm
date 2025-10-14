@@ -40,9 +40,10 @@
 ; Emphasis (@emphasis)
 ; ============================================================================
 
-; Both emphasis and strong emphasis as emphasis objects
-(emphasis) @emphasis.outer
-(strong_emphasis) @emphasis.outer
+; Note: emphasis and strong_emphasis nodes no longer exist in block grammar
+; They are handled by the inline grammar via injection
+; (emphasis) @emphasis.outer
+; (strong_emphasis) @emphasis.outer
 
 ; ============================================================================
 ; Headings (@heading)

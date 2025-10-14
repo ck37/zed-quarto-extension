@@ -2,7 +2,7 @@ use std::path::PathBuf;
 use std::process::Command;
 
 const REPO_URL: &str = "https://github.com/ck37/tree-sitter-pandoc-markdown";
-const COMMIT: &str = "481e75808b86bded1f9ba9d5aaad772bb253ea87";
+const COMMIT: &str = "40ee81adf88b8d85eef939da6efcb6593dc4324a";
 
 fn main() {
     // Only compile the grammar for native tests, not for WASM
@@ -84,12 +84,12 @@ fn main() {
         }
     }
 
-    // Patch inline grammar's highlights.scm to use Zed-compatible scopes (for native tests only)
-    // The upstream grammar uses modern nvim-treesitter conventions (@markup.italic, @markup.bold)
-    // but Zed's themes currently only support legacy scopes (@text.emphasis, @emphasis.strong)
-    // Note: This patching is only for native tests. For Zed runtime, we provide
-    //       languages/pandoc_markdown_inline/highlights.scm which overrides the grammar's version.
-    // See docs/scope-naming-decision.md for full rationale and future migration path
+    // NOTE: Patching code no longer needed as of commit 4f184e2 (zed-compatible-scopes branch)
+    // The grammar now uses Zed-compatible scopes directly, so no runtime patching needed
+    // See docs/scope-naming-decision.md for full rationale and migration path
+    //
+    // Keeping patching code below commented out for reference:
+    /*
     let inline_highlights_path = pandoc_dir
         .join("tree-sitter-pandoc-markdown-inline")
         .join("queries")
@@ -98,8 +98,6 @@ fn main() {
         let highlights = std::fs::read_to_string(&inline_highlights_path)
             .expect("failed to read inline highlights.scm");
 
-        // Replace nvim-treesitter scopes with Zed-compatible scopes
-        // When Zed adopts nvim-treesitter conventions, remove this patching code
         let patched = highlights
             .replace("@markup.italic", "@text.emphasis")
             .replace("@markup.bold", "@emphasis.strong")
@@ -121,6 +119,7 @@ fn main() {
             .expect("failed to patch inline highlights.scm");
         eprintln!("Patched inline grammar highlights.scm to use Zed-compatible scopes");
     }
+    */
 
     let sync_status = Command::new("git")
         .current_dir(&pandoc_dir)

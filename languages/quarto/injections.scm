@@ -8,7 +8,7 @@
 ; Inject inline grammar for all inline content
 ; This requires Zed PR #40063 for extension-to-extension grammar injection
 ((inline) @injection.content
-  (#set! injection.language "pandoc_markdown_inline"))
+  (#set! injection.language "Pandoc Markdown Inline"))
 
 ; ============================================================================
 ; YAML Front Matter
