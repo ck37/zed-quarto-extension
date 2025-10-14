@@ -1,7 +1,6 @@
 /// Test that validates highlights.scm queries compile correctly
 /// using tree-sitter CLI to prevent regressions where invalid node types
 /// or syntax errors break syntax highlighting in Zed.
-
 use assert_cmd::Command;
 use std::path::PathBuf;
 use tempfile::TempDir;

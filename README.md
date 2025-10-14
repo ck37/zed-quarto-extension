@@ -30,39 +30,27 @@ Zed will automatically compile the extension and its grammars.
 
 ## Highlighting Features
 
-- **Inline formatting support**:
-  - ✅ Bold (`**text**`)
-  - ✅ Italic (`*text*`)
-  - ✅ Inline code (`` `code` ``)
-  - ✅ Citations (`@reference`, `[@reference]`)
-  - ⚠️ Links (`[text](url)`) - Known grammar parsing issue ([tree-sitter-quarto#2](https://github.com/ck37/tree-sitter-quarto/issues/2))
+Inline formatting support:
+- Bold (`**text**`)
+- Italic (`*text*`)
+- Inline code (`` `code` ``)
+- Citations (`@reference`, `[@reference]`)
+- Links (`[text](url)`) - Known grammar parsing issue ([tree-sitter-quarto#2](https://github.com/ck37/tree-sitter-quarto/issues/2))
 
-- **Block-level elements**:
-  - ✅ Headings (all levels, including hyphenated headings)
-  - ✅ Code blocks with syntax highlighting
-  - ✅ Executable code cells (`{python}`, `{r}`, etc.)
-  - ✅ YAML front matter
-  - ✅ Lists (ordered and unordered)
-  - ✅ Block quotes
-  - ✅ Tables
+Block-level elements:
+- Headings (all levels, including hyphenated headings)
+- Code blocks with syntax highlighting
+- Executable code cells (`{python}`, `{r}`, etc.)
+- YAML front matter
+- Lists (ordered and unordered)
+- Block quotes
+- Tables
 
 ## Known Limitations
 
-- **Link parsing**: Markdown links are currently not parsing correctly and show as ERROR nodes in the parse tree ([tree-sitter-quarto#2](https://github.com/ck37/tree-sitter-quarto/issues/2)). Highlight queries are in place and ready to work once the grammar is fixed.
-- **Preview/render workflows**: Out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
-- **Grammar maturity**: `tree-sitter-quarto` is a new grammar under active development. Some edge cases in Quarto/Pandoc syntax may not be fully supported yet. Please report issues at [tree-sitter-quarto](https://github.com/ck37/tree-sitter-quarto).
-
-## Architecture
-
-Quarto documents (`.qmd`) are based on [Pandoc's Markdown](https://pandoc.org/MANUAL.html#pandocs-markdown), not standard Markdown. This extension uses [`tree-sitter-quarto`](https://github.com/ck37/tree-sitter-quarto) for Quarto-native syntax highlighting, since Zed requires tree-sitter grammars (not TextMate/regex-based grammars like VSCode uses).
-
-**Unified Grammar**: `tree-sitter-quarto` uses a single unified grammar that handles both block-level and inline elements together, providing better context awareness and fixing issues like hyphenated headings that plagued dual-grammar approaches.
-
-Tree-sitter provides proper parsing with better error recovery and forms the foundation for advanced editor features (code navigation, folding, refactoring).
-
-For technical details, see:
-- [`docs/syntax-highlighting-architecture.md`](docs/syntax-highlighting-architecture.md) - Technical comparison of grammar systems
-- [`CONTRIBUTING.md`](CONTRIBUTING.md) - Development setup and testing
+- Link parsing: Markdown links are currently not parsing correctly and show as ERROR nodes in the parse tree ([tree-sitter-quarto#2](https://github.com/ck37/tree-sitter-quarto/issues/2)). Highlight queries are in place and ready to work once the grammar is fixed.
+- Preview/render workflows: Out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
+- Grammar maturity: `tree-sitter-quarto` is a new grammar under active development. Some edge cases in Quarto/Pandoc syntax may not be fully supported yet. Please report issues at [tree-sitter-quarto](https://github.com/ck37/tree-sitter-quarto).
 
 ## Contributing
 
