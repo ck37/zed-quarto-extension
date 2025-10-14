@@ -567,6 +567,7 @@ dependencies = [
  "cc",
  "regex",
  "serde_json",
+ "streaming-iterator",
  "tempfile",
  "toml",
  "tree-sitter",

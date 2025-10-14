@@ -19,6 +19,7 @@ cc = "1"
 [dev-dependencies]
 assert_cmd = "2"
 tempfile = "3"
+streaming-iterator = "0.1"
 tree-sitter-highlight = "0.24.7"
 tree-sitter = "0.24.7"
 tree-sitter-markdown = { package = "tree-sitter-md", git = "https://github.com/tree-sitter-grammars/tree-sitter-markdown", tag = "v0.4.0", features = ["parser"] }

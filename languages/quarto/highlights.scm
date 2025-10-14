@@ -1,115 +1,263 @@
-; Pandoc markdown highlights (from tree-sitter-pandoc-markdown)
+; Quarto Syntax Highlighting (tree-sitter-quarto)
 ;
-; NOTE: This file uses Zed's legacy scope names (@text.*, @emphasis.strong) instead of
-; modern nvim-treesitter conventions (@markup.*) because Zed's themes don't yet support
-; the newer scopes. See docs/scope-naming-decision.md for rationale and migration path.
+; NOTE: This file uses Zed-compatible scope names (@text.*, @emphasis.strong) converted
+; from tree-sitter-quarto's standard @markup.* scopes. This conversion is done at build time
+; to ensure compatibility with Zed's theming system.
+;
+; Original source: https://github.com/ck37/tree-sitter-quarto/queries/highlights.scm
+; Scope mapping:
+;   @markup.heading -> @text.title
+;   @markup.italic -> @text.emphasis  
+;   @markup.bold -> @emphasis.strong
+;   @markup.raw.* -> @text.literal
+;   @markup.link.text -> @text.reference
+;   @markup.link.url -> @text.uri
+;   @markup.quote -> @comment
+;   @markup.math.* -> @string
+
+; Syntax highlighting queries for tree-sitter-quarto
+; Based on openspec/specs/language-injection/spec.md
+
+; ============================================================================
+; QUARTO-SPECIFIC HIGHLIGHTS
+; ============================================================================
+
+; Executable Code Cells
+; ----------------------
+
+(executable_code_cell
+  (code_fence_delimiter) @punctuation.delimiter)
+
+(executable_code_cell
+  (language_name) @function.builtin)
+
+; Chunk Options
+; -------------
+
+(chunk_option_key) @property
+
+(chunk_option_value) @string
+
+"#|" @punctuation.special
+
+; Cross-References (Quarto-specific)
+; -----------------------------------
+
+(cross_reference
+  "@" @punctuation.special
+  type: (reference_type) @constant.builtin
+  "-" @punctuation.delimiter
+  id: (reference_id) @variable.parameter)
+
+; Inline Code Cells
+; -----------------
+
+(inline_code_cell
+  (language_name) @function.builtin)
+
+(inline_cell_delimiter) @punctuation.bracket
+(inline_cell_brace) @punctuation.bracket
+
+; ============================================================================
+; PANDOC MARKDOWN HIGHLIGHTS
+; ============================================================================
+
+; Headings
+; --------
 
 (atx_heading
-  (inline) @text.title)
-
-(atx_heading_marker) @punctuation.special
+  (atx_heading_marker) @punctuation.special) @text.title
 
 (setext_heading
-  (inline) @text.title)
+  (setext_heading_marker) @punctuation.special) @text.title
 
-(setext_heading_marker) @punctuation.special
+; Emphasis
+; --------
+
+(emphasis) @text.emphasis
+
+(strong_emphasis) @emphasis.strong
+
+; Code
+; ----
+
+(code_span) @text.literal
+
+(code_span_delimiter) @punctuation.delimiter
 
 (fenced_code_block) @text.literal
-(fenced_code_block_delimiter) @punctuation.delimiter
-(code_fence_content) @text.literal
-(code_fence_line_text) @text.literal
-(chunk_option) @comment
 
-(yaml_front_matter_start) @punctuation.special
-(yaml_front_matter_delimiter) @punctuation.special
-(yaml_front_matter_content) @comment
+(code_fence_delimiter) @punctuation.delimiter
 
-(inline_math
-  (math_content)? @string)
+(info_string) @label
 
-(display_math
-  (math_content)? @string)
+; Links & Images
+; --------------
 
-(math_delimiter) @punctuation.special
+(link
+  text: (_) @text.reference
+  destination: (link_destination) @text.uri)
 
-(footnote_label) @text.reference
-(footnote_reference) @text.reference
-(inline_footnote) @comment
+(image
+  alt: (_) @text.reference
+  source: (image_source) @text.uri)
 
-(pipe_table_header_cell) @text.title
+"[" @punctuation.bracket
+"]" @punctuation.bracket
+"(" @punctuation.bracket
+")" @punctuation.bracket
+"!" @punctuation.special
 
-(pipe_table_cell) @string
+; Citations (Pandoc)
+; ------------------
 
-(pipe_table_alignment_marker) @punctuation.special
+(citation
+  "@" @punctuation.special
+  key: (citation_key) @constant)
 
-(fenced_div_delimiter) @punctuation.special
+; Block Quotes
+; ------------
+
+(block_quote) @comment
+(block_quote_marker) @punctuation.special
+
+; Lists
+; -----
 
 (list_marker) @punctuation.special
-(block_quote_marker) @punctuation.special
+
+(ordered_list_item
+  (list_marker) @punctuation.special)
+
+(unordered_list_item
+  (list_marker) @punctuation.special)
+
+; Thematic Breaks
+; ---------------
+
 (thematic_break) @punctuation.special
 
-; Note: DO NOT capture emphasis, strong_emphasis, or code_span in block grammar
-; These inline formatting nodes are handled by the inline grammar via injection
-; See languages/pandoc_markdown_inline/highlights.scm
+; Fenced Divs
+; -----------
 
-; Other inline formatting
-(strikethrough) @text.strike
-(highlight) @text.highlight
-(subscript) @text.subscript
-(superscript) @text.super
-(underline) @text.underline
+(fenced_div
+  (fenced_div_delimiter) @punctuation.delimiter)
 
-(link
-  (link_text) @text.reference
-  (link_destination) @text.uri)
+(fenced_div
+  attributes: (attribute_list) @attribute)
 
-(link
-  (link_label) @text.reference)
+; Attributes
+; ----------
 
-(html_open_tag) @tag
-(html_close_tag) @tag
-(html_block_content) @text.literal
+(attribute_id) @attribute
+(attribute_class) @attribute
+(attribute_key) @property
+(attribute_value) @string
 
-(image
-  (link_text) @text.reference
-  (link_destination)? @text.uri)
+; Shortcodes
+; ----------
 
-(image
-  (link_label) @text.reference)
+(shortcode_block
+  (shortcode_open) @punctuation.special
+  (shortcode_name) @function
+  (shortcode_arguments) @parameter
+  (shortcode_close) @punctuation.special)
+
+(shortcode_inline
+  (shortcode_open) @punctuation.special
+  (shortcode_name) @function
+  (shortcode_arguments) @parameter
+  (shortcode_close) @punctuation.special)
+
+; Math
+; ----
+
+(inline_math
+  (math_delimiter) @punctuation.delimiter
+  (math_content) @string)
+
+(display_math
+  (math_delimiter) @punctuation.delimiter
+  (math_content) @string)
+
+; YAML Front Matter
+; -----------------
+
+(yaml_front_matter
+  (yaml_front_matter_start) @punctuation.delimiter
+  (yaml_front_matter_delimiter) @punctuation.delimiter)
+
+(yaml_front_matter_content) @embedded
+
+; HTML
+; ----
+
+(html_block
+  (html_open_tag) @tag
+  (html_close_tag) @tag)
+
+(html_block_content) @embedded
+
+; Raw Blocks
+; ----------
+
+(raw_block
+  (raw_block_delimiter) @punctuation.delimiter)
+
+(raw_block_content) @embedded
+
+; Footnotes
+; ---------
+
+(footnote_definition
+  (footnote_marker) @punctuation.special)
+
+; Link References
+; ---------------
 
 (link_reference_definition
-  (link_label) @text.reference
-  (link_destination)? @text.uri
-  (link_title)? @string)
+  label: (_) @text.reference
+  destination: (link_destination) @text.uri)
 
-(autolink) @text.uri
+(link_title) @string
 
-; Quarto / Pandoc specific constructs
-(citation_group) @text.reference
-(citation) @text.reference
-(cross_reference) @text.reference
-(shortcode) @constant.macro
+; Pipe Tables
+; -----------
 
-(html_inline) @tag
+(pipe_table_header
+  "|" @punctuation.delimiter)
 
-(language) @type
-(attribute_span
-  (inline)? @text)
-(attribute_span
-  (attribute_list) @property)
+(pipe_table_delimiter
+  "|" @punctuation.delimiter
+  (table_delimiter_cell) @punctuation.special)
 
-(attribute_list) @property
-(info_string_text) @string
+(pipe_table_row
+  "|" @punctuation.delimiter)
 
-; Raw blocks and raw inline content (Pandoc-specific)
-(raw_block) @text.literal
-(raw_block_delimiter) @punctuation.delimiter
-(raw_block_content) @text.literal
-(raw_inline) @text.literal
-(raw_inline_content) @text.literal
-(raw_format) @property
+(table_cell) @none
 
-; Percent metadata
-(percent_metadata_title) @text.title
-(percent_metadata_author) @comment
-(percent_metadata_date) @comment
+; Text
+; ----
+; Note: (text) nodes are NOT captured with @text to allow them to inherit
+; their parent's styling (e.g., text inside headings inherits @text.title,
+; text inside emphasis inherits @text.emphasis, etc.)
+
+; Blank Lines
+; -----------
+
+(blank_line) @none
+
+; ============================================================================
+; PRIORITY RULES
+; ============================================================================
+
+; Higher priority for Quarto constructs
+((cross_reference) @constant.builtin
+  (#set! "priority" 110))
+
+((executable_code_cell
+  (language_name) @function.builtin)
+  (#set! "priority" 110))
+
+((chunk_option_key) @property
+  (#set! "priority" 110))

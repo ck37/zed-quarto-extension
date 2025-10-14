@@ -1,103 +1,277 @@
-; Pandoc Markdown Language Injection Queries
-; Quarto-specific patterns for code chunks with chunk options
+; Language injection queries for tree-sitter-quarto
+; Based on openspec/specs/language-injection/spec.md
+;
+; Enables syntax highlighting for code within executable cells
 
 ; ============================================================================
-; Inline Content (Pandoc inline grammar)
+; EXECUTABLE CODE CELLS
 ; ============================================================================
 
-; Inject inline grammar for all inline content
-; This requires Zed PR #40063 for extension-to-extension grammar injection
-((inline) @injection.content
-  (#set! injection.language "Pandoc Markdown Inline"))
+; Python
+; ------
+
+((executable_code_cell
+  language: (language_name) @_lang
+  (#eq? @_lang "python")
+  content: (cell_content) @injection.content)
+ (#set! injection.language "python"))
+
+((executable_code_cell
+  language: (language_name) @_lang
+  (#eq? @_lang "python3")
+  content: (cell_content) @injection.content)
+ (#set! injection.language "python"))
+
+; R
+; -
+
+((executable_code_cell
+  language: (language_name) @_lang
+  (#eq? @_lang "r")
+  content: (cell_content) @injection.content)
+ (#set! injection.language "r"))
+
+; Julia
+; -----
+
+((executable_code_cell
+  language: (language_name) @_lang
+  (#eq? @_lang "julia")
+  content: (cell_content) @injection.content)
+ (#set! injection.language "julia"))
+
+; SQL
+; ---
+
+((executable_code_cell
+  language: (language_name) @_lang
+  (#eq? @_lang "sql")
+  content: (cell_content) @injection.content)
+ (#set! injection.language "sql"))
+
+; Bash/Shell
+; ----------
+
+((executable_code_cell
+  language: (language_name) @_lang
+  (#eq? @_lang "bash")
+  content: (cell_content) @injection.content)
+ (#set! injection.language "bash"))
+
+((executable_code_cell
+  language: (language_name) @_lang
+  (#eq? @_lang "sh")
+  content: (cell_content) @injection.content)
+ (#set! injection.language "bash"))
+
+((executable_code_cell
+  language: (language_name) @_lang
+  (#eq? @_lang "shell")
+  content: (cell_content) @injection.content)
+ (#set! injection.language "bash"))
+
+; JavaScript/TypeScript
+; ---------------------
+
+((executable_code_cell
+  language: (language_name) @_lang
+  (#eq? @_lang "javascript")
+  content: (cell_content) @injection.content)
+ (#set! injection.language "javascript"))
+
+((executable_code_cell
+  language: (language_name) @_lang
+  (#eq? @_lang "js")
+  content: (cell_content) @injection.content)
+ (#set! injection.language "javascript"))
+
+((executable_code_cell
+  language: (language_name) @_lang
+  (#eq? @_lang "typescript")
+  content: (cell_content) @injection.content)
+ (#set! injection.language "typescript"))
+
+((executable_code_cell
+  language: (language_name) @_lang
+  (#eq? @_lang "ts")
+  content: (cell_content) @injection.content)
+ (#set! injection.language "typescript"))
+
+; Mermaid Diagrams
+; ----------------
+
+((executable_code_cell
+  language: (language_name) @_lang
+  (#eq? @_lang "mermaid")
+  content: (cell_content) @injection.content)
+ (#set! injection.language "mermaid"))
+
+; Dot/Graphviz
+; ------------
+
+((executable_code_cell
+  language: (language_name) @_lang
+  (#eq? @_lang "dot")
+  content: (cell_content) @injection.content)
+ (#set! injection.language "dot"))
+
+; Observable JS
+; -------------
+
+((executable_code_cell
+  language: (language_name) @_lang
+  (#eq? @_lang "ojs")
+  content: (cell_content) @injection.content)
+ (#set! injection.language "javascript"))
 
 ; ============================================================================
+; INLINE CODE CELLS
+; ============================================================================
+
+; Python Inline
+; -------------
+
+((inline_code_cell
+  language: (language_name) @_lang
+  (#eq? @_lang "python")
+  content: (cell_content) @injection.content)
+ (#set! injection.language "python"))
+
+; R Inline
+; --------
+
+((inline_code_cell
+  language: (language_name) @_lang
+  (#eq? @_lang "r")
+  content: (cell_content) @injection.content)
+ (#set! injection.language "r"))
+
+; Julia Inline
+; ------------
+
+((inline_code_cell
+  language: (language_name) @_lang
+  (#eq? @_lang "julia")
+  content: (cell_content) @injection.content)
+ (#set! injection.language "julia"))
+
+; ============================================================================
+; REGULAR FENCED CODE BLOCKS (Non-executable)
+; ============================================================================
+
+; These are standard Markdown code blocks without {language} syntax
+
+; Python
+((fenced_code_block
+  info: (info_string) @_lang
+  (#eq? @_lang "python"))
+ (#set! injection.language "python"))
+
+; R
+((fenced_code_block
+  info: (info_string) @_lang
+  (#eq? @_lang "r"))
+ (#set! injection.language "r"))
+
+; Julia
+((fenced_code_block
+  info: (info_string) @_lang
+  (#eq? @_lang "julia"))
+ (#set! injection.language "julia"))
+
+; JavaScript
+((fenced_code_block
+  info: (info_string) @_lang
+  (#eq? @_lang "javascript"))
+ (#set! injection.language "javascript"))
+
+((fenced_code_block
+  info: (info_string) @_lang
+  (#eq? @_lang "js"))
+ (#set! injection.language "javascript"))
+
+; TypeScript
+((fenced_code_block
+  info: (info_string) @_lang
+  (#eq? @_lang "typescript"))
+ (#set! injection.language "typescript"))
+
+((fenced_code_block
+  info: (info_string) @_lang
+  (#eq? @_lang "ts"))
+ (#set! injection.language "typescript"))
+
+; Bash
+((fenced_code_block
+  info: (info_string) @_lang
+  (#eq? @_lang "bash"))
+ (#set! injection.language "bash"))
+
+((fenced_code_block
+  info: (info_string) @_lang
+  (#eq? @_lang "sh"))
+ (#set! injection.language "bash"))
+
+; SQL
+((fenced_code_block
+  info: (info_string) @_lang
+  (#eq? @_lang "sql"))
+ (#set! injection.language "sql"))
+
+; JSON
+((fenced_code_block
+  info: (info_string) @_lang
+  (#eq? @_lang "json"))
+ (#set! injection.language "json"))
+
+; YAML
+((fenced_code_block
+  info: (info_string) @_lang
+  (#eq? @_lang "yaml"))
+ (#set! injection.language "yaml"))
+
+; TOML
+((fenced_code_block
+  info: (info_string) @_lang
+  (#eq? @_lang "toml"))
+ (#set! injection.language "toml"))
+
+; HTML
+((fenced_code_block
+  info: (info_string) @_lang
+  (#eq? @_lang "html"))
+ (#set! injection.language "html"))
+
+; CSS
+((fenced_code_block
+  info: (info_string) @_lang
+  (#eq? @_lang "css"))
+ (#set! injection.language "css"))
+
+; Markdown
+((fenced_code_block
+  info: (info_string) @_lang
+  (#eq? @_lang "markdown"))
+ (#set! injection.language "markdown"))
+
+; ============================================================================
+; OTHER EMBEDDED CONTENT
+; ============================================================================
+
 ; YAML Front Matter
-; ============================================================================
+; -----------------
 
-(yaml_front_matter
-  (yaml_front_matter_content) @injection.content
-  (#set! injection.language "yaml"))
+((yaml_front_matter
+  (yaml_front_matter_content) @injection.content)
+ (#set! injection.language "yaml"))
 
-; ============================================================================
-; Quarto Code Chunks (with chunk options like {python} or {r, echo=FALSE})
-; ============================================================================
+; HTML Blocks
+; -----------
 
-; These patterns match Quarto's special syntax with curly braces and chunk options
+((html_block
+  (html_block_content) @injection.content)
+ (#set! injection.language "html"))
 
-; Python chunks: {python}, {python, echo=TRUE}, etc.
-((fenced_code_block
-  (info_string) @injection.language
-  (code_fence_content) @injection.content)
-  (#match? @injection.language "(?i)^\\{?python(?:[\\s,}]|$)")
-  (#set! injection.language "python"))
-
-; R chunks: {r}, {r, echo=FALSE}, etc.
-((fenced_code_block
-  (info_string) @injection.language
-  (code_fence_content) @injection.content)
-  (#match? @injection.language "(?i)^\\{?r(?:[\\s,}]|$)")
-  (#set! injection.language "r"))
-
-; Julia chunks: {julia}, {julia, eval=TRUE}, etc.
-((fenced_code_block
-  (info_string) @injection.language
-  (code_fence_content) @injection.content)
-  (#match? @injection.language "(?i)^\\{?julia(?:[\\s,}]|$)")
-  (#set! injection.language "julia"))
-
-; SQL chunks: {sql}, {sql, connection=con}, etc.
-((fenced_code_block
-  (info_string) @injection.language
-  (code_fence_content) @injection.content)
-  (#match? @injection.language "(?i)^\\{?sql(?:[\\s,}]|$)")
-  (#set! injection.language "sql"))
-
-; ============================================================================
-; Standard Markdown Code Blocks (simple language names)
-; ============================================================================
-
-; Generic fallback for simple language names (javascript, rust, etc.)
-; This handles standard markdown code blocks without Quarto chunk options
-(fenced_code_block
-  (info_string
-    (language) @injection.language)?
-  (code_fence_content) @injection.content)
-
-; ============================================================================
-; Math (LaTeX)
-; ============================================================================
-
-; Display math - inject LaTeX
-((display_math
-  (math_content) @injection.content)
-  (#set! injection.language "latex"))
-
-; Inline math - inject LaTeX
-((inline_math
-  (math_content) @injection.content)
-  (#set! injection.language "latex"))
-
-; ============================================================================
-; Raw Blocks with Format Markers
-; ============================================================================
-
-; Raw HTML blocks
-((raw_block
-  (raw_format) @_format
-  (raw_block_content) @injection.content)
-  (#eq? @_format "{=html}")
-  (#set! injection.language "html"))
-
-; Raw LaTeX blocks
-((raw_block
-  (raw_format) @_format
-  (raw_block_content) @injection.content)
-  (#eq? @_format "{=latex}")
-  (#set! injection.language "latex"))
-
-; Raw TeX blocks
-((raw_block
-  (raw_format) @_format
-  (raw_block_content) @injection.content)
-  (#eq? @_format "{=tex}")
-  (#set! injection.language "latex"))
+; Raw Blocks
+; ----------
+; Note: Cannot inject based on format since it's embedded in delimiter

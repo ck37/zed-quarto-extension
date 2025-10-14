@@ -1,5 +1,5 @@
 name = "Quarto"
-grammar = "pandoc_markdown"
+grammar = "quarto"
 path_suffixes = ["qmd"]
 line_comments = ["# "]
 completion_query_characters = ["-", "@"]

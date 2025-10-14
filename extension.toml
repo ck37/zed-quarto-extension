@@ -1,18 +1,12 @@
 id = "quarto"
 name = "Quarto"
-version = "0.1.0"
+version = "0.2.0"
 schema_version = 1
 authors = ["Chris Kennedy <chrisken@gmail.com>"]
-description = "Quarto authoring for Zed with Pandoc-aware syntax highlighting"
+description = "Quarto authoring for Zed with tree-sitter-quarto grammar"
 repository = "https://github.com/ck37/zed-quarto-extension"
-languages = ["languages/quarto", "languages/pandoc_markdown_inline"]
+languages = ["languages/quarto"]
 
-[grammars.pandoc_markdown]
-repository = "https://github.com/ck37/tree-sitter-pandoc-markdown"
-commit = "f2e5718a1b2190cf59dd22d9a97fc9b7329a25b6"
-path = "tree-sitter-pandoc-markdown"
-
-[grammars.pandoc_markdown_inline]
-repository = "https://github.com/ck37/tree-sitter-pandoc-markdown"
-commit = "f2e5718a1b2190cf59dd22d9a97fc9b7329a25b6"
-path = "tree-sitter-pandoc-markdown-inline"
+[grammars.quarto]
+repository = "https://github.com/ck37/tree-sitter-quarto"
+commit = "20c2966027686bcf68d4f4c39c0cf3a5e53c86f8"

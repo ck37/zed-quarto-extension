@@ -1,4 +1,0 @@
-name = "Pandoc Markdown Inline"
-grammar = "pandoc_markdown_inline"
-path_suffixes = []
-hidden = true
