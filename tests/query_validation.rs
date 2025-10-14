@@ -1,7 +1,7 @@
+use std::path::Path;
 /// Test that validates highlights.scm can be parsed by tree-sitter
 /// This ensures our query file syntax is valid
 use std::process::Command;
-use std::path::Path;
 
 #[test]
 fn highlights_query_is_valid_syntax() {
@@ -33,10 +33,7 @@ fn highlights_query_is_valid_syntax() {
     // Test that tree-sitter can parse our highlights query
     let output = Command::new("tree-sitter")
         .current_dir(&grammar_dir)
-        .args([
-            "query",
-            highlights_path.to_str().unwrap(),
-        ])
+        .args(["query", highlights_path.to_str().unwrap()])
         .output();
 
     match output {
@@ -60,9 +57,8 @@ fn highlights_query_is_valid_syntax() {
 #[test]
 fn highlights_uses_zed_compatible_scopes() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let highlights = std::fs::read_to_string(
-        manifest_dir.join("languages/quarto/highlights.scm")
-    ).expect("Failed to read highlights.scm");
+    let highlights = std::fs::read_to_string(manifest_dir.join("languages/quarto/highlights.scm"))
+        .expect("Failed to read highlights.scm");
 
     // Check that we're using Zed-compatible scopes, not standard tree-sitter scopes
     // Filter out comment lines before checking
