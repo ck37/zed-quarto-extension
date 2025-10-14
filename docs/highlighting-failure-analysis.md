@@ -132,9 +132,56 @@ Add `queries/highlights-zed.scm` to tree-sitter-quarto:
 - Then reference it in extension.toml
 - But we want THIS extension to handle Zed compatibility
 
+## Research Findings
+
+### Zed Documentation Review (via Context7)
+- Extensions should place query files in `languages/<language-name>/highlights.scm`
+- Grammars are referenced in `extension.toml` with `repository` and `commit` fields
+- **No documented mechanism to explicitly override grammar queries**
+- Expected behavior: Extension queries should take precedence over grammar queries
+- **Actual behavior**: Grammar queries appear to be loaded instead
+
+### Conclusion
+This appears to be either:
+1. A bug in Zed's extension loading system
+2. Undocumented behavior that requires a specific configuration
+3. A recent regression in Zed's query loading priority
+
+## Proposed Solutions
+
+### Option A: File Issue with Zed (RECOMMENDED)
+Create a minimal reproduction case and file an issue:
+- Extension with custom queries using Zed-compatible scopes
+- Grammar with standard `@markup.*` scopes
+- Document that grammar queries are loaded instead of extension queries
+- Request clarification on expected behavior
+
+### Option B: Temporary Workaround - Post-Install Script
+Create a script that users run after installation:
+```bash
+#!/bin/bash
+# Copy extension queries over grammar queries
+cp languages/quarto/highlights.scm grammars/quarto/queries/highlights.scm
+```
+- Fragile, breaks on Zed updates
+- Requires manual user intervention
+- Not ideal but would work
+
+### Option C: Use Local Grammar Copy
+Instead of referencing grammar from git, vendorthe grammar locally:
+- Clone tree-sitter-quarto into `grammars/quarto`
+- Overwrite its `queries/highlights.scm` with our version
+- Reference it with `path = "grammars/quarto"`
+- Downsides: Larger repo size, harder to update grammar
+
+### Option D: Request Zed-Compatible Queries in Grammar
+Ask tree-sitter-quarto to add `queries/highlights-zed.scm`:
+- Grammar provides both standard and Zed-compatible queries
+- This extension references the Zed variant
+- But we wanted to keep grammar editor-agnostic
+
 ## Next Steps
 
-1. Research Zed extension API for query override mechanism
-2. Check if there's a way to specify custom query paths in extension.toml
-3. If no API exists, may need to file feature request with Zed
-4. Consider temporary workaround while waiting for proper solution
+1. **Immediate**: Try Option B workaround to unblock user
+2. **Short-term**: File issue with Zed about query loading priority
+3. **Long-term**: Once Zed clarifies/fixes behavior, remove workaround
