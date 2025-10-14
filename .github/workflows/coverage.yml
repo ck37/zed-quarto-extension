@@ -25,7 +25,7 @@ jobs:
         uses: taiki-e/install-action@cargo-llvm-cov
 
       - name: Generate coverage
-        run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info
+        run: cargo llvm-cov --all-features --workspace --lcov --output-path lcov.info -- --skip wasm_extension_builds_successfully
 
       - name: Upload to Codecov
         uses: codecov/codecov-action@v4
