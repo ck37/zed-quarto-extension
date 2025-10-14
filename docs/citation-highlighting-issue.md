@@ -1,8 +1,9 @@
 # Citation and Cross-Reference Highlighting Issue
 
-## Status: Active Investigation
+## Status: RESOLVED
 
 **Date**: 2025-10-13
+**Resolution**: Citations now working with `@constant` scope
 **Zed Version**: Custom build with PR #40063 (extension-to-extension grammar injection)
 **Extension Version**: 0.1.0
 **Grammar Commit**: `40ee81adf88b8d85eef939da6efcb6593dc4324a` (zed-compatible-scopes branch)
@@ -196,6 +197,51 @@ If Zed theme doesn't support appropriate scopes:
 - Injection config: `/Library/Application Support/Zed/extensions/installed/quarto/languages/quarto/injections.scm`
 - Grammar source: `https://github.com/ck37/tree-sitter-pandoc-markdown/tree/zed-compatible-scopes`
 - Test corpus: `tree-sitter-pandoc-markdown-inline/test/corpus/foundation.txt` (lines 376-404)
+
+## Resolution Summary
+
+### Root Cause
+The issue was that we were editing the **wrong highlights.scm file**. Zed uses the language override file at `languages/pandoc_markdown_inline/highlights.scm`, not the grammar's built-in file at `grammars/pandoc_markdown_inline/tree-sitter-pandoc-markdown-inline/queries/highlights.scm`.
+
+### Discovery Process
+1. Confirmed grammar supports citations (tested with `tree-sitter parse`)
+2. Confirmed grammar injection works (emphasis highlighting worked)
+3. Tested with `@string` scope - **this worked!**
+4. Discovered we were editing the wrong file
+5. Updated the correct file (language override)
+6. Switched to `@constant` scope (semantically more appropriate)
+
+### Final Solution
+Changed citation scopes from `@text.reference` (unsupported by Zed themes) to `@constant` (widely supported):
+
+```scm
+; Citations - using @constant (semantically better than @string)
+(citation_group) @constant
+(citation) @constant
+
+; Cross-references
+(cross_reference) @constant
+
+; Footnotes
+(footnote_reference) @constant
+(inline_footnote) @constant
+```
+
+### Key Learnings
+1. **Language override files take precedence** - Always check `languages/*/highlights.scm` first
+2. **Not all scopes are supported** - Zed themes don't support all nvim-treesitter scopes
+3. **Test with known-working scopes** - Using `@string` as a test confirmed the queries worked
+4. **Semantic compromise** - Sometimes need to use less-semantic but supported scopes
+
+### Working Scopes in Zed
+- ✅ `@constant` - Used for citations (constants/references)
+- ✅ `@string` - Strings
+- ✅ `@text.emphasis` - Italic
+- ✅ `@emphasis.strong` - Bold
+- ✅ `@text.literal` - Code spans
+- ✅ `@tag` - HTML tags
+- ❌ `@text.reference` - Not supported
+- ❌ `@markup.bold` / `@markup.italic` - Not supported (Zed uses different convention)
 
 ## References
 

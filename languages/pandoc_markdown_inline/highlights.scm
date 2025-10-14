@@ -52,16 +52,16 @@
 ; Pandoc Extensions
 ; ============================================================================
 
-; Citations
-(citation_group) @text.reference
-(citation) @text.reference
+; Citations - using @constant (semantically better than @string)
+(citation_group) @constant
+(citation) @constant
 
 ; Cross-references
-(cross_reference) @text.reference
+(cross_reference) @constant
 
 ; Footnotes
-(footnote_reference) @text.reference
-(inline_footnote) @text.reference
+(footnote_reference) @constant
+(inline_footnote) @constant
 
 ; ============================================================================
 ; Special Formatting
