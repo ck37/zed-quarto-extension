@@ -14,18 +14,48 @@ fn inline_language() -> Language {
 fn inline_grammar_triple_asterisk_parsing() {
     // Test various combinations of asterisks using the inline grammar directly
     let test_cases = vec![
-        ("*single italic*", "emphasis", "should parse single asterisks as emphasis"),
-        ("**double bold**", "strong_emphasis", "should parse double asterisks as strong_emphasis"),
-        ("***triple***", "emphasis", "should parse triple asterisks (contains nested emphasis/strong)"),
-        ("****quadruple****", "strong_emphasis", "should parse quadruple asterisks"),
-        ("_single underscore_", "emphasis", "should parse single underscores as emphasis"),
-        ("__double underscore__", "strong_emphasis", "should parse double underscores as strong_emphasis"),
-        ("___triple underscore___", "emphasis", "should parse triple underscores"),
+        (
+            "*single italic*",
+            "emphasis",
+            "should parse single asterisks as emphasis",
+        ),
+        (
+            "**double bold**",
+            "strong_emphasis",
+            "should parse double asterisks as strong_emphasis",
+        ),
+        (
+            "***triple***",
+            "emphasis",
+            "should parse triple asterisks (contains nested emphasis/strong)",
+        ),
+        (
+            "****quadruple****",
+            "strong_emphasis",
+            "should parse quadruple asterisks",
+        ),
+        (
+            "_single underscore_",
+            "emphasis",
+            "should parse single underscores as emphasis",
+        ),
+        (
+            "__double underscore__",
+            "strong_emphasis",
+            "should parse double underscores as strong_emphasis",
+        ),
+        (
+            "___triple underscore___",
+            "emphasis",
+            "should parse triple underscores",
+        ),
     ];
 
     let mut parser = Parser::new();
     let lang = inline_language();
-    parser.set_language(&lang).expect("parser loads inline language");
+    parser
+        .set_language(&lang)
+        .expect("parser loads inline language");
 
     for (source, expected_node, description) in test_cases {
         eprintln!("\n=== Testing: {} ===", description);
@@ -89,7 +119,9 @@ fn inline_grammar_triple_asterisk_structure() {
 
     let mut parser = Parser::new();
     let lang = inline_language();
-    parser.set_language(&lang).expect("parser loads inline language");
+    parser
+        .set_language(&lang)
+        .expect("parser loads inline language");
 
     let tree = parser
         .parse(source.as_bytes(), None)
@@ -123,7 +155,6 @@ fn inline_grammar_triple_asterisk_structure() {
     let mut cursor = tree.walk();
     cursor.goto_first_child(); // Go to document root child
 
-    let mut found_nested = false;
     fn check_nesting(cursor: &mut tree_sitter::TreeCursor) -> bool {
         let node = cursor.node();
         let kind = node.kind();
@@ -132,8 +163,9 @@ fn inline_grammar_triple_asterisk_structure() {
             if cursor.goto_first_child() {
                 loop {
                     let child_kind = cursor.node().kind();
-                    if (kind == "emphasis" && child_kind == "strong_emphasis") ||
-                       (kind == "strong_emphasis" && child_kind == "emphasis") {
+                    if (kind == "emphasis" && child_kind == "strong_emphasis")
+                        || (kind == "strong_emphasis" && child_kind == "emphasis")
+                    {
                         return true;
                     }
                     if check_nesting(cursor) {
@@ -160,7 +192,7 @@ fn inline_grammar_triple_asterisk_structure() {
         false
     }
 
-    found_nested = check_nesting(&mut cursor);
+    let found_nested = check_nesting(&mut cursor);
 
     assert!(
         found_nested,

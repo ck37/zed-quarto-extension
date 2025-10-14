@@ -15,8 +15,7 @@ fn language() -> Language {
 
 #[test]
 fn r_code_blocks_are_parsed() {
-    let fixture = Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("tests/fixtures/r-code-examples.qmd");
+    let fixture = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/r-code-examples.qmd");
     let source = fs::read_to_string(&fixture).expect("fixture readable");
 
     let mut parser = Parser::new();
@@ -97,7 +96,12 @@ fn r_code_blocks_are_parsed() {
         }
     }
 
-    find_r_blocks(&mut cursor, &source, &mut r_code_blocks, &mut r_code_contents);
+    find_r_blocks(
+        &mut cursor,
+        &source,
+        &mut r_code_blocks,
+        &mut r_code_contents,
+    );
 
     eprintln!("\n=== R CODE BLOCKS FOUND: {} ===", r_code_blocks);
 
@@ -125,19 +129,17 @@ fn r_code_blocks_are_parsed() {
     println!("✓ R code contains library() calls");
 
     assert!(
-        all_content.contains("%>%") || all_content.contains("filter") || all_content.contains("select"),
+        all_content.contains("%>%")
+            || all_content.contains("filter")
+            || all_content.contains("select"),
         "R code should contain dplyr/tidyverse patterns"
     );
     println!("✓ R code contains dplyr/tidyverse patterns");
 
     // Check for code with options
-    let has_options = source.contains("{r echo=")
-        || source.contains("{r my-analysis")
-        || source.contains("{r,");
-    assert!(
-        has_options,
-        "Should have R code blocks with chunk options"
-    );
+    let has_options =
+        source.contains("{r echo=") || source.contains("{r my-analysis") || source.contains("{r,");
+    assert!(has_options, "Should have R code blocks with chunk options");
     println!("✓ R code blocks with chunk options are present");
 
     // Verify no parse errors in R blocks
@@ -153,7 +155,7 @@ fn r_code_blocks_are_parsed() {
 #[test]
 fn r_injection_query_matches() {
     // Test that the injection query properly identifies R code blocks
-    let test_cases = vec![
+    let test_cases = [
         "# Test\n\n```{r}\nx <- 1\n```\n",
         "# Test\n\n```{R}\ny <- 2\n```\n",
         "# Test\n\n```{r echo=TRUE}\nz <- 3\n```\n",
@@ -193,7 +195,10 @@ fn r_injection_query_matches() {
 
         // Should not have errors (or only minor ones that don't affect code blocks)
         if root.has_error() {
-            eprintln!("WARNING: Test case {} has parse errors, but this may be acceptable", i + 1);
+            eprintln!(
+                "WARNING: Test case {} has parse errors, but this may be acceptable",
+                i + 1
+            );
         }
 
         println!("✓ Test case {} passed", i + 1);

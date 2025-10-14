@@ -57,8 +57,8 @@ fn highlight_configuration() -> HighlightConfiguration {
 #[test]
 #[ignore] // Requires Zed's injection system - tree-sitter-highlight doesn't support cross-grammar injection
 fn emphasis_variations_are_highlighted() {
-    let fixture = Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("tests/fixtures/emphasis-variations.qmd");
+    let fixture =
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/emphasis-variations.qmd");
     let source = fs::read_to_string(&fixture).expect("fixture readable");
 
     let mut parser = Parser::new();
@@ -92,7 +92,10 @@ fn emphasis_variations_are_highlighted() {
     let rendered = rendered.join("");
 
     // Debug: print full rendered output
-    eprintln!("\n=== EMPHASIS VARIATIONS RENDERED OUTPUT ===\n{}\n", rendered);
+    eprintln!(
+        "\n=== EMPHASIS VARIATIONS RENDERED OUTPUT ===\n{}\n",
+        rendered
+    );
 
     // Note: This test is ignored by default because emphasis highlighting requires
     // Zed's injection system to work properly. The basic tree-sitter-highlight
@@ -112,8 +115,8 @@ fn emphasis_variations_are_highlighted() {
 
     // Test triple asterisks (bold + italic)
     let has_triple_content = rendered.contains("bold and italic");
-    let has_triple_highlighting = rendered.contains("<text.emphasis>")
-        || rendered.contains("<emphasis.strong>");
+    let has_triple_highlighting =
+        rendered.contains("<text.emphasis>") || rendered.contains("<emphasis.strong>");
 
     if has_triple_content && has_triple_highlighting {
         println!("✓ Triple asterisks highlighted (nested emphasis/strong)");

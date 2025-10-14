@@ -15,8 +15,8 @@ fn language() -> Language {
 
 #[test]
 fn python_code_blocks_are_parsed() {
-    let fixture = Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("tests/fixtures/python-code-examples.qmd");
+    let fixture =
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures/python-code-examples.qmd");
     let source = fs::read_to_string(&fixture).expect("fixture readable");
 
     let mut parser = Parser::new();
@@ -97,7 +97,12 @@ fn python_code_blocks_are_parsed() {
         }
     }
 
-    find_python_blocks(&mut cursor, &source, &mut python_code_blocks, &mut python_code_contents);
+    find_python_blocks(
+        &mut cursor,
+        &source,
+        &mut python_code_blocks,
+        &mut python_code_contents,
+    );
 
     eprintln!("\n=== PYTHON CODE BLOCKS FOUND: {} ===", python_code_blocks);
 
@@ -113,19 +118,25 @@ fn python_code_blocks_are_parsed() {
 
     // Check for key Python constructs
     assert!(
-        all_content.contains("import") || all_content.contains("def") || all_content.contains("class"),
+        all_content.contains("import")
+            || all_content.contains("def")
+            || all_content.contains("class"),
         "Python code should contain import, def, or class keywords"
     );
     println!("✓ Python code content is preserved (import/def/class keywords)");
 
     assert!(
-        all_content.contains("numpy") || all_content.contains("pandas") || all_content.contains("np."),
+        all_content.contains("numpy")
+            || all_content.contains("pandas")
+            || all_content.contains("np."),
         "Python code should contain scientific library imports"
     );
     println!("✓ Python code contains scientific library imports");
 
     assert!(
-        all_content.contains("for ") || all_content.contains("while ") || all_content.contains("if "),
+        all_content.contains("for ")
+            || all_content.contains("while ")
+            || all_content.contains("if "),
         "Python code should contain control flow structures"
     );
     println!("✓ Python code contains control flow structures");
@@ -159,7 +170,7 @@ fn python_code_blocks_are_parsed() {
 #[test]
 fn python_injection_query_matches() {
     // Test that the injection query properly identifies Python code blocks
-    let test_cases = vec![
+    let test_cases = [
         "# Test\n\n```{python}\nx = 1\n```\n",
         "# Test\n\n```{Python}\ny = 2\n```\n",
         "# Test\n\n```{python echo=TRUE}\nz = 3\n```\n",
@@ -192,14 +203,18 @@ fn python_injection_query_matches() {
 
         // Should have an info_string with 'python' or 'Python'
         assert!(
-            sexp.contains("(info_string") && (source.contains("{python") || source.contains("{Python")),
+            sexp.contains("(info_string")
+                && (source.contains("{python") || source.contains("{Python")),
             "Test case {} should have Python info_string",
             i + 1
         );
 
         // Should not have errors (or only minor ones that don't affect code blocks)
         if root.has_error() {
-            eprintln!("WARNING: Test case {} has parse errors, but this may be acceptable", i + 1);
+            eprintln!(
+                "WARNING: Test case {} has parse errors, but this may be acceptable",
+                i + 1
+            );
         }
 
         println!("✓ Test case {} passed", i + 1);
@@ -256,25 +271,25 @@ print("Python block 2")
     ) {
         let node = cursor.node();
 
-        if node.kind() == "fenced_code_block" {
-            if cursor.goto_first_child() {
-                loop {
-                    let child = cursor.node();
-                    if child.kind() == "info_string" {
-                        let info = &source[child.byte_range()];
-                        if info.to_lowercase().contains("python") {
-                            *python_count += 1;
-                        } else if info.to_lowercase().contains("r") && !info.to_lowercase().contains("python") {
-                            *r_count += 1;
-                        }
-                        break;
+        if node.kind() == "fenced_code_block" && cursor.goto_first_child() {
+            loop {
+                let child = cursor.node();
+                if child.kind() == "info_string" {
+                    let info = &source[child.byte_range()];
+                    if info.to_lowercase().contains("python") {
+                        *python_count += 1;
+                    } else if info.to_lowercase().contains("r")
+                        && !info.to_lowercase().contains("python")
+                    {
+                        *r_count += 1;
                     }
-                    if !cursor.goto_next_sibling() {
-                        break;
-                    }
+                    break;
                 }
-                cursor.goto_parent();
+                if !cursor.goto_next_sibling() {
+                    break;
+                }
             }
+            cursor.goto_parent();
         }
 
         if cursor.goto_first_child() {

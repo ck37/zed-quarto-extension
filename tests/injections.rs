@@ -45,8 +45,8 @@ fn injection_languages_are_valid() {
 
     // Extract language names from (#set! injection.language "LANGUAGE_NAME") predicates
     // This captures explicit language assignments, not dynamic captures like @injection.language
-    let injection_language_pattern = regex::Regex::new(r#"#set!\s+injection\.language\s+"([^"]+)""#)
-        .expect("regex compiles");
+    let injection_language_pattern =
+        regex::Regex::new(r#"#set!\s+injection\.language\s+"([^"]+)""#).expect("regex compiles");
 
     let mut invalid_languages = Vec::new();
 
@@ -86,8 +86,8 @@ fn injections_file_exists_and_parses() {
         "injections.scm must exist at languages/quarto/injections.scm"
     );
 
-    let injections_str = fs::read_to_string(&injections_path)
-        .expect("injections.scm should be readable");
+    let injections_str =
+        fs::read_to_string(&injections_path).expect("injections.scm should be readable");
 
     assert!(
         !injections_str.is_empty(),
@@ -96,7 +96,8 @@ fn injections_file_exists_and_parses() {
 
     // Basic validation that it looks like a tree-sitter query file
     assert!(
-        injections_str.contains("@injection.content") || injections_str.contains("@injection.language"),
+        injections_str.contains("@injection.content")
+            || injections_str.contains("@injection.language"),
         "injections.scm should contain tree-sitter injection predicates"
     );
 }
