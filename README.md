@@ -40,9 +40,12 @@ Zed will automatically compile the extension and its grammars.
   Note: Initial investigation suggested Zed might need modifications to support extension-to-extension injection, but testing confirmed the mechanism works correctly. See [`docs/bold-highlighting-investigation/`](docs/bold-highlighting-investigation/) for the complete investigation.
 
 ## Known Limitations
-- Preview/render workflows are out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
-- Grammar completeness: `tree-sitter-pandoc-markdown` is a community project that extends `tree-sitter-markdown`. Some edge cases in Pandoc syntax may not be fully supported yet.
-- No official tree-sitter-quarto: Until an official Quarto grammar exists, we rely on Pandoc markdown as the closest approximation.
+
+- **Hyphenated headings**: Headings containing hyphens (e.g., `## Non-Longitudinal Clustering`) don't receive heading color due to dual-grammar injection limitations. See [`docs/hyphenated-headings-issue.md`](docs/hyphenated-headings-issue.md) for details and the recommended solution (migrate to tree-sitter-quarto).
+- **Preview/render workflows**: Out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
+- **Grammar completeness**: `tree-sitter-pandoc-markdown` is a community project that extends `tree-sitter-markdown`. Some edge cases in Pandoc syntax may not be fully supported yet.
+
+**Migration Path**: [tree-sitter-quarto](https://github.com/ck37/tree-sitter-quarto) is now production-ready (alpha complete, 58/58 tests passing). See [issue #3](https://github.com/ck37/zed-quarto-extension/issues/3) for migration plan. This will fix the hyphenated headings issue and provide better Quarto-specific support.
 
 ## Architecture
 
