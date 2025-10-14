@@ -9,4 +9,4 @@ languages = ["languages/quarto"]
 
 [grammars.quarto]
 repository = "https://github.com/ck37/tree-sitter-quarto"
-commit = "851b221cdb26d41e8a8596e0f1f9a84e1ed9e49d"
+commit = "851b221b6580b14f0975fcc6be6d1e76abb69079"
