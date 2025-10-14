@@ -1,0 +1,266 @@
+---
+title: "Comprehensive Pandoc Features Test"
+author: "Test Author"
+date: "2024-01-01"
+format: html
+---
+
+# Pandoc Feature Coverage
+
+This fixture tests Pandoc-specific syntax that's supported by the grammar.
+
+## Inline Formatting Extensions
+
+Regular *italic* and **bold** text.
+
+Strikethrough: ~~deleted text~~
+
+Highlight: ==highlighted text==
+
+Subscript: H~2~O and CO~2~
+
+Superscript: x^2^ + y^2^ = z^2^
+
+Underline: [underlined text]{.underline}
+
+Combined: ***bold and italic*** or **_also bold and italic_**
+
+## Attribute Spans
+
+This is [regular text]{.red} with a class attribute.
+
+You can also use [multiple]{.class1 .class2 #myid key="value"} attributes.
+
+## Links
+
+Inline link: [link text](https://example.com)
+
+Reference-style link: [link text][ref]
+
+[ref]: https://example.com "Optional title"
+
+Implicit reference: [Google]
+
+[Google]: https://google.com
+
+Auto-link: <https://example.com>
+
+Email: <user@example.com>
+
+## Citations
+
+Single citation: @smith2024
+
+Citation in brackets: [@jones2023]
+
+Multiple citations: [@smith2024; @jones2023]
+
+Citation with locator: [@smith2024, p. 42]
+
+Citation with prefix and suffix: [see @smith2024, pp. 30-35; also @jones2023]
+
+Inline citation: @smith2024 says that...
+
+Suppress author: [-@smith2024]
+
+## Cross-references
+
+See @fig-plot for the visualization.
+
+Refer to @tbl-data for the summary statistics.
+
+Check @sec-intro for background information.
+
+Equation reference: @eq-formula
+
+## Footnotes
+
+Here's a footnote reference[^1] in text.
+
+Here's another one[^longnote].
+
+Inline footnote: ^[This is an inline footnote.]
+
+[^1]: This is the footnote content.
+
+[^longnote]: Here's a longer footnote with multiple paragraphs.
+
+    Second paragraph of the footnote.
+
+## Tables
+
+Simple pipe table:
+
+| Header 1 | Header 2 | Header 3 |
+|----------|----------|----------|
+| Cell 1   | Cell 2   | Cell 3   |
+| Cell 4   | Cell 5   | Cell 6   |
+
+Table with alignment:
+
+| Right | Left | Center | Default |
+|------:|:-----|:------:|---------|
+| 12    | 12   | 12     | 12      |
+| 123   | 123  | 123    | 123     |
+| 1     | 1    | 1      | 1       |
+
+Table with caption: [Table caption text]
+
+## Math
+
+Inline math: $E = mc^2$
+
+Display math:
+
+$$
+\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
+$$
+
+Multiple equations:
+
+$$
+\begin{aligned}
+f(x) &= x^2 + 2x + 1 \\
+     &= (x + 1)^2
+\end{aligned}
+$$
+
+## Fenced Divs
+
+::: {.callout-note}
+This is a simple callout note.
+:::
+
+::: {.callout-warning icon=false}
+This is a warning without an icon.
+:::
+
+Nested divs:
+
+::: {.outer}
+Outer content
+
+::: {.inner}
+Inner content
+:::
+
+More outer content
+:::
+
+Multiple classes and attributes:
+
+::: {.panel .panel-primary #my-panel data-value="123"}
+Panel content with multiple attributes
+:::
+
+## Block Quotes
+
+> This is a block quote.
+> It can span multiple lines.
+>
+> It can contain multiple paragraphs.
+
+Nested block quotes:
+
+> Level 1
+>
+> > Level 2
+> >
+> > > Level 3
+
+## Lists
+
+Unordered list:
+
+- Item 1
+- Item 2
+  - Nested item 2.1
+  - Nested item 2.2
+- Item 3
+
+Ordered list:
+
+1. First item
+2. Second item
+   a. Nested item 2.a
+   b. Nested item 2.b
+3. Third item
+
+Task list:
+
+- [x] Completed task
+- [ ] Incomplete task
+- [ ] Another task
+
+## Code Chunks with #| Options
+
+```{python}
+#| label: fig-example
+#| fig-cap: "Example plot"
+#| echo: false
+#| warning: false
+
+import matplotlib.pyplot as plt
+plt.plot([1, 2, 3], [1, 4, 9])
+plt.show()
+```
+
+```{r}
+#| label: tbl-summary
+#| tbl-cap: "Summary statistics"
+#| output: true
+
+summary(mtcars)
+```
+
+## Shortcodes
+
+Include another file: {{< include _content.qmd >}}
+
+Video embed: {{< video https://example.com/video.mp4 >}}
+
+Custom shortcode: {{< custom-shortcode param="value" >}}
+
+## Raw Blocks and Inline
+
+Raw HTML block:
+
+```{=html}
+<div class="custom">
+  <p>Raw HTML content</p>
+</div>
+```
+
+Raw LaTeX block:
+
+```{=latex}
+\begin{equation}
+  E = mc^2
+\end{equation}
+```
+
+Inline raw HTML: `<span class="red">red text</span>`{=html}
+
+Inline raw LaTeX: `$\alpha$`{=latex}
+
+## Percent Metadata
+
+% Alternative Title
+% Alternative Author
+% 2024-01-15
+
+This is an alternative way to specify metadata in Pandoc.
+
+## Horizontal Rules
+
+Three or more hyphens:
+
+---
+
+Three or more asterisks:
+
+***
+
+Three or more underscores:
+
+___

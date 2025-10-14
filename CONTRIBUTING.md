@@ -126,14 +126,15 @@ The extension uses tree-sitter queries to map parsed nodes to semantic highlight
 
 **Key Scopes Used:**
 - `@text.title` - Headings
-- `@text.emphasis` / `@text.strong` - Emphasis/bold
+- `@text.emphasis` - Italic text
+- `@emphasis.strong` - Bold text
 - `@text.literal` - Code spans and fenced code blocks
 - `@text.uri` - Links
-- `@comment.documentation` - YAML front matter content
-- `@markup.raw.block` - Fenced divs (Pandoc/Quarto-specific)
-- `@attribute` - Attribute lists like `{.class #id}`
-- `@string.special.symbol` - Citations and cross-references
-- `@function.macro` - Shortcodes like `{{< include file.qmd >}}`
+- `@text.reference` - Citations, cross-references, footnotes
+- `@comment` - YAML front matter, chunk options
+- `@constant.macro` - Shortcodes like `{{< include file.qmd >}}`
+- `@property` - Attribute lists like `{.class #id}`
+- `@punctuation.special` - Markers (headings, lists, block quotes, etc.)
 
 ## File Organization
 
