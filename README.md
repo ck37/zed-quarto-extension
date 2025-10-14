@@ -44,16 +44,6 @@ tree-sitter-quarto provides unified grammar handling for both block and inline c
 - Preview/render workflows: Out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
 - Grammar completeness: tree-sitter-quarto is in alpha (58/58 tests passing). Some edge cases in Quarto/Pandoc syntax may not be fully supported yet. See the [grammar repository](https://github.com/ck37/tree-sitter-quarto) for current status.
 
-## Architecture
-
-Quarto documents (`.qmd`) are based on [Pandoc's Markdown](https://pandoc.org/MANUAL.html#pandocs-markdown), not standard Markdown. This extension uses [`tree-sitter-quarto`](https://github.com/ck37/tree-sitter-quarto), a unified grammar specifically designed for Quarto files, since Zed requires tree-sitter grammars (not TextMate/regex-based grammars like VSCode uses).
-
-Tree-sitter provides proper parsing with better error recovery and forms the foundation for advanced editor features (code navigation, folding, refactoring).
-
-For technical details on the grammar and architecture, see:
-- [`docs/syntax-highlighting-architecture.md`](docs/syntax-highlighting-architecture.md) - Technical comparison of grammar systems
-- [`docs/scope-naming-decision.md`](docs/scope-naming-decision.md) - Why this extension uses Zed-compatible scope names
-
 ## Contributing
 
 Contributions are welcome! See [`CONTRIBUTING.md`](CONTRIBUTING.md) for development setup, testing, and architecture details.
