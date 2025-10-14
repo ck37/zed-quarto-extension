@@ -2,7 +2,7 @@ use std::path::PathBuf;
 use std::process::Command;
 
 const REPO_URL: &str = "https://github.com/ck37/tree-sitter-pandoc-markdown";
-const COMMIT: &str = "40ee81adf88b8d85eef939da6efcb6593dc4324a";
+const COMMIT: &str = "95f296eb8a9f28760f3b6ae34084282a1b9dc52a";
 
 fn main() {
     // Only compile the grammar for native tests, not for WASM
@@ -68,19 +68,54 @@ fn main() {
         panic!("Could not reset pandoc-markdown grammar to commit {COMMIT}");
     }
 
-    // Patch Cargo.toml to add edition if missing
+    // Patch Cargo.toml to add edition if missing and remove broken benchmark binary
     let cargo_toml_path = pandoc_dir.join("Cargo.toml");
     if cargo_toml_path.exists() {
-        let cargo_toml =
+        let mut cargo_toml =
             std::fs::read_to_string(&cargo_toml_path).expect("failed to read grammar Cargo.toml");
+        let mut modified = false;
+
         if !cargo_toml.contains("edition = ") {
             // Insert edition after version line
-            let patched = cargo_toml.replace(
+            cargo_toml = cargo_toml.replace(
                 "version = \"0.1.0\"\nauthors",
                 "version = \"0.1.0\"\nedition = \"2021\"\nauthors",
             );
-            std::fs::write(&cargo_toml_path, patched).expect("failed to patch grammar Cargo.toml");
+            modified = true;
             eprintln!("Patched pandoc-markdown Cargo.toml to add edition = \"2021\"");
+        }
+
+        // Remove [[bin]] section which has import errors at commit 95f296e
+        if cargo_toml.contains("[[bin]]") {
+            // Find and remove the [[bin]] section
+            let lines: Vec<&str> = cargo_toml.lines().collect();
+            let mut result = Vec::new();
+            let mut skip_bin_section = false;
+
+            for line in lines {
+                if line.trim().starts_with("[[bin]]") {
+                    skip_bin_section = true;
+                    continue;
+                }
+                if skip_bin_section && (line.trim().starts_with("[") || line.trim().is_empty()) {
+                    if line.trim().starts_with("[") && !line.trim().starts_with("[[bin]]") {
+                        skip_bin_section = false;
+                        result.push(line);
+                    }
+                    continue;
+                }
+                if !skip_bin_section {
+                    result.push(line);
+                }
+            }
+
+            cargo_toml = result.join("\n");
+            modified = true;
+            eprintln!("Patched pandoc-markdown Cargo.toml to remove broken [[bin]] section");
+        }
+
+        if modified {
+            std::fs::write(&cargo_toml_path, cargo_toml).expect("failed to patch grammar Cargo.toml");
         }
     }
 

@@ -9,10 +9,10 @@ languages = ["languages/quarto", "languages/pandoc_markdown_inline"]
 
 [grammars.pandoc_markdown]
 repository = "https://github.com/ck37/tree-sitter-pandoc-markdown"
-commit = "40ee81adf88b8d85eef939da6efcb6593dc4324a"
+commit = "95f296eb8a9f28760f3b6ae34084282a1b9dc52a"
 path = "tree-sitter-pandoc-markdown"
 
 [grammars.pandoc_markdown_inline]
 repository = "https://github.com/ck37/tree-sitter-pandoc-markdown"
-commit = "40ee81adf88b8d85eef939da6efcb6593dc4324a"
+commit = "95f296eb8a9f28760f3b6ae34084282a1b9dc52a"
 path = "tree-sitter-pandoc-markdown-inline"

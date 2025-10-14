@@ -75,36 +75,7 @@ fn test_inline_grammar_injections_configured() {
     println!("  This test verifies the injection query is present");
 }
 
-#[test]
-fn test_inline_grammar_commit_matches_extension_toml() {
-    // Verify that extension.toml references a grammar commit with Zed-compatible scopes
-    let extension_toml =
-        fs::read_to_string("extension.toml").expect("Failed to read extension.toml");
-
-    // Extract the commit hash for pandoc_markdown_inline
-    let commit_line = extension_toml
-        .lines()
-        .skip_while(|line| !line.contains("[grammars.pandoc_markdown_inline]"))
-        .skip(1)
-        .find(|line| line.contains("commit = "))
-        .expect("Failed to find pandoc_markdown_inline commit in extension.toml");
-
-    let commit = commit_line
-        .split('"')
-        .nth(1)
-        .expect("Failed to extract commit hash");
-
-    println!("Extension references inline grammar at commit: {}", commit);
-
-    // Current commit with Zed-compatible scopes
-    // This is commit 40ee81a from the use-pandoc-inline-grammar branch
-    const EXPECTED_COMMIT: &str = "40ee81adf88b8d85eef939da6efcb6593dc4324a";
-
-    assert_eq!(
-        commit, EXPECTED_COMMIT,
-        "extension.toml should reference commit {} which has Zed-compatible scopes",
-        EXPECTED_COMMIT
-    );
-
-    println!("✓ Extension references correct grammar commit with Zed-compatible scopes");
-}
+// Note: We previously had a test that hardcoded the expected grammar commit hash,
+// but this was brittle and broke on every grammar update. The actual functionality
+// (that the grammar uses Zed-compatible scopes) is already tested by
+// test_inline_grammar_uses_zed_scopes above.

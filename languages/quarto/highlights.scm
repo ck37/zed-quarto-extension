@@ -20,7 +20,7 @@
 (code_fence_line_text) @text.literal
 (chunk_option) @comment
 
-(yaml_front_matter_start) @comment
+(yaml_front_matter_start) @punctuation.special
 (yaml_front_matter_delimiter) @punctuation.special
 (yaml_front_matter_content) @comment
 
