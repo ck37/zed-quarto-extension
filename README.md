@@ -3,7 +3,6 @@
 [![CI](https://github.com/ck37/zed-quarto-extension/actions/workflows/ci.yml/badge.svg)](https://github.com/ck37/zed-quarto-extension/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-available-blue)](docs/)
-[![Zed PR](https://img.shields.io/badge/Zed_PR-40063-green)](https://github.com/zed-industries/zed/pull/40063)
 
 Quarto brings literate programming to Zed with first-class syntax highlighting for `.qmd` files. This extension uses `tree-sitter-pandoc-markdown` for Pandoc-aware syntax highlighting.
 
@@ -28,19 +27,19 @@ Zed will automatically compile the extension and its grammars.
 
 > **Note**: This extension provides syntax highlighting only. For language server features (completions, hover, diagnostics), see [`docs/LSP_STATUS.md`](docs/LSP_STATUS.md) for the current state and options.
 
-## Known Limitations
+## Highlighting Features
 
-- Bold/italic highlighting partially working: The pandoc-markdown grammar uses a dual-grammar architecture (separate block and inline grammars), but extension-to-extension grammar injection didn't work in Zed.
-  - Current workaround: Injecting Zed's built-in `markdown-inline` grammar provides ~70% coverage:
-    - ✅ Works: Bold (`**`/`__`), italic (`*`/`_`), inline code
-    - ❌ Doesn't work: Links, mixed content (partially), Pandoc extensions (strikethrough, subscript, superscript)
-  - Root cause (confirmed): When extension grammars load asynchronously, the LanguageRegistry version wasn't incremented, so pending injections were never resolved. Built-in grammars worked because they're immediately available.
-  - Fix implemented: One-line change to increment registry version when languages load, enabling pending injections to be resolved. See [zed-fix-implemented.md](docs/bold-highlighting-investigation/zed-fix-implemented.md)
-  - Investigation: Complete technical analysis and verification in [`docs/bold-highlighting-investigation/`](docs/bold-highlighting-investigation/)
-  - Status: Fix submitted to Zed in [PR #40063](https://github.com/zed-industries/zed/pull/40063). Once merged, this extension will switch to full `pandoc_markdown_inline` grammar for 100% coverage.
-  - Timeline: Workaround active now (70% coverage); full fix expected within weeks pending Zed PR review
-  - **Branch with full grammar**: [`use-pandoc-inline-grammar`](https://github.com/ck37/zed-quarto-extension/tree/use-pandoc-inline-grammar) (this branch) uses the full `pandoc_markdown_inline` grammar with triple asterisk support
-- Triple asterisks for bold+italic (`***text***`): ✅ Fully supported in the grammar as of commit [481e758](https://github.com/ck37/tree-sitter-pandoc-markdown/commit/481e75808b86bded1f9ba9d5aaad772bb253ea87) (now on `use-pandoc-inline-grammar` branch). Will work in main branch once Zed PR merges.
+- **Full inline formatting support**: The pandoc-markdown grammar uses a dual-grammar architecture (separate block and inline grammars) with extension-to-extension grammar injection.
+  - ✅ Bold (`**text**`, `__text__`)
+  - ✅ Italic (`*text*`, `_text_`)
+  - ✅ Bold+italic (`***text***`)
+  - ✅ Inline code (`` `code` ``)
+  - ✅ Links (`[text](url)`)
+  - ✅ Pandoc extensions: strikethrough (`~~text~~`), subscript (`H~2~O`), superscript (`x^2^`), highlight (`==text==`), underline (`[text]{.underline}`)
+
+  Note: Initial investigation suggested Zed might need modifications to support extension-to-extension injection, but testing confirmed the mechanism works correctly. See [`docs/bold-highlighting-investigation/`](docs/bold-highlighting-investigation/) for the complete investigation.
+
+## Known Limitations
 - Preview/render workflows are out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
 - Grammar completeness: `tree-sitter-pandoc-markdown` is a community project that extends `tree-sitter-markdown`. Some edge cases in Pandoc syntax may not be fully supported yet.
 - No official tree-sitter-quarto: Until an official Quarto grammar exists, we rely on Pandoc markdown as the closest approximation.
