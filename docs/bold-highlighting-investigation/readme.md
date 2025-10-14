@@ -10,9 +10,9 @@ Investigation into why bold/italic text highlighting wasn't working in Quarto `.
 
 **Current Solution (70% coverage)**: Inject Zed's built-in `markdown-inline` grammar as temporary workaround.
 
-**Fix Implemented**: One-line change in Zed to increment registry version when languages load. Fix is in branch `fix/extension-grammar-injection`, pending testing and PR.
+**Fix Implemented**: One-line change in Zed to increment registry version when languages load. PR submitted: [zed-industries/zed#40063](https://github.com/zed-industries/zed/pull/40063)
 
-**Status**: Workaround active now; full solution expected within weeks after Zed PR review.
+**Status**: Workaround active now; full solution expected within weeks after PR merge.
 
 ## Technical Background
 
@@ -92,9 +92,9 @@ state.version += 1;  // Increment version so pending injections can be resolved
 
 **Status**:
 - ✅ **Fix implemented** in branch `fix/extension-grammar-injection`
-- ⏳ **Testing**: Pending build and test with Quarto extension
-- 📝 **PR to Zed**: Will submit after testing confirms fix works
-- 🎯 **Timeline**: Weeks, not months
+- ✅ **PR submitted**: [zed-industries/zed#40063](https://github.com/zed-industries/zed/pull/40063)
+- ⏳ **Pending review**: Awaiting Zed maintainer review and merge
+- 🎯 **Timeline**: Expected within weeks
 
 See [zed-fix-implemented.md](./zed-fix-implemented.md) for complete implementation details.
 

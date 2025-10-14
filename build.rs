@@ -2,7 +2,7 @@ use std::path::PathBuf;
 use std::process::Command;
 
 const REPO_URL: &str = "https://github.com/ck37/tree-sitter-pandoc-markdown";
-const COMMIT: &str = "17677df1749f9489032f8757192cd19231563186";
+const COMMIT: &str = "f2e5718a1b2190cf59dd22d9a97fc9b7329a25b6";
 
 fn main() {
     // Only compile the grammar for native tests, not for WASM
@@ -83,6 +83,43 @@ fn main() {
             eprintln!("Patched pandoc-markdown Cargo.toml to add edition = \"2021\"");
         }
     }
+
+    // NOTE: Patching code no longer needed as of commit 4f184e2 (zed-compatible-scopes branch)
+    // The grammar now uses Zed-compatible scopes directly, so no runtime patching needed
+    // See docs/scope-naming-decision.md for full rationale and migration path
+    //
+    // Keeping patching code below commented out for reference:
+    /*
+    let inline_highlights_path = pandoc_dir
+        .join("tree-sitter-pandoc-markdown-inline")
+        .join("queries")
+        .join("highlights.scm");
+    if inline_highlights_path.exists() {
+        let highlights = std::fs::read_to_string(&inline_highlights_path)
+            .expect("failed to read inline highlights.scm");
+
+        let patched = highlights
+            .replace("@markup.italic", "@text.emphasis")
+            .replace("@markup.bold", "@emphasis.strong")
+            .replace("@markup.raw.inline", "@text.literal")
+            .replace("@markup.link.label", "@text.reference")
+            .replace("@markup.link.url", "@text.uri")
+            .replace("@markup.reference.citation", "@text.reference")
+            .replace("@markup.reference.cross_ref", "@text.reference")
+            .replace("@markup.reference.footnote", "@text.reference")
+            .replace("@markup.strikethrough", "@text.strike")
+            .replace("@markup.highlight", "@text.highlight")
+            .replace("@markup.subscript", "@text.subscript")
+            .replace("@markup.superscript", "@text.super")
+            .replace("@markup.underline", "@text.underline")
+            .replace("@markup.math.inline", "@string")
+            .replace("@attribute", "@property");
+
+        std::fs::write(&inline_highlights_path, patched)
+            .expect("failed to patch inline highlights.scm");
+        eprintln!("Patched inline grammar highlights.scm to use Zed-compatible scopes");
+    }
+    */
 
     let sync_status = Command::new("git")
         .current_dir(&pandoc_dir)

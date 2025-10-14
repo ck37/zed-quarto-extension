@@ -1,5 +1,8 @@
 ; Pandoc markdown highlights (from tree-sitter-pandoc-markdown)
-; This file uses the grammar's upstream queries to ensure proper highlighting.
+;
+; NOTE: This file uses Zed's legacy scope names (@text.*, @emphasis.strong) instead of
+; modern nvim-treesitter conventions (@markup.*) because Zed's themes don't yet support
+; the newer scopes. See docs/scope-naming-decision.md for rationale and migration path.
 
 (atx_heading
   (inline) @text.title)
@@ -17,7 +20,7 @@
 (code_fence_line_text) @text.literal
 (chunk_option) @comment
 
-(yaml_front_matter_start) @comment
+(yaml_front_matter_start) @punctuation.special
 (yaml_front_matter_delimiter) @punctuation.special
 (yaml_front_matter_content) @comment
 
@@ -45,16 +48,16 @@
 (block_quote_marker) @punctuation.special
 (thematic_break) @punctuation.special
 
-; Emphasis and strong emphasis
-(emphasis) @text.emphasis
-(strong_emphasis) @emphasis.strong
+; Note: DO NOT capture emphasis, strong_emphasis, or code_span in block grammar
+; These inline formatting nodes are handled by the inline grammar via injection
+; See languages/pandoc_markdown_inline/highlights.scm
+
+; Other inline formatting
 (strikethrough) @text.strike
 (highlight) @text.highlight
 (subscript) @text.subscript
 (superscript) @text.super
 (underline) @text.underline
-(code_span) @text.literal
-(code_span_content) @text.literal
 
 (link
   (link_text) @text.reference

@@ -1,0 +1,28 @@
+---
+title: "Emphasis Variations Test"
+---
+
+# Emphasis Testing
+
+## Single asterisks (italic)
+This is *italic text* using single asterisks.
+
+## Double asterisks (bold)
+This is **bold text** using double asterisks.
+
+## Triple asterisks (bold + italic)
+This is ***bold and italic*** using triple asterisks.
+
+## Quadruple asterisks
+This is ****deeply nested**** using four asterisks.
+
+## Mixed in sentences
+Here's a sentence with ***triple asterisk emphasis*** in the middle.
+
+## Underscore variants
+- _single underscore italic_
+- __double underscore bold__
+- ___triple underscore bold+italic___
+
+## Mixed delimiters
+This is **_also bold and italic_** using mixed delimiters.

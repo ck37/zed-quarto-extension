@@ -13,7 +13,8 @@ This document outlines missing features in `tree-sitter-pandoc-markdown` that wo
 - YAML front matter (`---` metadata blocks with YAML payload)
 - Basic markdown (headings, lists, links, code blocks)
 - **Inline formatting** (emphasis, strong, strikethrough, highlight, subscript, superscript, underline)
-  - ⚠️ Note: Bold/italic highlighting partially working (~70% coverage) in Zed using built-in markdown-inline injection workaround (see `docs/bold-highlighting-investigation/` and README)
+  - Includes triple asterisks for bold+italic (`***text***`) as of grammar commit [77de308](https://github.com/ck37/tree-sitter-pandoc-markdown/commit/77de308d04c994a2a3fa2056e66fae6a5630fb87)
+  - ⚠️ Note: Full inline grammar highlighting pending Zed PR [#40063](https://github.com/zed-industries/zed/pull/40063). Current workaround uses built-in markdown-inline (~70% coverage). See `docs/bold-highlighting-investigation/` and README
 - **Math** - Inline (`$...$`) and display (`$$...$$`) with LaTeX content
 - **Pipe tables** - Headers, cells, alignment markers
 - **Footnotes** - References (`[^1]`) and inline footnotes (`^[text]`)
@@ -188,5 +189,5 @@ For each new feature:
 - Most critical Pandoc Markdown features are now implemented (Phase 1 complete)
 - Remaining features are lower priority alternatives to already-supported syntax
 - Quarto-specific features may ultimately be implemented in a future `tree-sitter-quarto` grammar or via downstream tooling
-- Current grammar version: `ck37/tree-sitter-pandoc-markdown@581a8279` (Phase 1 completion + pipe tables)
-- **Known limitation**: Bold/italic highlighting partially working (~70% coverage) using built-in markdown-inline injection workaround; custom-to-custom grammar injection not yet supported in Zed extensions (see `docs/bold-highlighting-investigation/` and README)
+- Current grammar version: `ck37/tree-sitter-pandoc-markdown@77de308` (Phase 1 + triple asterisk support)
+- **Known limitation**: Full inline grammar highlighting pending Zed PR [#40063](https://github.com/zed-industries/zed/pull/40063) to support extension-to-extension grammar injection. Current workaround uses built-in markdown-inline (~70% coverage). See `docs/bold-highlighting-investigation/` and README

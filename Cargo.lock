@@ -565,6 +565,7 @@ version = "0.1.0"
 dependencies = [
  "assert_cmd",
  "cc",
+ "regex",
  "serde_json",
  "tempfile",
  "toml",
