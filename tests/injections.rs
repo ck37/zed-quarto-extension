@@ -62,16 +62,42 @@ fn injection_languages_are_valid() {
 
         let is_builtin = known_builtin_grammars.contains(&language_name);
 
-        if !is_defined_in_manifest && !is_builtin {
+        // Check if it's a language defined in this extension's languages/ directory
+        let is_extension_language = manifest
+            .get("languages")
+            .and_then(|value| value.as_array())
+            .map(|langs| {
+                langs.iter().any(|lang_path| {
+                    if let Some(lang_path_str) = lang_path.as_str() {
+                        let config_path = manifest_dir.join(lang_path_str).join("config.toml");
+                        if let Ok(config_str) = fs::read_to_string(&config_path) {
+                            if let Ok(config) = toml::from_str::<toml::Value>(&config_str) {
+                                return config
+                                    .get("name")
+                                    .and_then(|n| n.as_str())
+                                    .map(|n| n == language_name)
+                                    .unwrap_or(false);
+                            }
+                        }
+                    }
+                    false
+                })
+            })
+            .unwrap_or(false);
+
+        if !is_defined_in_manifest && !is_builtin && !is_extension_language {
             invalid_languages.push(language_name.to_string());
         }
     }
 
     assert!(
         invalid_languages.is_empty(),
-        "The following injection languages are neither defined in extension.toml nor known built-in grammars: {:?}\n\
+        "The following injection languages are not valid: {:?}\n\
          This means the injection will fail at runtime.\n\
-         Either add them to extension.toml [grammars] section or ensure the language name is correct.",
+         Languages must be either:\n\
+         - Defined in extension.toml [grammars] section\n\
+         - A known built-in Zed grammar\n\
+         - A language defined in this extension's languages/ directory",
         invalid_languages
     );
 }

@@ -8,8 +8,10 @@
 ; Emphasis & Strong
 ; ============================================================================
 
-; Use container node captures (simpler and matches upstream structure)
-; The new grammar handles overlaps properly, so we can capture containers
+; Strategy: Capture container nodes directly (emphasis, strong_emphasis)
+; The grammar handles nested emphasis properly, avoiding overlapping ranges.
+; This approach is simpler than capturing text nodes directly and matches
+; the upstream tree-sitter-pandoc-markdown structure.
 (emphasis) @text.emphasis
 (strong_emphasis) @emphasis.strong
 

@@ -96,24 +96,25 @@ fn test_block_grammar_has_injection_comment() {
 }
 
 #[test]
-fn test_inline_grammar_only_captures_text_nodes() {
+fn test_inline_grammar_documents_capture_strategy() {
     let inline_highlights = fs::read_to_string("languages/pandoc_markdown_inline/highlights.scm")
         .expect("Failed to read inline grammar highlights.scm");
 
-    // The inline grammar should have a comment explaining the text-node-only strategy
+    // The inline grammar should have a comment explaining its capture strategy
     assert!(
-        inline_highlights.contains("Only capture text nodes") ||
-        inline_highlights.contains("text nodes directly"),
-        "Inline grammar should document why it only captures text nodes (to avoid overlapping container ranges)"
+        inline_highlights.contains("Strategy:") ||
+        (inline_highlights.contains("capture") && inline_highlights.contains("nodes")),
+        "Inline grammar should document its capture strategy (container nodes vs text nodes)"
     );
 
-    // Verify the pattern structure: we should see (text) @scope, not just container captures
+    // Verify we're capturing emphasis and strong containers
     assert!(
-        inline_highlights.contains("(text) @"),
-        "Inline grammar should capture text nodes to avoid overlapping ranges"
+        inline_highlights.contains("(emphasis) @") &&
+        inline_highlights.contains("(strong_emphasis) @"),
+        "Inline grammar should capture emphasis and strong_emphasis container nodes"
     );
 
-    println!("✓ Inline grammar correctly documents and implements text-node-only strategy");
+    println!("✓ Inline grammar correctly documents and implements container-based capture strategy");
 }
 
 #[test]

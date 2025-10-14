@@ -48,8 +48,8 @@
 (block_quote_marker) @punctuation.special
 (thematic_break) @punctuation.special
 
-; Note: Emphasis and strong emphasis nodes no longer exist in block grammar
-; They are now handled exclusively by the inline grammar via injection
+; Note: DO NOT capture emphasis, strong_emphasis, or code_span in block grammar
+; These inline formatting nodes are handled by the inline grammar via injection
 ; See languages/pandoc_markdown_inline/highlights.scm
 
 ; Other inline formatting
@@ -58,8 +58,6 @@
 (subscript) @text.subscript
 (superscript) @text.super
 (underline) @text.underline
-(code_span) @text.literal
-(code_span_content) @text.literal
 
 (link
   (link_text) @text.reference

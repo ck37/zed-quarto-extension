@@ -59,9 +59,10 @@ fn test_inline_grammar_injections_configured() {
         fs::read_to_string(injections_path).expect("Failed to read injections.scm");
 
     // Verify that inline grammar injection is configured
+    // Note: The injection uses the language name "Pandoc Markdown Inline" not the grammar key
     assert!(
-        injections_content.contains("pandoc_markdown_inline"),
-        "injections.scm should configure injection of pandoc_markdown_inline grammar for inline content"
+        injections_content.contains("Pandoc Markdown Inline"),
+        "injections.scm should configure injection of Pandoc Markdown Inline language for inline content"
     );
 
     assert!(
@@ -95,8 +96,9 @@ fn test_inline_grammar_commit_matches_extension_toml() {
 
     println!("Extension references inline grammar at commit: {}", commit);
 
-    // Known good commit with Zed-compatible scopes (zed-compatible-scopes branch)
-    const EXPECTED_COMMIT: &str = "d2b53a88ef584df731c7e4be0e204b9dfbeb6f14";
+    // Current commit with Zed-compatible scopes
+    // This is commit 40ee81a from the use-pandoc-inline-grammar branch
+    const EXPECTED_COMMIT: &str = "40ee81adf88b8d85eef939da6efcb6593dc4324a";
 
     assert_eq!(
         commit, EXPECTED_COMMIT,
