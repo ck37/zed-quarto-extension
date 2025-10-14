@@ -5,7 +5,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-available-blue)](docs/)
 [![Zed PR](https://img.shields.io/badge/Zed_PR-40063-green)](https://github.com/zed-industries/zed/pull/40063)
-[![Grammar](https://img.shields.io/badge/grammar-481e758-orange)](https://github.com/ck37/tree-sitter-pandoc-markdown/commit/481e75808b86bded1f9ba9d5aaad772bb253ea87)
 
 Quarto brings literate programming to Zed with first-class syntax highlighting for `.qmd` files. This extension uses `tree-sitter-pandoc-markdown` for Pandoc-aware syntax highlighting.
 
