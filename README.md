@@ -1,7 +1,6 @@
 # Quarto extension for Zed
 
 [![CI](https://github.com/ck37/zed-quarto-extension/actions/workflows/ci.yml/badge.svg)](https://github.com/ck37/zed-quarto-extension/actions/workflows/ci.yml)
-[![codecov](https://codecov.io/gh/ck37/zed-quarto-extension/branch/use-pandoc-inline-grammar/graph/badge.svg)](https://codecov.io/gh/ck37/zed-quarto-extension/branch/use-pandoc-inline-grammar)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Documentation](https://img.shields.io/badge/docs-available-blue)](docs/)
 [![Zed PR](https://img.shields.io/badge/Zed_PR-40063-green)](https://github.com/zed-industries/zed/pull/40063)
