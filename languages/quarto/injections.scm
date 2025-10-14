@@ -97,24 +97,6 @@
   content: (cell_content) @injection.content)
  (#set! injection.language "typescript"))
 
-; Mermaid Diagrams
-; ----------------
-
-((executable_code_cell
-  language: (language_name) @_lang
-  (#eq? @_lang "mermaid")
-  content: (cell_content) @injection.content)
- (#set! injection.language "mermaid"))
-
-; Dot/Graphviz
-; ------------
-
-((executable_code_cell
-  language: (language_name) @_lang
-  (#eq? @_lang "dot")
-  content: (cell_content) @injection.content)
- (#set! injection.language "dot"))
-
 ; Observable JS
 ; -------------
 

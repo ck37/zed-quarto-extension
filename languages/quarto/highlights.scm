@@ -71,8 +71,8 @@
 (setext_heading
   (setext_heading_marker) @punctuation.special) @text.title
 
-; Emphasis
-; --------
+; Emphasis/Strong
+; ---------------
 
 (emphasis) @text.emphasis
 
@@ -113,7 +113,7 @@
 
 (citation
   "@" @punctuation.special
-  key: (citation_key) @constant)
+  key: (citation_key) @variable.parameter)
 
 ; Block Quotes
 ; ------------
@@ -238,9 +238,8 @@
 
 ; Text
 ; ----
-; Note: (text) nodes are NOT captured with @text to allow them to inherit
-; their parent's styling (e.g., text inside headings inherits @text.title,
-; text inside emphasis inherits @text.emphasis, etc.)
+
+(text) @text
 
 ; Blank Lines
 ; -----------

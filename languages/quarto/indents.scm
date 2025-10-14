@@ -21,9 +21,8 @@
 ; DEDENT
 ; ============================================================================
 
-; Note: Zed doesn't support @dedent capture, so this is disabled
-; Closing delimiters would be marked here if supported
-; [
-;   (fenced_div_delimiter)
-;   (code_fence_delimiter)
-; ] @dedent
+; Closing delimiters
+[
+  (fenced_div_delimiter)
+  (code_fence_delimiter)
+] @dedent
