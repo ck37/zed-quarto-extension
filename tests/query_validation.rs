@@ -24,7 +24,7 @@ fn highlights_query_is_valid_syntax() {
         // Checkout specific commit
         let status = Command::new("git")
             .current_dir(&grammar_dir)
-            .args(["checkout", "851b221b6580b14f0975fcc6be6d1e76abb69079"])
+            .args(["checkout", "b1b4cbd88fc6f787c660bf52b0e23879a8fc66c2"])
             .status()
             .expect("failed to checkout commit");
         assert!(status.success(), "Failed to checkout grammar commit");
