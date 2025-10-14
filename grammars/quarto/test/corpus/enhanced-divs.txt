@@ -1,0 +1,386 @@
+==================
+Callout block - note type
+==================
+
+::: {.callout-note}
+This is a note callout.
+:::
+
+---
+
+(document
+  (blank_line)
+  (callout_block
+    (callout_open)
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter)))
+
+==================
+Callout block - warning with title
+==================
+
+::: {.callout-warning}
+## Warning Title
+This is a warning message.
+:::
+
+---
+
+(document
+  (blank_line)
+  (callout_block
+    (callout_open)
+    content: (atx_heading
+      marker: (atx_heading_marker)
+      content: (inline
+        (text)))
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter)))
+
+==================
+Callout block - important type
+==================
+
+::: {.callout-important}
+Critical information here.
+:::
+
+---
+
+(document
+  (blank_line)
+  (callout_block
+    (callout_open)
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter)))
+
+==================
+Callout block - tip type
+==================
+
+::: {.callout-tip}
+Helpful tip goes here.
+:::
+
+---
+
+(document
+  (blank_line)
+  (callout_block
+    (callout_open)
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter)))
+
+==================
+Callout block - caution type
+==================
+
+::: {.callout-caution}
+Be careful with this!
+:::
+
+---
+
+(document
+  (blank_line)
+  (callout_block
+    (callout_open)
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter)))
+
+==================
+Callout block - with appearance attribute
+==================
+
+::: {.callout-note appearance="simple"}
+Simple appearance callout.
+:::
+
+---
+
+(document
+  (blank_line)
+  (callout_block
+    (callout_open)
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter)))
+
+==================
+Callout block - with icon=false
+==================
+
+::: {.callout-warning icon=false}
+No icon warning.
+:::
+
+---
+
+(document
+  (blank_line)
+  (callout_block
+    (callout_open)
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter)))
+
+==================
+Callout block - with collapse attribute
+==================
+
+::: {.callout-important collapse="true"}
+Collapsible important callout.
+:::
+
+---
+
+(document
+  (blank_line)
+  (callout_block
+    (callout_open)
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter)))
+
+==================
+Tabset block - basic
+==================
+
+::: {.panel-tabset}
+## Tab 1
+Content 1.
+
+## Tab 2
+Content 2.
+:::
+
+---
+
+(document
+  (blank_line)
+  (tabset_block
+    (tabset_open)
+    content: (atx_heading
+      marker: (atx_heading_marker)
+      content: (inline
+        (text)))
+    content: (paragraph
+      content: (inline
+        (text)))
+    content: (atx_heading
+      marker: (atx_heading_marker)
+      content: (inline
+        (text)))
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter)))
+
+==================
+Tabset block - with group attribute
+==================
+
+::: {.panel-tabset group="language"}
+## Python
+Python code here.
+
+## R
+R code here.
+:::
+
+---
+
+(document
+  (blank_line)
+  (tabset_block
+    (tabset_open)
+    content: (atx_heading
+      marker: (atx_heading_marker)
+      content: (inline
+        (text)))
+    content: (paragraph
+      content: (inline
+        (text)))
+    content: (atx_heading
+      marker: (atx_heading_marker)
+      content: (inline
+        (text)))
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter)))
+
+==================
+Tabset block - with code blocks
+==================
+
+::: {.panel-tabset}
+## Python
+```python
+print("Hello")
+```
+
+## R
+```r
+print("Hello")
+```
+:::
+
+---
+
+(document
+  (blank_line)
+  (tabset_block
+    (tabset_open)
+    content: (atx_heading
+      marker: (atx_heading_marker)
+      content: (inline
+        (text)))
+    content: (fenced_code_block
+      open: (code_fence_delimiter)
+      info: (info_string)
+      (code_line)
+      close: (code_fence_delimiter))
+    content: (atx_heading
+      marker: (atx_heading_marker)
+      content: (inline
+        (text)))
+    content: (fenced_code_block
+      open: (code_fence_delimiter)
+      info: (info_string)
+      (code_line)
+      close: (code_fence_delimiter))
+    close: (fenced_div_delimiter)))
+
+==================
+Conditional content - content-visible with when-format
+==================
+
+::: {.content-visible when-format="html"}
+HTML only content.
+:::
+
+---
+
+(document
+  (blank_line)
+  (conditional_block
+    (conditional_open)
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter)))
+
+==================
+Conditional content - content-hidden with when-format
+==================
+
+::: {.content-hidden when-format="pdf"}
+Hidden in PDF.
+:::
+
+---
+
+(document
+  (blank_line)
+  (conditional_block
+    (conditional_open)
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter)))
+
+==================
+Conditional content - with unless-format
+==================
+
+::: {.content-visible unless-format="pdf"}
+Visible unless PDF.
+:::
+
+---
+
+(document
+  (blank_line)
+  (conditional_block
+    (conditional_open)
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter)))
+
+==================
+Conditional content - with when-profile
+==================
+
+::: {.content-visible when-profile="production"}
+Production only content.
+:::
+
+---
+
+(document
+  (blank_line)
+  (conditional_block
+    (conditional_open)
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter)))
+
+==================
+Multiple enhanced divs in sequence
+==================
+
+::: {.callout-note}
+First callout.
+:::
+
+::: {.panel-tabset}
+## Tab 1
+Tab content.
+:::
+
+::: {.content-visible when-format="html"}
+Conditional content.
+:::
+
+---
+
+(document
+  (blank_line)
+  (callout_block
+    (callout_open)
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter))
+  (tabset_block
+    (tabset_open)
+    content: (atx_heading
+      marker: (atx_heading_marker)
+      content: (inline
+        (text)))
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter))
+  (conditional_block
+    (conditional_open)
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter)))

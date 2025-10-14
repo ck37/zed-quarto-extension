@@ -180,8 +180,68 @@ Ask tree-sitter-quarto to add `queries/highlights-zed.scm`:
 - This extension references the Zed variant
 - But we wanted to keep grammar editor-agnostic
 
+## Solution: Vendored Grammar with Patches
+
+**Implemented:** October 14, 2025
+
+Instead of fighting Zed's query loading behavior, we now **vendor the entire grammar** in the repository and apply Zed-compatibility patches directly to it.
+
+### Implementation
+
+1. **Clone grammar source** into `grammars/quarto/` at specific commit
+2. **Apply scope patches** to `queries/highlights.scm`:
+   - `@markup.heading` → `@text.title`
+   - `@markup.italic` → `@text.emphasis`
+   - `@markup.bold` → `@emphasis.strong`
+   - `@markup.raw.*` → `@text.literal`
+   - `@markup.link.*` → `@text.reference`/`@text.uri`
+   - `@markup.quote` → `@comment`
+   - `@markup.math.*` → `@string`
+3. **Remove unsupported injections** (mermaid, dot) from `queries/injections.scm`
+4. **Add extension-specific queries** (outline.scm, tags.scm) not in upstream grammar
+5. **Update extension.toml** to use local path: `path = "grammars/quarto"`
+6. **Remove redundant** `languages/quarto/*.scm` files
+
+### Advantages
+
+✅ **Actually works** - Grammar has correct scopes built-in
+✅ **Full control** - No dependency on Zed's query loading behavior
+✅ **Clear patches** - Documented in script and file headers
+✅ **Reproducible** - `scripts/update-grammar.sh` automates future updates
+✅ **Test coverage** - Automated tests verify scope compatibility
+
+### Maintenance
+
+To update the grammar in the future:
+
+```bash
+# Update to latest commit
+./scripts/update-grammar.sh
+
+# Or update to specific commit
+./scripts/update-grammar.sh b1b4cbd88fc6f787c660bf52b0e23879a8fc66c2
+```
+
+The script automatically:
+- Clones the specified version
+- Applies all Zed-compatibility patches
+- Removes unsupported injections
+- Adds documentation headers
+- Verifies patch completeness
+
+### Tradeoffs
+
+❌ **Larger repo** - Grammar source adds ~2-3 MB
+❌ **Manual sync** - Must run script to pull upstream updates
+❌ **Divergence** - Our version differs from canonical grammar
+
+However, these are acceptable because:
+- The grammar is our own repository anyway (ck37/tree-sitter-quarto)
+- Updates are infrequent and well-scripted
+- The alternative (broken highlighting) is unacceptable
+
 ## Next Steps
 
-1. **Immediate**: Try Option B workaround to unblock user
-2. **Short-term**: File issue with Zed about query loading priority
-3. **Long-term**: Once Zed clarifies/fixes behavior, remove workaround
+1. **Immediate**: ✅ DONE - Vendored grammar with patches
+2. **Short-term**: ~~File issue with Zed~~ (no longer needed with this approach)
+3. **Long-term**: Consider contributing Zed-compatible scopes to nvim-treesitter standard

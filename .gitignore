@@ -2,6 +2,11 @@
 /target/
 **/target/
 /extension.wasm
-/grammars/
+# Grammars - vendored tree-sitter-quarto with Zed-compatibility patches
+# The grammar source is committed to the repo (patched for Zed compatibility)
+# Only ignore temporary build artifacts
+/grammars/*.wasm
+/grammars/**/target/
+/grammars/**/node_modules/
 CLAUDE.md
 lcov.info

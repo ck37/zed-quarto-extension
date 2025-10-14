@@ -1,22 +1,20 @@
-; Quarto Syntax Highlighting (tree-sitter-quarto)
+; Syntax highlighting queries for tree-sitter-quarto
+; Based on openspec/specs/language-injection/spec.md
 ;
-; NOTE: This file uses Zed-compatible scope names (@text.*, @emphasis.strong) converted
-; from tree-sitter-quarto's standard @markup.* scopes. This conversion is done at build time
-; to ensure compatibility with Zed's theming system.
-;
-; Original source: https://github.com/ck37/tree-sitter-quarto/queries/highlights.scm
-; Scope mapping:
+; PATCHED FOR ZED COMPATIBILITY
+; This file has been modified from the upstream tree-sitter-quarto grammar to use
+; Zed-compatible scope names. The following substitutions have been made:
 ;   @markup.heading -> @text.title
-;   @markup.italic -> @text.emphasis  
+;   @markup.italic -> @text.emphasis
 ;   @markup.bold -> @emphasis.strong
 ;   @markup.raw.* -> @text.literal
 ;   @markup.link.text -> @text.reference
 ;   @markup.link.url -> @text.uri
 ;   @markup.quote -> @comment
 ;   @markup.math.* -> @string
-
-; Syntax highlighting queries for tree-sitter-quarto
-; Based on openspec/specs/language-injection/spec.md
+;
+; Original source: https://github.com/ck37/tree-sitter-quarto
+; Commit: b1b4cbd88fc6f787c660bf52b0e23879a8fc66c2
 
 ; ============================================================================
 ; QUARTO-SPECIFIC HIGHLIGHTS
@@ -71,8 +69,8 @@
 (setext_heading
   (setext_heading_marker) @punctuation.special) @text.title
 
-; Emphasis/Strong
-; ---------------
+; Emphasis
+; --------
 
 (emphasis) @text.emphasis
 

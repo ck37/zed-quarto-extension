@@ -1,0 +1,69 @@
+---
+title: "Quarto Sample Document"
+author: "Example Author"
+---
+
+## Introduction
+
+This document demonstrates Quarto Markdown features that tree-sitter-quarto can parse.
+
+See @fig-scatter for the visualization and @tbl-summary for data.
+
+## Code Cells
+
+### Python Cell
+
+```{python}
+#| label: fig-scatter
+#| echo: false
+import matplotlib.pyplot as plt
+plt.plot([1, 2, 3], [1, 4, 9])
+```
+
+### R Cell
+
+```{r}
+#| label: tbl-summary
+#| echo: true
+summary(mtcars)
+```
+
+### Julia Cell
+
+```{julia}
+#| label: julia-example
+println("Hello from Julia")
+```
+
+## Inline Code
+
+The result is `{python} 2 + 2`.
+
+Using R shorthand: `r mean(c(1, 2, 3))`.
+
+## Cross-References
+
+References to figures: @fig-scatter and @fig-plot2.
+
+References to tables: @tbl-summary and @tbl-data.
+
+References to equations: @eq-linear and @eq-quadratic.
+
+References to sections: @sec-intro and @sec-methods.
+
+References to listings: @lst-example and @lst-code.
+
+## Regular Code Block
+
+```python
+# This is a regular code block (not executable)
+print("Not executable")
+```
+
+## Citations
+
+According to @smith2020, the method works well.
+
+## Formatting
+
+This is **bold** and *italic* text.

@@ -6,29 +6,14 @@ use std::process::Command;
 #[test]
 fn highlights_query_is_valid_syntax() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let highlights_path = manifest_dir.join("languages/quarto/highlights.scm");
-
-    // Clone grammar if not present
+    let highlights_path = manifest_dir.join("grammars/quarto/queries/highlights.scm");
     let grammar_dir = manifest_dir.join("grammars/quarto");
-    if !grammar_dir.exists() {
-        let status = Command::new("git")
-            .args([
-                "clone",
-                "https://github.com/ck37/tree-sitter-quarto",
-                grammar_dir.to_str().unwrap(),
-            ])
-            .status()
-            .expect("failed to clone grammar");
-        assert!(status.success(), "Failed to clone grammar repository");
 
-        // Checkout specific commit
-        let status = Command::new("git")
-            .current_dir(&grammar_dir)
-            .args(["checkout", "b1b4cbd88fc6f787c660bf52b0e23879a8fc66c2"])
-            .status()
-            .expect("failed to checkout commit");
-        assert!(status.success(), "Failed to checkout grammar commit");
-    }
+    // Grammar is now vendored in the repo, so just verify it exists
+    assert!(
+        grammar_dir.exists(),
+        "Grammar directory should exist at grammars/quarto (vendored in repo)"
+    );
 
     // Test that tree-sitter can parse our highlights query
     let output = Command::new("tree-sitter")
@@ -57,8 +42,9 @@ fn highlights_query_is_valid_syntax() {
 #[test]
 fn highlights_uses_zed_compatible_scopes() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let highlights = std::fs::read_to_string(manifest_dir.join("languages/quarto/highlights.scm"))
-        .expect("Failed to read highlights.scm");
+    let highlights =
+        std::fs::read_to_string(manifest_dir.join("grammars/quarto/queries/highlights.scm"))
+            .expect("Failed to read highlights.scm");
 
     // Check that we're using Zed-compatible scopes, not standard tree-sitter scopes
     // Filter out comment lines before checking

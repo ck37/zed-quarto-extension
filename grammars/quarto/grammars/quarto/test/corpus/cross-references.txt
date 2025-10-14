@@ -1,0 +1,154 @@
+==================
+Figure reference
+==================
+
+See @fig-plot for details.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (cross_reference
+        type: (reference_type)
+        id: (reference_id))
+      (text))))
+
+==================
+Table reference
+==================
+
+Results in @tbl-data show trends.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (cross_reference
+        type: (reference_type)
+        id: (reference_id))
+      (text))))
+
+==================
+Equation reference
+==================
+
+Apply @eq-linear to solve.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (cross_reference
+        type: (reference_type)
+        id: (reference_id))
+      (text))))
+
+==================
+Section reference
+==================
+
+Details in @sec-intro explain this.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (cross_reference
+        type: (reference_type)
+        id: (reference_id))
+      (text))))
+
+==================
+Listing reference
+==================
+
+See @lst-code for implementation.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (cross_reference
+        type: (reference_type)
+        id: (reference_id))
+      (text))))
+
+==================
+Citation vs cross-reference
+==================
+
+Smith argues @smith2020 that @fig-results demonstrates this.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (citation
+        key: (citation_key))
+      (text)
+      (cross_reference
+        type: (reference_type)
+        id: (reference_id))
+      (text))))
+
+==================
+Multiple cross-references
+==================
+
+Compare @fig-a with @fig-b and @tbl-summary.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (cross_reference
+        type: (reference_type)
+        id: (reference_id))
+      (text)
+      (cross_reference
+        type: (reference_type)
+        id: (reference_id))
+      (text)
+      (cross_reference
+        type: (reference_type)
+        id: (reference_id))
+      (text))))
+
+==================
+Cross-reference with hyphens
+==================
+
+See @fig-my-plot-2024 for results.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (cross_reference
+        type: (reference_type)
+        id: (reference_id))
+      (text))))

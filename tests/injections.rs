@@ -6,8 +6,9 @@ fn injection_languages_are_valid() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
 
     // Read injections.scm
-    let injections_str = fs::read_to_string(manifest_dir.join("languages/quarto/injections.scm"))
-        .expect("injections.scm readable");
+    let injections_str =
+        fs::read_to_string(manifest_dir.join("grammars/quarto/queries/injections.scm"))
+            .expect("injections.scm readable");
 
     // Read extension manifest
     let manifest_str = fs::read_to_string(manifest_dir.join("extension.toml"))
@@ -105,11 +106,11 @@ fn injection_languages_are_valid() {
 #[test]
 fn injections_file_exists_and_parses() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let injections_path = manifest_dir.join("languages/quarto/injections.scm");
+    let injections_path = manifest_dir.join("grammars/quarto/queries/injections.scm");
 
     assert!(
         injections_path.exists(),
-        "injections.scm must exist at languages/quarto/injections.scm"
+        "injections.scm must exist at grammars/quarto/queries/injections.scm"
     );
 
     let injections_str =
@@ -133,8 +134,9 @@ fn pandoc_inline_grammar_is_defined() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
 
     // Read injections.scm
-    let injections_str = fs::read_to_string(manifest_dir.join("languages/quarto/injections.scm"))
-        .expect("injections.scm readable");
+    let injections_str =
+        fs::read_to_string(manifest_dir.join("grammars/quarto/queries/injections.scm"))
+            .expect("injections.scm readable");
 
     // If this branch uses pandoc_markdown_inline, verify it's defined in extension.toml
     if injections_str.contains("pandoc_markdown_inline") {

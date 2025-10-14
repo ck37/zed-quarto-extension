@@ -1,0 +1,84 @@
+==================
+Simple paragraph
+==================
+
+This is a paragraph.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text))))
+
+==================
+ATX heading
+==================
+
+# Heading 1
+
+---
+
+(document
+  (atx_heading
+    marker: (atx_heading_marker)
+    content: (inline
+      (text))))
+
+==================
+Paragraph with code span
+==================
+
+This has `inline code` in it.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (code_span
+        (code_span_delimiter)
+        (code_span_content)
+        (code_span_delimiter))
+      (text))))
+
+==================
+Regular fenced code block
+==================
+
+```python
+print("hello")
+```
+
+---
+
+(document
+  (fenced_code_block
+    open: (code_fence_delimiter)
+    info: (info_string)
+    (code_line)
+    close: (code_fence_delimiter)))
+
+==================
+YAML front matter
+==================
+---
+title: "My Document"
+---
+
+# Heading
+
+---
+
+(document
+  (yaml_front_matter
+    start: (yaml_front_matter_start)
+    (yaml_front_matter_content)
+    close: (yaml_front_matter_delimiter))
+  (atx_heading
+    marker: (atx_heading_marker)
+    content: (inline
+      (text))))

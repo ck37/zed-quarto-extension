@@ -1,0 +1,175 @@
+==================
+Python inline code cell
+==================
+
+The result is `{python} 2 + 2`.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (inline_code_cell
+        (inline_cell_delimiter)
+        language: (language_name)
+        (inline_cell_brace)
+        content: (cell_content)
+        (inline_cell_delimiter))
+      (text))))
+
+==================
+R shorthand syntax
+==================
+
+The mean is `r mean(x)` here.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (inline_code_cell
+        (inline_cell_delimiter)
+        content: (cell_content)
+        (inline_cell_delimiter))
+      (text))))
+
+==================
+Julia inline code cell
+==================
+
+Compute `{julia} sqrt(144)` quickly.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (inline_code_cell
+        (inline_cell_delimiter)
+        language: (language_name)
+        (inline_cell_brace)
+        content: (cell_content)
+        (inline_cell_delimiter))
+      (text))))
+
+==================
+JavaScript inline code cell
+==================
+
+Value: `{javascript} Math.PI * 2`.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (inline_code_cell
+        (inline_cell_delimiter)
+        language: (language_name)
+        (inline_cell_brace)
+        content: (cell_content)
+        (inline_cell_delimiter))
+      (text))))
+
+==================
+Multiple inline cells
+==================
+
+Add `{python} x + y` to `{python} a * b` for total.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (inline_code_cell
+        (inline_cell_delimiter)
+        language: (language_name)
+        (inline_cell_brace)
+        content: (cell_content)
+        (inline_cell_delimiter))
+      (text)
+      (inline_code_cell
+        (inline_cell_delimiter)
+        language: (language_name)
+        (inline_cell_brace)
+        content: (cell_content)
+        (inline_cell_delimiter))
+      (text))))
+
+==================
+Complex expression
+==================
+
+The value `{python} np.mean([1, 2, 3])` is shown.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (inline_code_cell
+        (inline_cell_delimiter)
+        language: (language_name)
+        (inline_cell_brace)
+        content: (cell_content)
+        (inline_cell_delimiter))
+      (text))))
+
+==================
+R shorthand with function call
+==================
+
+Result: `r sum(data$column)` total.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (inline_code_cell
+        (inline_cell_delimiter)
+        content: (cell_content)
+        (inline_cell_delimiter))
+      (text))))
+
+==================
+Inline cell vs regular code span
+==================
+
+Use `{python} x` not `regular code` here.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (inline_code_cell
+        (inline_cell_delimiter)
+        language: (language_name)
+        (inline_cell_brace)
+        content: (cell_content)
+        (inline_cell_delimiter))
+      (text)
+      (code_span
+        (code_span_delimiter)
+        (code_span_content)
+        (code_span_delimiter))
+      (text))))

@@ -1,0 +1,274 @@
+==================
+Block shortcode without arguments
+==================
+
+{{< video >}}
+
+---
+
+(document
+  (blank_line)
+  (shortcode_block
+    (shortcode_open)
+    name: (shortcode_name)
+    (shortcode_close)))
+
+==================
+Block shortcode with URL argument
+==================
+
+{{< video https://example.com/video.mp4 >}}
+
+---
+
+(document
+  (blank_line)
+  (shortcode_block
+    (shortcode_open)
+    name: (shortcode_name)
+    arguments: (shortcode_arguments)
+    (shortcode_close)))
+
+==================
+Block embed shortcode
+==================
+
+{{< embed notebook.ipynb#fig-plot >}}
+
+---
+
+(document
+  (blank_line)
+  (shortcode_block
+    (shortcode_open)
+    name: (shortcode_name)
+    arguments: (shortcode_arguments)
+    (shortcode_close)))
+
+==================
+Block include shortcode
+==================
+
+{{< include _content.qmd >}}
+
+---
+
+(document
+  (blank_line)
+  (shortcode_block
+    (shortcode_open)
+    name: (shortcode_name)
+    arguments: (shortcode_arguments)
+    (shortcode_close)))
+
+==================
+Block meta shortcode
+==================
+
+{{< meta title >}}
+
+---
+
+(document
+  (blank_line)
+  (shortcode_block
+    (shortcode_open)
+    name: (shortcode_name)
+    arguments: (shortcode_arguments)
+    (shortcode_close)))
+
+==================
+Block var shortcode
+==================
+
+{{< var variable.name >}}
+
+---
+
+(document
+  (blank_line)
+  (shortcode_block
+    (shortcode_open)
+    name: (shortcode_name)
+    arguments: (shortcode_arguments)
+    (shortcode_close)))
+
+==================
+Shortcode with hyphenated name
+==================
+
+{{< my-shortcode arg >}}
+
+---
+
+(document
+  (blank_line)
+  (shortcode_block
+    (shortcode_open)
+    name: (shortcode_name)
+    arguments: (shortcode_arguments)
+    (shortcode_close)))
+
+==================
+Shortcode without spaces
+==================
+
+{{<video>}}
+
+---
+
+(document
+  (blank_line)
+  (shortcode_block
+    (shortcode_open)
+    name: (shortcode_name)
+    (shortcode_close)))
+
+==================
+Inline shortcode in paragraph
+==================
+
+See {{< video https://example.com/video.mp4 >}} for details.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (shortcode_inline
+        (shortcode_open)
+        name: (shortcode_name)
+        arguments: (shortcode_arguments)
+        (shortcode_close))
+      (text))))
+
+==================
+Multiple inline shortcodes
+==================
+
+Use {{< var x >}} and {{< var y >}} here.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (shortcode_inline
+        (shortcode_open)
+        name: (shortcode_name)
+        arguments: (shortcode_arguments)
+        (shortcode_close))
+      (text)
+      (shortcode_inline
+        (shortcode_open)
+        name: (shortcode_name)
+        arguments: (shortcode_arguments)
+        (shortcode_close))
+      (text))))
+
+==================
+Shortcode with multiple arguments
+==================
+
+{{< embed notebook.ipynb cell=code-cell >}}
+
+---
+
+(document
+  (blank_line)
+  (shortcode_block
+    (shortcode_open)
+    name: (shortcode_name)
+    arguments: (shortcode_arguments)
+    (shortcode_close)))
+
+==================
+Shortcode with special characters in arguments
+==================
+
+{{< include path/to/file-name_v2.qmd >}}
+
+---
+
+(document
+  (blank_line)
+  (shortcode_block
+    (shortcode_open)
+    name: (shortcode_name)
+    arguments: (shortcode_arguments)
+    (shortcode_close)))
+
+==================
+Multiple block shortcodes
+==================
+
+{{< video video1.mp4 >}}
+
+{{< video video2.mp4 >}}
+
+---
+
+(document
+  (blank_line)
+  (shortcode_block
+    (shortcode_open)
+    name: (shortcode_name)
+    arguments: (shortcode_arguments)
+    (shortcode_close))
+  (blank_line)
+  (shortcode_block
+    (shortcode_open)
+    name: (shortcode_name)
+    arguments: (shortcode_arguments)
+    (shortcode_close)))
+
+==================
+Shortcode after heading
+==================
+
+## Video Section
+
+{{< video https://example.com/demo.mp4 >}}
+
+---
+
+(document
+  (atx_heading
+    marker: (atx_heading_marker)
+    content: (inline
+      (text)))
+  (shortcode_block
+    (shortcode_open)
+    name: (shortcode_name)
+    arguments: (shortcode_arguments)
+    (shortcode_close)))
+
+==================
+Shortcode before code cell
+==================
+
+{{< include data.qmd >}}
+
+```{python}
+import pandas as pd
+```
+
+---
+
+(document
+  (blank_line)
+  (shortcode_block
+    (shortcode_open)
+    name: (shortcode_name)
+    arguments: (shortcode_arguments)
+    (shortcode_close))
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))

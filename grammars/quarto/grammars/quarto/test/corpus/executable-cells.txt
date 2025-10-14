@@ -1,0 +1,124 @@
+==================
+Basic Python cell
+==================
+
+```{python}
+import numpy as np
+result = np.mean([1, 2, 3])
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line)
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+Python cell with chunk options
+==================
+
+```{python}
+#| label: fig-plot
+#| echo: false
+import matplotlib.pyplot as plt
+plt.plot([1, 2, 3])
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    chunk_options: (chunk_options
+      (chunk_option
+        key: (chunk_option_key)
+        value: (chunk_option_value))
+      (chunk_option
+        key: (chunk_option_key)
+        value: (chunk_option_value)))
+    content: (cell_content
+      (code_line)
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+R cell
+==================
+
+```{r}
+library(ggplot2)
+mean(x)
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line)
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+Julia cell
+==================
+
+```{julia}
+using Statistics
+mean([1, 2, 3])
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line)
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+Empty cell
+==================
+
+```{python}
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+Cell with attributes
+==================
+
+```{python #fig-plot .class}
+plt.plot([1, 2, 3])
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+      attributes: (attribute_list
+        id: (attribute_id)
+        class: (attribute_class))
+    content: (cell_content
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))

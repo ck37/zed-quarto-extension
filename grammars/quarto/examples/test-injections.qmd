@@ -1,0 +1,48 @@
+---
+title: "Language Injection Test"
+---
+
+## Python
+
+```{python}
+#| label: fig-plot
+import numpy as np
+result = np.mean([1, 2, 3])
+```
+
+Inline: `{python} np.mean([1,2,3])`
+
+## R
+
+```{r}
+library(ggplot2)
+mean(x)
+```
+
+Inline: `{r} mean(x)` or `r mean(x)`
+
+## Julia
+
+```{julia}
+using Statistics
+mean([1, 2, 3])
+```
+
+Inline: `{julia} sqrt(144)`
+
+## SQL
+
+```{sql}
+SELECT * FROM users WHERE active = 1;
+```
+
+## Bash
+
+```{bash}
+echo "Hello, World!"
+ls -la
+```
+
+## Multiple Languages
+
+This document has Python: `{python} sum([1,2,3])`, R: `r length(x)`, and Julia: `{julia} 2+2` all in one paragraph.
