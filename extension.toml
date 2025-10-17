@@ -20,19 +20,19 @@ languages = ["languages/quarto"]
 # Development approach:
 # - For production: use GitHub repository URL with specific commit SHA
 # - For local dev: can use file:// URL to load from local filesystem
-# - build.rs compiles vendored grammar at grammars/quarto-vendored/ for local tests
-# - Tests run against vendored version for reproducibility
+# - build.rs clones grammar to grammars/quarto/ for local tests (same commit as Zed uses)
+# - Tests run against cloned version for consistency with Zed's runtime behavior
 #
 # Query file resolution:
 # - Zed loads queries from: queries/highlights.scm (in grammar repo)
-# - Grammar repo has: queries/zed/highlights.scm (Zed-compatible @text.* scopes)
-# - We've patched: queries/highlights.scm is a copy of queries/zed/highlights.scm
-# - This ensures Zed themes can style the syntax correctly
+# - Grammar repo's queries/highlights.scm uses Zed-compatible scopes (@text.*, @emphasis.strong)
+# - Grammar repo's queries/nvim/highlights.scm preserves modern scopes (@markup.*)
+# - This ensures Zed themes can style the syntax correctly without extension overrides
 #
 # IMPORTANT: When changing the repository or rev below:
 # 1. Update build.rs QUARTO_COMMIT constant to match
-# 2. Update test files if directory structure changes
-# 3. Verify grammars/quarto-vendored/ has matching commit
+# 2. Run tests to verify grammar clones and compiles correctly
+# 3. Clean and rebuild: cargo clean && cargo build --release
 [grammars.quarto]
 repository = "https://github.com/ck37/tree-sitter-quarto"
 rev = "9f7e5d2ef6af2af9dd47b259d9d50fa5d0e18638"
