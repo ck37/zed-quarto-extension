@@ -19,8 +19,11 @@ if [ -d ~/Library/Application\ Support/Zed/extensions/work/quarto ]; then
     echo "  ✓ Removed work directory"
 fi
 
-echo "🔨 Building extension..."
-cargo build --release
+echo "🔨 Building extension WASM..."
+cargo build --release --target wasm32-wasip2
+
+echo "📦 Copying WASM to extension.wasm..."
+cp target/wasm32-wasip2/release/quarto_zed.wasm extension.wasm
 
 echo "✨ Ready to install in Zed!"
 echo ""
