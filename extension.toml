@@ -28,6 +28,11 @@ languages = ["languages/quarto"]
 # - Grammar repo has: queries/zed/highlights.scm (Zed-compatible @text.* scopes)
 # - We've patched: queries/highlights.scm is a copy of queries/zed/highlights.scm
 # - This ensures Zed themes can style the syntax correctly
+#
+# IMPORTANT: When changing the repository or rev below:
+# 1. Update build.rs QUARTO_COMMIT constant to match
+# 2. Update test files if directory structure changes
+# 3. Verify grammars/quarto-vendored/ has matching commit
 [grammars.quarto]
 # TEMPORARY: Using file:// URL for local development until we push Zed-compatible queries to GitHub
 # The vendored grammar at grammars/quarto-vendored already has queries/highlights.scm patched with Zed scopes
