@@ -30,4 +30,4 @@ languages = ["languages/quarto"]
 # - This ensures Zed themes can style the syntax correctly
 [grammars.quarto]
 repository = "https://github.com/ck37/tree-sitter-quarto"
-rev = "c9f444e88fc6f787c660bf52b0e23879a8fc66c2"
+rev = "c9f444e800878517fd1937a97f60fe4ed3145917"
