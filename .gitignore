@@ -7,11 +7,14 @@
 # tree-sitter-pandoc-markdown: cloned by build.rs, not vendored
 /grammars/pandoc_markdown/
 
-# tree-sitter-quarto: vendored with Zed-compatibility patches
-# Grammar source IS committed, only ignore build artifacts
-/grammars/quarto/target/
-/grammars/quarto/node_modules/
-/grammars/quarto/**/*.wasm
+# tree-sitter-quarto: vendored for local tests, Zed clones its own copy
+# Grammar source IS committed at grammars/quarto-vendored/, only ignore build artifacts
+/grammars/quarto-vendored/target/
+/grammars/quarto-vendored/node_modules/
+/grammars/quarto-vendored/**/*.wasm
+
+# Zed may create grammars/quarto/ when installing - don't commit it
+/grammars/quarto/
 
 CLAUDE.md
 lcov.info

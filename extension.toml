@@ -29,5 +29,10 @@ languages = ["languages/quarto"]
 # - We've patched: queries/highlights.scm is a copy of queries/zed/highlights.scm
 # - This ensures Zed themes can style the syntax correctly
 [grammars.quarto]
-repository = "https://github.com/ck37/tree-sitter-quarto"
-rev = "c9f444e800878517fd1937a97f60fe4ed3145917"
+# TEMPORARY: Using file:// URL for local development until we push Zed-compatible queries to GitHub
+# The vendored grammar at grammars/quarto-vendored already has queries/highlights.scm patched with Zed scopes
+repository = "file:///Users/ck432/Partners HealthCare Dropbox/Chris Kennedy/Code/zed-quarto-extension/grammars/quarto-vendored"
+rev = "HEAD"
+# Production (once queries are fixed on GitHub):
+# repository = "https://github.com/ck37/tree-sitter-quarto"
+# rev = "c9f444e800878517fd1937a97f60fe4ed3145917"

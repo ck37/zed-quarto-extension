@@ -192,7 +192,9 @@ fn main() {
 }
 
 fn compile_quarto_grammar(dir: &Path) {
-    let quarto_dir = dir.join("quarto");
+    // Use the vendored grammar directory (grammars/quarto-vendored)
+    // Zed will clone its own copy when installing, but tests use this vendored version
+    let quarto_dir = dir.join("quarto-vendored");
     let src_dir = quarto_dir.join("src");
 
     if !quarto_dir.join(".git").exists() {
