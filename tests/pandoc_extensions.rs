@@ -44,7 +44,10 @@ fn strikethrough_is_highlighted() {
         .parse(source.as_bytes(), None)
         .expect("parse succeeds");
 
-    eprintln!("\n=== STRIKETHROUGH PARSE TREE ===\n{}\n", tree.root_node().to_sexp());
+    eprintln!(
+        "\n=== STRIKETHROUGH PARSE TREE ===\n{}\n",
+        tree.root_node().to_sexp()
+    );
 
     let config = highlight_configuration();
     let mut highlighter = Highlighter::new();
@@ -89,7 +92,10 @@ fn highlight_is_highlighted() {
     parser.set_language(&lang).unwrap();
     let tree = parser.parse(source.as_bytes(), None).unwrap();
 
-    eprintln!("\n=== HIGHLIGHT PARSE TREE ===\n{}\n", tree.root_node().to_sexp());
+    eprintln!(
+        "\n=== HIGHLIGHT PARSE TREE ===\n{}\n",
+        tree.root_node().to_sexp()
+    );
 
     let config = highlight_configuration();
     let mut highlighter = Highlighter::new();
@@ -133,7 +139,10 @@ fn subscript_is_highlighted() {
     parser.set_language(&lang).unwrap();
     let tree = parser.parse(source.as_bytes(), None).unwrap();
 
-    eprintln!("\n=== SUBSCRIPT PARSE TREE ===\n{}\n", tree.root_node().to_sexp());
+    eprintln!(
+        "\n=== SUBSCRIPT PARSE TREE ===\n{}\n",
+        tree.root_node().to_sexp()
+    );
 
     let config = highlight_configuration();
     let mut highlighter = Highlighter::new();
@@ -178,7 +187,10 @@ fn superscript_is_highlighted() {
     parser.set_language(&lang).unwrap();
     let tree = parser.parse(source.as_bytes(), None).unwrap();
 
-    eprintln!("\n=== SUPERSCRIPT PARSE TREE ===\n{}\n", tree.root_node().to_sexp());
+    eprintln!(
+        "\n=== SUPERSCRIPT PARSE TREE ===\n{}\n",
+        tree.root_node().to_sexp()
+    );
 
     let config = highlight_configuration();
     let mut highlighter = Highlighter::new();
@@ -233,7 +245,10 @@ Superscript: x^2^ + y^2^ = z^2^
     parser.set_language(&lang).unwrap();
     let tree = parser.parse(source.as_bytes(), None).unwrap();
 
-    eprintln!("\n=== FULL DOCUMENT PARSE TREE ===\n{}\n", tree.root_node().to_sexp());
+    eprintln!(
+        "\n=== FULL DOCUMENT PARSE TREE ===\n{}\n",
+        tree.root_node().to_sexp()
+    );
 
     let config = highlight_configuration();
     let mut highlighter = Highlighter::new();

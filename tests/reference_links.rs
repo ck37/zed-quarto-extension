@@ -47,7 +47,10 @@ fn basic_reference_link() {
         .parse(source.as_bytes(), None)
         .expect("parse succeeds");
 
-    eprintln!("\n=== REFERENCE LINK PARSE TREE ===\n{}\n", tree.root_node().to_sexp());
+    eprintln!(
+        "\n=== REFERENCE LINK PARSE TREE ===\n{}\n",
+        tree.root_node().to_sexp()
+    );
 
     let config = highlight_configuration();
     let mut highlighter = Highlighter::new();
@@ -100,7 +103,10 @@ fn shorthand_reference_link() {
     parser.set_language(&lang).unwrap();
     let tree = parser.parse(source.as_bytes(), None).unwrap();
 
-    eprintln!("\n=== SHORTHAND REFERENCE PARSE TREE ===\n{}\n", tree.root_node().to_sexp());
+    eprintln!(
+        "\n=== SHORTHAND REFERENCE PARSE TREE ===\n{}\n",
+        tree.root_node().to_sexp()
+    );
 
     let config = highlight_configuration();
     let mut highlighter = Highlighter::new();
@@ -153,7 +159,10 @@ Also check [Julia][] for numerical computing.
     parser.set_language(&lang).unwrap();
     let tree = parser.parse(source.as_bytes(), None).unwrap();
 
-    eprintln!("\n=== MULTIPLE REFERENCES PARSE TREE ===\n{}\n", tree.root_node().to_sexp());
+    eprintln!(
+        "\n=== MULTIPLE REFERENCES PARSE TREE ===\n{}\n",
+        tree.root_node().to_sexp()
+    );
 
     let config = highlight_configuration();
     let mut highlighter = Highlighter::new();
@@ -201,7 +210,10 @@ fn reference_with_title() {
     parser.set_language(&lang).unwrap();
     let tree = parser.parse(source.as_bytes(), None).unwrap();
 
-    eprintln!("\n=== REFERENCE WITH TITLE PARSE TREE ===\n{}\n", tree.root_node().to_sexp());
+    eprintln!(
+        "\n=== REFERENCE WITH TITLE PARSE TREE ===\n{}\n",
+        tree.root_node().to_sexp()
+    );
 
     let config = highlight_configuration();
     let mut highlighter = Highlighter::new();
@@ -233,7 +245,8 @@ fn reference_with_title() {
         "Reference link text should be present"
     );
     assert!(
-        rendered_output.contains("example.com") || rendered_output.contains("Example Documentation"),
+        rendered_output.contains("example.com")
+            || rendered_output.contains("Example Documentation"),
         "Reference definition should be present"
     );
 
@@ -253,7 +266,10 @@ fn inline_vs_reference_links() {
     parser.set_language(&lang).unwrap();
     let tree = parser.parse(source.as_bytes(), None).unwrap();
 
-    eprintln!("\n=== MIXED LINKS PARSE TREE ===\n{}\n", tree.root_node().to_sexp());
+    eprintln!(
+        "\n=== MIXED LINKS PARSE TREE ===\n{}\n",
+        tree.root_node().to_sexp()
+    );
 
     let config = highlight_configuration();
     let mut highlighter = Highlighter::new();

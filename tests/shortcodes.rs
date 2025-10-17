@@ -97,7 +97,8 @@ You can also use {{< pagebreak >}} inline.
 
     // Check that shortcode arguments are highlighted (may include spaces)
     assert!(
-        rendered_output.contains("<parameter>") && (rendered_output.contains("name") || rendered_output.contains("title")),
+        rendered_output.contains("<parameter>")
+            && (rendered_output.contains("name") || rendered_output.contains("title")),
         "Shortcode arguments should be highlighted as parameters"
     );
 
