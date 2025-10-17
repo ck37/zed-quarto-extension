@@ -1,25 +1,59 @@
 /// Verify that required language configuration files exist
 ///
-/// Even when using a grammar from a GitHub repository, Zed extensions still need
-/// their own language configuration files in languages/<lang>/ directory.
+/// # Why Language Query Files Are Required
 ///
-/// Why this is needed:
-/// - Zed loads grammars from the repository specified in extension.toml
-/// - BUT language-specific configuration (queries, settings) come from the extension
-/// - The grammar provides the parser; the extension provides the editor integration
+/// Even when using a grammar from a GitHub repository, Zed extensions MUST provide
+/// their own language configuration files in the `languages/<lang>/` directory.
 ///
-/// Required files:
-/// - config.toml: Language metadata (file extensions, comment syntax, etc.)
-/// - highlights.scm: Syntax highlighting queries (maps AST nodes to semantic scopes)
-/// - injections.scm: Language injection rules (embedded code blocks, YAML, etc.)
+/// ## Architecture: Grammar vs Extension
 ///
-/// Optional but recommended:
-/// - indents.scm: Indentation rules
-/// - folds.scm: Code folding rules
-/// - outline.scm: Document outline/structure
-/// - tags.scm: Symbol navigation
-/// - locals.scm: Local scope support
-/// - textobjects.scm: Text object selection
+/// In extension.toml, we specify a grammar from GitHub:
+/// ```toml
+/// [grammars.quarto]
+/// repository = "https://github.com/ck37/tree-sitter-quarto"
+/// rev = "9f7e5d2..."
+/// ```
+///
+/// But Zed still requires the extension to provide language files:
+///
+/// 1. **Grammar (from GitHub)** → Provides the **parser** (how to build the AST)
+/// 2. **Extension (local files)** → Provides **editor integration** (how to use the AST)
+///
+/// ## Division of Responsibilities
+///
+/// - **Grammar repository**: Defines syntax rules, creates parse tree from source code
+/// - **Extension's languages/ dir**: Maps parse tree to editor features (colors, folding, navigation)
+///
+/// ## Required Files
+///
+/// These files MUST exist or the extension won't work:
+/// - `config.toml`: Language metadata (file extensions, comment syntax, tab settings)
+/// - `highlights.scm`: Syntax highlighting queries (maps AST nodes → semantic scopes for themes)
+/// - `injections.scm`: Language injection rules (embedded Python, R, YAML in Quarto documents)
+///
+/// ## Optional but Recommended Files
+///
+/// These enhance the editing experience:
+/// - `indents.scm`: Smart indentation rules
+/// - `folds.scm`: Code folding support (collapse sections)
+/// - `outline.scm`: Document outline/structure for navigation panel
+/// - `tags.scm`: Symbol navigation (go to definition, find references)
+/// - `locals.scm`: Local scope support for accurate symbol resolution
+/// - `textobjects.scm`: Text object selection (e.g., select inside function)
+///
+/// ## What Happens Without These Files
+///
+/// Without language query files, the extension will:
+/// - ✅ Install successfully in Zed
+/// - ✅ Load the grammar from GitHub
+/// - ✅ Parse .qmd files correctly
+/// - ❌ Provide NO syntax highlighting (everything appears as plain text)
+/// - ❌ Provide NO code folding, outline, or other features
+///
+/// ## This Test Prevents That
+///
+/// This test validates all required files exist and will fail if they're missing,
+/// preventing the "extension installs but doesn't work" issue from occurring.
 use std::path::Path;
 
 #[test]
