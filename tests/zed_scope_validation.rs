@@ -85,7 +85,7 @@ const ALLOWED_SCOPE_PATTERNS: &[&str] = &[
 #[test]
 fn all_scopes_are_zed_compatible() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let highlights_path = manifest_dir.join("grammars/quarto-vendored/queries/zed/highlights.scm");
+    let highlights_path = manifest_dir.join("grammars/quarto/queries/highlights.scm");
 
     let highlights =
         std::fs::read_to_string(&highlights_path).expect("Failed to read highlights.scm");
@@ -146,7 +146,7 @@ fn all_scopes_are_zed_compatible() {
 #[test]
 fn no_nvim_treesitter_scopes() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let highlights_path = manifest_dir.join("grammars/quarto-vendored/queries/zed/highlights.scm");
+    let highlights_path = manifest_dir.join("grammars/quarto/queries/highlights.scm");
 
     let highlights =
         std::fs::read_to_string(&highlights_path).expect("Failed to read highlights.scm");
@@ -187,7 +187,7 @@ fn no_nvim_treesitter_scopes() {
 #[test]
 fn uses_recommended_markdown_scopes() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let highlights_path = manifest_dir.join("grammars/quarto-vendored/queries/zed/highlights.scm");
+    let highlights_path = manifest_dir.join("grammars/quarto/queries/highlights.scm");
 
     let highlights =
         std::fs::read_to_string(&highlights_path).expect("Failed to read highlights.scm");
@@ -229,7 +229,7 @@ fn uses_recommended_markdown_scopes() {
 #[test]
 fn documents_all_used_scopes() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let highlights_path = manifest_dir.join("grammars/quarto-vendored/queries/zed/highlights.scm");
+    let highlights_path = manifest_dir.join("grammars/quarto/queries/highlights.scm");
     let docs_path = manifest_dir.join("docs/zed-syntax-scopes.md");
 
     let highlights =
@@ -303,7 +303,7 @@ fn is_scope_supported(scope: &str) -> bool {
 #[test]
 fn list_all_used_scopes() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let highlights_path = manifest_dir.join("grammars/quarto-vendored/queries/zed/highlights.scm");
+    let highlights_path = manifest_dir.join("grammars/quarto/queries/highlights.scm");
 
     let highlights =
         std::fs::read_to_string(&highlights_path).expect("Failed to read highlights.scm");

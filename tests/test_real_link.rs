@@ -20,7 +20,7 @@ fn test_real_document_link() {
 
     let highlights_query = std::fs::read_to_string(
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-            .join("grammars/quarto-vendored/queries/zed/highlights.scm"),
+            .join("grammars/quarto/queries/highlights.scm"),
     )
     .unwrap();
 

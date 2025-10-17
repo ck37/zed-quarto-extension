@@ -25,7 +25,7 @@ fn analyze_emphasis_captures() {
     // Now let's see what our queries capture
     let highlights_query = std::fs::read_to_string(
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-            .join("grammars/quarto-vendored/queries/zed/highlights.scm"),
+            .join("grammars/quarto/queries/highlights.scm"),
     )
     .expect("Failed to read highlights.scm");
 
@@ -185,7 +185,7 @@ fn analyze_heading_captures() {
 
     let highlights_query = std::fs::read_to_string(
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-            .join("grammars/quarto-vendored/queries/zed/highlights.scm"),
+            .join("grammars/quarto/queries/highlights.scm"),
     )
     .expect("Failed to read highlights.scm");
 

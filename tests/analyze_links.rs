@@ -24,7 +24,7 @@ fn analyze_link_structure_and_captures() {
     // Check what our queries capture
     let highlights_query = std::fs::read_to_string(
         std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-            .join("grammars/quarto-vendored/queries/zed/highlights.scm"),
+            .join("grammars/quarto/queries/highlights.scm"),
     )
     .expect("Failed to read highlights.scm");
 

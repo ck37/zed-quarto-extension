@@ -1,1 +1,0 @@
-Use {{< var x >}} and {{< var y >}} here.

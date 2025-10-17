@@ -6,7 +6,7 @@ const COMMIT: &str = "f2e5718a1b2190cf59dd22d9a97fc9b7329a25b6";
 
 // tree-sitter-quarto for automated highlighting tests
 const QUARTO_REPO_URL: &str = "https://github.com/ck37/tree-sitter-quarto";
-const QUARTO_COMMIT: &str = "96638a5eaba58df4cf2ac270af844d19d8fff083";
+const QUARTO_COMMIT: &str = "9f7e5d2ef6af2af9dd47b259d9d50fa5d0e18638";
 
 fn main() {
     // Only compile the grammar for native tests, not for WASM
@@ -192,9 +192,9 @@ fn main() {
 }
 
 fn compile_quarto_grammar(dir: &Path) {
-    // Use the vendored grammar directory (grammars/quarto-vendored)
-    // Zed will clone its own copy when installing, but tests use this vendored version
-    let quarto_dir = dir.join("quarto-vendored");
+    // Build.rs clones tree-sitter-quarto to grammars/quarto/ for test compilation
+    // Zed will also clone its own copy when installing the extension
+    let quarto_dir = dir.join("quarto");
     let src_dir = quarto_dir.join("src");
 
     if !quarto_dir.join(".git").exists() {

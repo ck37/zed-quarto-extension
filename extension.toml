@@ -34,10 +34,5 @@ languages = ["languages/quarto"]
 # 2. Update test files if directory structure changes
 # 3. Verify grammars/quarto-vendored/ has matching commit
 [grammars.quarto]
-# TEMPORARY: Using file:// URL for local development until we push Zed-compatible queries to GitHub
-# The vendored grammar at grammars/quarto-vendored already has queries/highlights.scm patched with Zed scopes
-repository = "file:///Users/ck432/Partners HealthCare Dropbox/Chris Kennedy/Code/zed-quarto-extension/grammars/quarto-vendored"
-rev = "HEAD"
-# Production (once queries are fixed on GitHub):
-# repository = "https://github.com/ck37/tree-sitter-quarto"
-# rev = "c9f444e800878517fd1937a97f60fe4ed3145917"
+repository = "https://github.com/ck37/tree-sitter-quarto"
+rev = "9f7e5d2ef6af2af9dd47b259d9d50fa5d0e18638"
