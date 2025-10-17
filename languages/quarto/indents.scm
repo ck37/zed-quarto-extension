@@ -1,9 +1,28 @@
-(list_item) @indent
-; TODO: Re-enable if pandoc_markdown supports task lists
-; (task_list_item) @indent
+; Indentation queries for tree-sitter-quarto
+; Defines automatic indentation behavior in editors
 
-(fenced_code_block
-  (code_fence_content) @indent
-  (fenced_code_block_delimiter) @end)
+; ============================================================================
+; INDENT
+; ============================================================================
 
+; Lists
+[
+  (ordered_list)
+  (unordered_list)
+] @indent
+
+; Block quotes
 (block_quote) @indent
+
+; Fenced divs
+(fenced_div) @indent
+
+; ============================================================================
+; DEDENT
+; ============================================================================
+
+; Closing delimiters
+[
+  (fenced_div_delimiter)
+  (code_fence_delimiter)
+] @dedent

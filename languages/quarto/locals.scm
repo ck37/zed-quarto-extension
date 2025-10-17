@@ -1,65 +1,40 @@
-; Pandoc Markdown Locals Queries
-; Define scopes and references for semantic analysis and go-to-definition
+; Locals queries for tree-sitter-quarto
+; Defines scopes and local definitions for semantic analysis
 
 ; ============================================================================
-; Link References
+; SCOPES
 ; ============================================================================
 
-; Link reference definitions create local "variables"
+(document) @scope
+
+(executable_code_cell) @scope
+
+; ============================================================================
+; DEFINITIONS
+; ============================================================================
+
+; Chunk labels define identifiers
+(chunk_option
+  key: (chunk_option_key) @_key
+  (#eq? @_key "label")
+  value: (chunk_option_value) @definition.label)
+
+; Link reference definitions
 (link_reference_definition
-  (link_label) @definition.link)
-
-; Link references use these "variables"
-(link
-  (link_label) @reference.link)
-
-; Image references also use link definitions
-(image
-  (link_label) @reference.link)
-
-; ============================================================================
-; Footnotes
-; ============================================================================
+  label: (_) @definition.reference)
 
 ; Footnote definitions
 (footnote_definition
-  (footnote_label) @definition.footnote)
-
-; Footnote references
-(footnote_reference) @reference.footnote
+  marker: (_) @definition.footnote)
 
 ; ============================================================================
-; Scopes
+; REFERENCES
 ; ============================================================================
 
-; Document root is the top-level scope
-(document) @scope
+; Cross-references reference labels
+(cross_reference
+  id: (reference_id) @reference.label)
 
-; Fenced divs create nested scopes
-(fenced_div) @scope
-
-; Block quotes create nested scopes
-(block_quote) @scope
-
-; Lists create nested scopes
-(list) @scope
-
-; Headings with content create section scopes
-(atx_heading) @scope
-(setext_heading) @scope
-
-; ============================================================================
-; Notes
-; ============================================================================
-
-; This file enables:
-; - Go-to-definition for link and footnote references
-; - Hover tooltips showing definition content
-; - Rename refactoring for references
-; - Scope-aware semantic analysis
-; - LSP integration for references
-
-; Scopes define where references are valid:
-; - Link references are typically document-scoped
-; - Footnotes are document-scoped
-; - Some editors may implement section-local references
+; Citations reference bibliography
+(citation
+  key: (citation_key) @reference.citation)
