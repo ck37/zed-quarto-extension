@@ -1,0 +1,225 @@
+==================
+Suppress author citation
+==================
+
+Citation with -@author.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (citation
+        key: (citation_key))
+      (text))))
+
+==================
+Bracketed citation
+==================
+
+Citation @{https://example.com}.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (citation
+        (ERROR)
+        key: (citation_key))
+      (text))))
+
+==================
+Suppress author with brackets
+==================
+
+Citation -@{url}.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (citation
+        (ERROR)
+        key: (citation_key))
+      (text))))
+
+==================
+Escaped shortcode
+==================
+
+{{{< call >}}}
+
+---
+
+(document
+  (blank_line)
+  (ERROR)
+  (paragraph
+    content: (inline
+      (shortcode_inline
+        (shortcode_open)
+        name: (shortcode_name)
+        (shortcode_close))
+      (text))))
+
+==================
+Block shortcode with argument
+==================
+
+{{< video https://example.com >}}
+
+---
+
+(document
+  (blank_line)
+  (shortcode_block
+    (shortcode_open)
+    name: (shortcode_name)
+    arguments: (shortcode_arguments)
+    (shortcode_close)))
+
+==================
+Inline shortcode with argument
+==================
+
+Text with {{< meta title >}} inline.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (shortcode_inline
+        (shortcode_open)
+        name: (shortcode_name)
+        arguments: (shortcode_arguments)
+        (shortcode_close))
+      (text))))
+
+==================
+Shortcode with multiple arguments
+==================
+
+{{< video url="https://example.com" width="100%" >}}
+
+---
+
+(document
+  (blank_line)
+  (shortcode_block
+    (shortcode_open)
+    name: (shortcode_name)
+    arguments: (shortcode_arguments)
+    (shortcode_close)))
+
+==================
+Executable cell with hyphenated language
+==================
+
+```{julia-lang}
+x = 1
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+Regular code block with language
+==================
+
+```python
+code
+```
+
+---
+
+(document
+  (fenced_code_block
+    open: (code_fence_delimiter)
+    info: (info_string)
+    (code_line)
+    close: (code_fence_delimiter)))
+
+==================
+Callout without title
+==================
+
+::: {.callout-tip}
+Tip content.
+:::
+
+---
+
+(document
+  (blank_line)
+  (callout_block
+    (callout_open)
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter)))
+
+==================
+Tabset block
+==================
+
+::: {.panel-tabset}
+## Tab 1
+Content 1.
+:::
+
+---
+
+(document
+  (blank_line)
+  (tabset_block
+    (tabset_open)
+    content: (atx_heading
+      marker: (atx_heading_marker)
+      content: (inline
+        (text)))
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter)))
+
+==================
+Callout with multiple paragraphs
+==================
+
+::: {.callout-note}
+First paragraph.
+
+Second paragraph.
+:::
+
+---
+
+(document
+  (blank_line)
+  (callout_block
+    (callout_open)
+    content: (paragraph
+      content: (inline
+        (text)))
+    content: (paragraph
+      content: (inline
+        (text)))
+    close: (fenced_div_delimiter)))

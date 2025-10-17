@@ -1,7 +1,6 @@
 /// Test to validate that all node types used in highlight queries
 /// actually exist in the grammar. This prevents silent highlighting failures
 /// when queries reference non-existent node types.
-
 use std::path::Path;
 use tree_sitter::{Language, Query};
 
@@ -14,8 +13,9 @@ extern "C" {
 fn all_query_node_types_exist_in_grammar() {
     let language = unsafe { tree_sitter_quarto() };
     let highlights_query = std::fs::read_to_string(
-        Path::new(env!("CARGO_MANIFEST_DIR")).join("languages/quarto/highlights.scm")
-    ).expect("Failed to read highlights.scm");
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("grammars/quarto/queries/zed/highlights.scm"),
+    )
+    .expect("Failed to read highlights.scm");
 
     // Try to compile the query - this will fail if node types don't exist
     let result = Query::new(&language, &highlights_query);
@@ -35,7 +35,7 @@ fn all_query_node_types_exist_in_grammar() {
                 3. The grammar version matches what extension.toml expects\n\n\
                 To debug:\n\
                 - Run: tree-sitter parse <test-file> to see actual AST nodes\n\
-                - Run: tree-sitter query languages/quarto/highlights.scm to validate query",
+                - Run: tree-sitter query grammars/quarto/queries/zed/highlights.scm to validate query",
                 e
             );
         }
@@ -66,10 +66,14 @@ fn emphasis_and_strong_nodes_exist() {
 fn grammar_parses_basic_inline_content() {
     let language = unsafe { tree_sitter_quarto() };
     let mut parser = tree_sitter::Parser::new();
-    parser.set_language(&language).expect("Failed to set language");
+    parser
+        .set_language(&language)
+        .expect("Failed to set language");
 
     // Test emphasis
-    let tree = parser.parse("*italic text*", None).expect("Failed to parse emphasis");
+    let tree = parser
+        .parse("*italic text*", None)
+        .expect("Failed to parse emphasis");
     let root = tree.root_node();
 
     // Should have an emphasis node somewhere in the tree
@@ -81,7 +85,9 @@ fn grammar_parses_basic_inline_content() {
     );
 
     // Test strong emphasis
-    let tree = parser.parse("**bold text**", None).expect("Failed to parse strong");
+    let tree = parser
+        .parse("**bold text**", None)
+        .expect("Failed to parse strong");
     let root = tree.root_node();
 
     let has_strong = check_for_node_type(&root, "strong_emphasis");
@@ -92,7 +98,9 @@ fn grammar_parses_basic_inline_content() {
     );
 
     // Test heading
-    let tree = parser.parse("# Heading\n", None).expect("Failed to parse heading");
+    let tree = parser
+        .parse("# Heading\n", None)
+        .expect("Failed to parse heading");
     let root = tree.root_node();
 
     let has_heading = check_for_node_type(&root, "atx_heading");
@@ -103,7 +111,9 @@ fn grammar_parses_basic_inline_content() {
     );
 
     // Verify text nodes exist inside emphasis
-    let tree = parser.parse("*italic text*", None).expect("Failed to parse");
+    let tree = parser
+        .parse("*italic text*", None)
+        .expect("Failed to parse");
     let root = tree.root_node();
 
     let has_text_in_emphasis = check_for_nested_node(&root, "emphasis", "text");
@@ -160,7 +170,9 @@ fn document_unsupported_pandoc_features() {
 
     let language = unsafe { tree_sitter_quarto() };
     let mut parser = tree_sitter::Parser::new();
-    parser.set_language(&language).expect("Failed to set language");
+    parser
+        .set_language(&language)
+        .expect("Failed to set language");
 
     // Test strikethrough (NOT supported yet)
     let tree = parser.parse("~~strikethrough~~", None).unwrap();

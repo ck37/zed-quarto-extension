@@ -67,3 +67,12 @@ According to @smith2020, the method works well.
 ## Formatting
 
 This is **bold** and *italic* text.
+
+Extended Pandoc inline formatting:
+
+- Strikethrough: ~~deleted text~~
+- Highlight: ==important text==
+- Subscript: H~2~O and C~6~H~12~O~6~
+- Superscript: x^2^ and E=mc^2^
+
+Combined: **Bold with ~~strikethrough~~** and ==*highlighted italic*==.

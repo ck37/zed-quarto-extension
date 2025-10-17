@@ -122,3 +122,128 @@ plt.plot([1, 2, 3])
     content: (cell_content
       (code_line))
     close_delimiter: (code_fence_delimiter)))
+
+==================
+Multi-line chunk option basic
+==================
+
+```{python}
+#| fig-cap: |
+#|   This is a multi-line
+#|   figure caption
+import numpy as np
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    chunk_options: (chunk_options
+      (chunk_option
+        key: (chunk_option_key)
+        (chunk_option_continuation
+          value: (chunk_option_value))
+        (chunk_option_continuation
+          value: (chunk_option_value))))
+    content: (cell_content
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+Multi-line chunk option with indentation
+==================
+
+```{python}
+#| warning: |
+#|   Line 1
+#|     Indented line 2
+#|   Line 3
+plt.plot([1, 2, 3])
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    chunk_options: (chunk_options
+      (chunk_option
+        key: (chunk_option_key)
+        (chunk_option_continuation
+          value: (chunk_option_value))
+        (chunk_option_continuation
+          value: (chunk_option_value))
+        (chunk_option_continuation
+          value: (chunk_option_value))))
+    content: (cell_content
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+Mixed single and multi-line chunk options
+==================
+
+```{python}
+#| label: fig-example
+#| fig-cap: |
+#|   A beautiful plot showing
+#|   the relationship
+#| echo: false
+plt.plot([1, 2, 3])
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    chunk_options: (chunk_options
+      (chunk_option
+        key: (chunk_option_key)
+        value: (chunk_option_value))
+      (chunk_option
+        key: (chunk_option_key)
+        (chunk_option_continuation
+          value: (chunk_option_value))
+        (chunk_option_continuation
+          value: (chunk_option_value)))
+      (chunk_option
+        key: (chunk_option_key)
+        value: (chunk_option_value)))
+    content: (cell_content
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+Multi-line option followed by code
+==================
+
+```{r}
+#| message: |
+#|   Calculating statistics
+#|   for dataset
+library(ggplot2)
+ggplot(data, aes(x, y)) + geom_point()
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    chunk_options: (chunk_options
+      (chunk_option
+        key: (chunk_option_key)
+        (chunk_option_continuation
+          value: (chunk_option_value))
+        (chunk_option_continuation
+          value: (chunk_option_value))))
+    content: (cell_content
+      (code_line)
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))

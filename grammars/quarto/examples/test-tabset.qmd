@@ -1,0 +1,24 @@
+::: {.panel-tabset}
+## Python
+```python
+print("Hello from Python")
+```
+
+## R
+```r
+print("Hello from R")
+```
+
+## Julia
+```julia
+println("Hello from Julia")
+```
+:::
+
+::: {.panel-tabset group="language"}
+## Tab 1
+Content for tab 1.
+
+## Tab 2
+Content for tab 2.
+:::

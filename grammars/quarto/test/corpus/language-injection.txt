@@ -1,0 +1,412 @@
+==================
+Python executable cell injection
+==================
+
+```{python}
+import numpy as np
+result = np.mean([1, 2, 3])
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line)
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+Python3 alias injection
+==================
+
+```{python3}
+import sys
+print(sys.version)
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line)
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+R executable cell injection
+==================
+
+```{r}
+library(ggplot2)
+mean(c(1, 2, 3))
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line)
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+Julia executable cell injection
+==================
+
+```{julia}
+using Statistics
+mean([1, 2, 3])
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line)
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+SQL executable cell injection
+==================
+
+```{sql}
+SELECT * FROM users WHERE active = 1;
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+Bash executable cell injection
+==================
+
+```{bash}
+echo "Hello, World!"
+ls -la
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line)
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+Shell alias (sh) injection
+==================
+
+```{sh}
+pwd
+echo $HOME
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line)
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+JavaScript executable cell injection
+==================
+
+```{javascript}
+const x = [1, 2, 3];
+console.log(x.length);
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line)
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+JavaScript alias (js) injection
+==================
+
+```{js}
+console.log("Hello");
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+TypeScript executable cell injection
+==================
+
+```{typescript}
+const greeting: string = "Hello";
+console.log(greeting);
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line)
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+TypeScript alias (ts) injection
+==================
+
+```{ts}
+let x: number = 42;
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+Observable JS (ojs) injection
+==================
+
+```{ojs}
+viewof x = Inputs.range([0, 100])
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+Python inline cell injection
+==================
+
+The result is `{python} np.mean([1, 2, 3])` which is the average.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (inline_code_cell
+        (inline_cell_delimiter)
+        language: (language_name)
+        (inline_cell_brace)
+        content: (cell_content)
+        (inline_cell_delimiter))
+      (text))))
+
+==================
+R inline cell injection
+==================
+
+The mean is `{r} mean(x)` in R.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (inline_code_cell
+        (inline_cell_delimiter)
+        language: (language_name)
+        (inline_cell_brace)
+        content: (cell_content)
+        (inline_cell_delimiter))
+      (text))))
+
+==================
+Julia inline cell injection
+==================
+
+Calculate `{julia} sum([1, 2, 3])` inline.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (inline_code_cell
+        (inline_cell_delimiter)
+        language: (language_name)
+        (inline_cell_brace)
+        content: (cell_content)
+        (inline_cell_delimiter))
+      (text))))
+
+==================
+Multi-language document with Python and R
+==================
+
+```{python}
+import numpy as np
+x = np.array([1, 2, 3])
+```
+
+```{r}
+library(ggplot2)
+y <- c(1, 2, 3)
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line)
+      (code_line))
+    close_delimiter: (code_fence_delimiter))
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line)
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+Cell with chunk options (options excluded from injection)
+==================
+
+```{python}
+#| label: fig-plot
+#| echo: false
+import matplotlib.pyplot as plt
+plt.plot([1, 2, 3])
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    chunk_options: (chunk_options
+      (chunk_option
+        key: (chunk_option_key)
+        value: (chunk_option_value))
+      (chunk_option
+        key: (chunk_option_key)
+        value: (chunk_option_value)))
+    content: (cell_content
+      (code_line)
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+Mixed Python, Julia, and SQL in one document
+==================
+
+```{python}
+import pandas as pd
+```
+
+```{julia}
+using DataFrames
+```
+
+```{sql}
+SELECT * FROM data;
+```
+
+---
+
+(document
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line))
+    close_delimiter: (code_fence_delimiter))
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line))
+    close_delimiter: (code_fence_delimiter))
+  (executable_code_cell
+    open_delimiter: (code_fence_delimiter)
+    language: (language_name)
+    content: (cell_content
+      (code_line))
+    close_delimiter: (code_fence_delimiter)))
+
+==================
+Regular fenced code block (non-executable)
+==================
+
+```python
+# This is a non-executable code block
+print("Just for display")
+```
+
+---
+
+(document
+  (fenced_code_block
+    open: (code_fence_delimiter)
+    info: (info_string)
+    (code_line)
+    (code_line)
+    close: (code_fence_delimiter)))

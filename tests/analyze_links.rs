@@ -1,5 +1,4 @@
 /// Analyze link highlighting to understand why links aren't working
-
 use tree_sitter::{Language, Parser};
 use tree_sitter_highlight::{HighlightConfiguration, HighlightEvent, Highlighter};
 
@@ -24,16 +23,13 @@ fn analyze_link_structure_and_captures() {
 
     // Check what our queries capture
     let highlights_query = std::fs::read_to_string(
-        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("languages/quarto/highlights.scm")
-    ).expect("Failed to read highlights.scm");
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("grammars/quarto/queries/zed/highlights.scm"),
+    )
+    .expect("Failed to read highlights.scm");
 
-    let mut config = HighlightConfiguration::new(
-        language,
-        "quarto",
-        &highlights_query,
-        "",
-        "",
-    ).expect("Failed to create config");
+    let mut config = HighlightConfiguration::new(language, "quarto", &highlights_query, "", "")
+        .expect("Failed to create config");
 
     let scope_names: Vec<String> = config.names().iter().map(|s| s.to_string()).collect();
     let scope_refs: Vec<&str> = scope_names.iter().map(|s| s.as_str()).collect();
@@ -62,11 +58,23 @@ fn analyze_link_structure_and_captures() {
         match &event {
             HighlightEvent::Source { start, end } => {
                 let text = &source[*start..*end];
-                println!("{:indent$}Source[{}..{}]: {:?}", "", start, end, text, indent = depth * 2);
+                println!(
+                    "{:indent$}Source[{}..{}]: {:?}",
+                    "",
+                    start,
+                    end,
+                    text,
+                    indent = depth * 2
+                );
             }
             HighlightEvent::HighlightStart(scope) => {
                 let scope_name = config.names()[scope.0];
-                println!("{:indent$}▼ HighlightStart: @{}", "", scope_name, indent = depth * 2);
+                println!(
+                    "{:indent$}▼ HighlightStart: @{}",
+                    "",
+                    scope_name,
+                    indent = depth * 2
+                );
                 depth += 1;
             }
             HighlightEvent::HighlightEnd => {

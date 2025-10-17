@@ -55,7 +55,6 @@ const ZED_SUPPORTED_SCOPES: &[&str] = &[
     "variable",
     "variable.special",
     "variant",
-
     // Language-specific conventions (used by markdown)
     // These extend base scopes with .markup, .rust, etc. suffixes
     "title.markup",
@@ -64,33 +63,32 @@ const ZED_SUPPORTED_SCOPES: &[&str] = &[
     "punctuation.embedded.markup",
     "link_text.markup",
     "link_uri.markup",
-
     // Special scopes
-    "text",                    // Plain text
-    "none",                    // No highlighting
-    "parameter",               // Function parameters
+    "text", // Plain text
+    "none", // No highlighting
+    "parameter", // Function parameters
 
-    // Allow language-specific sub-scopes
-    // These follow the pattern: base_scope.language_suffix
-    // Examples: variable.builtin, function.method, variable.builtin.self.rust
+            // Allow language-specific sub-scopes
+            // These follow the pattern: base_scope.language_suffix
+            // Examples: variable.builtin, function.method, variable.builtin.self.rust
 ];
 
 /// Additional scope patterns that should be allowed
 /// These are regex patterns for valid sub-scope extensions
 const ALLOWED_SCOPE_PATTERNS: &[&str] = &[
-    r"^(text|emphasis|function|variable|constant|string|punctuation)\..*$",  // Sub-scopes
-    r"^.*\.builtin$",          // Built-in variants
-    r"^.*\.method$",           // Method variants
-    r"^.*\.parameter$",        // Parameter variants
+    r"^(text|emphasis|function|variable|constant|string|punctuation)\..*$", // Sub-scopes
+    r"^.*\.builtin$",                                                       // Built-in variants
+    r"^.*\.method$",                                                        // Method variants
+    r"^.*\.parameter$",                                                     // Parameter variants
 ];
 
 #[test]
 fn all_scopes_are_zed_compatible() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let highlights_path = manifest_dir.join("languages/quarto/highlights.scm");
+    let highlights_path = manifest_dir.join("grammars/quarto/queries/zed/highlights.scm");
 
-    let highlights = std::fs::read_to_string(&highlights_path)
-        .expect("Failed to read highlights.scm");
+    let highlights =
+        std::fs::read_to_string(&highlights_path).expect("Failed to read highlights.scm");
 
     // Filter out comment lines before extracting scopes
     let non_comment_lines: Vec<&str> = highlights
@@ -116,7 +114,11 @@ fn all_scopes_are_zed_compatible() {
     if !unsupported_scopes.is_empty() {
         eprintln!("\n❌ Found unsupported scopes in highlights.scm:\n");
 
-        let mut unique_unsupported: Vec<_> = unsupported_scopes.iter().collect::<HashSet<_>>().into_iter().collect();
+        let mut unique_unsupported: Vec<_> = unsupported_scopes
+            .iter()
+            .collect::<HashSet<_>>()
+            .into_iter()
+            .collect();
         unique_unsupported.sort();
         let unsupported_count = unique_unsupported.len();
 
@@ -134,17 +136,20 @@ fn all_scopes_are_zed_compatible() {
         eprintln!("  @text.uri -> use @link_uri or @link_uri.markup");
         eprintln!("  @markup.* -> Zed doesn't use nvim-treesitter @markup.* scopes");
 
-        panic!("highlights.scm contains {} unsupported scopes", unsupported_count);
+        panic!(
+            "highlights.scm contains {} unsupported scopes",
+            unsupported_count
+        );
     }
 }
 
 #[test]
 fn no_nvim_treesitter_scopes() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let highlights_path = manifest_dir.join("languages/quarto/highlights.scm");
+    let highlights_path = manifest_dir.join("grammars/quarto/queries/zed/highlights.scm");
 
-    let highlights = std::fs::read_to_string(&highlights_path)
-        .expect("Failed to read highlights.scm");
+    let highlights =
+        std::fs::read_to_string(&highlights_path).expect("Failed to read highlights.scm");
 
     // Filter out comment lines
     let non_comment_lines: Vec<&str> = highlights
@@ -182,10 +187,10 @@ fn no_nvim_treesitter_scopes() {
 #[test]
 fn uses_recommended_markdown_scopes() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let highlights_path = manifest_dir.join("languages/quarto/highlights.scm");
+    let highlights_path = manifest_dir.join("grammars/quarto/queries/zed/highlights.scm");
 
-    let highlights = std::fs::read_to_string(&highlights_path)
-        .expect("Failed to read highlights.scm");
+    let highlights =
+        std::fs::read_to_string(&highlights_path).expect("Failed to read highlights.scm");
 
     // Check that we're using the recommended scopes for markdown-like content
     let scopes = extract_scopes(&highlights);
@@ -193,19 +198,20 @@ fn uses_recommended_markdown_scopes() {
 
     // These should be present for a Quarto/Markdown extension
     let recommended = [
-        "emphasis",           // Italic
-        "emphasis.strong",    // Bold
-        "title",              // Headings
-        "text.literal",       // Code spans
-        "link_uri",          // URLs
-        "link_text",         // Link labels
-        "punctuation.special",// Markers
+        "emphasis",            // Italic
+        "emphasis.strong",     // Bold
+        "title",               // Headings
+        "text.literal",        // Code spans
+        "link_uri",            // URLs
+        "link_text",           // Link labels
+        "punctuation.special", // Markers
     ];
 
     let mut missing = Vec::new();
     for scope in &recommended {
         // Check both with and without .markup suffix
-        if !scope_set.contains(scope) && !scope_set.contains(&format!("{}.markup", scope).as_str()) {
+        if !scope_set.contains(scope) && !scope_set.contains(&format!("{}.markup", scope).as_str())
+        {
             missing.push(*scope);
         }
     }
@@ -223,13 +229,12 @@ fn uses_recommended_markdown_scopes() {
 #[test]
 fn documents_all_used_scopes() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let highlights_path = manifest_dir.join("languages/quarto/highlights.scm");
+    let highlights_path = manifest_dir.join("grammars/quarto/queries/zed/highlights.scm");
     let docs_path = manifest_dir.join("docs/zed-syntax-scopes.md");
 
-    let highlights = std::fs::read_to_string(&highlights_path)
-        .expect("Failed to read highlights.scm");
-    let docs = std::fs::read_to_string(&docs_path)
-        .expect("Failed to read zed-syntax-scopes.md");
+    let highlights =
+        std::fs::read_to_string(&highlights_path).expect("Failed to read highlights.scm");
+    let docs = std::fs::read_to_string(&docs_path).expect("Failed to read zed-syntax-scopes.md");
 
     let scopes = extract_scopes(&highlights);
     let unique_scopes: HashSet<_> = scopes.iter().map(|s| s.as_str()).collect();
@@ -246,7 +251,9 @@ fn documents_all_used_scopes() {
         let mut sorted: Vec<_> = undocumented.into_iter().collect();
         sorted.sort();
 
-        eprintln!("\n⚠️  Warning: These scopes are used but not documented in docs/zed-syntax-scopes.md:");
+        eprintln!(
+            "\n⚠️  Warning: These scopes are used but not documented in docs/zed-syntax-scopes.md:"
+        );
         for scope in sorted {
             eprintln!("  @{}", scope);
         }
@@ -296,13 +303,14 @@ fn is_scope_supported(scope: &str) -> bool {
 #[test]
 fn list_all_used_scopes() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let highlights_path = manifest_dir.join("languages/quarto/highlights.scm");
+    let highlights_path = manifest_dir.join("grammars/quarto/queries/zed/highlights.scm");
 
-    let highlights = std::fs::read_to_string(&highlights_path)
-        .expect("Failed to read highlights.scm");
+    let highlights =
+        std::fs::read_to_string(&highlights_path).expect("Failed to read highlights.scm");
 
     let scopes = extract_scopes(&highlights);
-    let mut scope_counts: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
+    let mut scope_counts: std::collections::HashMap<String, usize> =
+        std::collections::HashMap::new();
 
     for scope in scopes {
         *scope_counts.entry(scope).or_insert(0) += 1;
@@ -313,7 +321,11 @@ fn list_all_used_scopes() {
 
     eprintln!("\n📋 All scopes used in highlights.scm (by frequency):\n");
     for (scope, count) in sorted {
-        let supported = if is_scope_supported(&scope) { "✓" } else { "✗" };
+        let supported = if is_scope_supported(&scope) {
+            "✓"
+        } else {
+            "✗"
+        };
         eprintln!("  {} @{:30} (used {} times)", supported, scope, count);
     }
 }

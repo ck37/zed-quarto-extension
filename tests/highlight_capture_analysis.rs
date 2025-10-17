@@ -1,6 +1,5 @@
 /// Deep analysis of what highlight captures are actually being generated
 /// This will show us if child text nodes are being captured or not
-
 use tree_sitter::{Language, Parser};
 use tree_sitter_highlight::{HighlightConfiguration, HighlightEvent, Highlighter};
 
@@ -25,16 +24,13 @@ fn analyze_emphasis_captures() {
 
     // Now let's see what our queries capture
     let highlights_query = std::fs::read_to_string(
-        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("languages/quarto/highlights.scm")
-    ).expect("Failed to read highlights.scm");
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("grammars/quarto/queries/zed/highlights.scm"),
+    )
+    .expect("Failed to read highlights.scm");
 
-    let mut config = HighlightConfiguration::new(
-        language,
-        "quarto",
-        &highlights_query,
-        "",
-        "",
-    ).expect("Failed to create config");
+    let mut config = HighlightConfiguration::new(language, "quarto", &highlights_query, "", "")
+        .expect("Failed to create config");
 
     // Use actual scope names from our queries
     let scope_names: Vec<String> = config.names().iter().map(|s| s.to_string()).collect();
@@ -64,11 +60,23 @@ fn analyze_emphasis_captures() {
         match &event {
             HighlightEvent::Source { start, end } => {
                 let text = &source[*start..*end];
-                println!("{:indent$}Source[{}..{}]: {:?}", "", start, end, text, indent = depth * 2);
+                println!(
+                    "{:indent$}Source[{}..{}]: {:?}",
+                    "",
+                    start,
+                    end,
+                    text,
+                    indent = depth * 2
+                );
             }
             HighlightEvent::HighlightStart(scope) => {
                 let scope_name = config.names()[scope.0];
-                println!("{:indent$}▼ HighlightStart: @{}", "", scope_name, indent = depth * 2);
+                println!(
+                    "{:indent$}▼ HighlightStart: @{}",
+                    "",
+                    scope_name,
+                    indent = depth * 2
+                );
                 depth += 1;
             }
             HighlightEvent::HighlightEnd => {
@@ -97,7 +105,10 @@ fn analyze_emphasis_captures() {
         }
     });
 
-    println!("Has @text.emphasis or @emphasis.strong scope: {}", has_emphasis_scope);
+    println!(
+        "Has @text.emphasis or @emphasis.strong scope: {}",
+        has_emphasis_scope
+    );
     println!("Has @text scope: {}", has_text_scope);
 
     // Count how many times text content is captured
@@ -119,7 +130,10 @@ fn analyze_emphasis_captures() {
         }
     }
 
-    println!("Times 'italic text' appears in Source events: {}", text_captures);
+    println!(
+        "Times 'italic text' appears in Source events: {}",
+        text_captures
+    );
 
     // The key question: Does the text "italic text" appear INSIDE a HighlightStart..HighlightEnd block?
     let mut inside_highlight = false;
@@ -170,16 +184,13 @@ fn analyze_heading_captures() {
     println!("{}\n", tree.root_node().to_sexp());
 
     let highlights_query = std::fs::read_to_string(
-        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("languages/quarto/highlights.scm")
-    ).expect("Failed to read highlights.scm");
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("grammars/quarto/queries/zed/highlights.scm"),
+    )
+    .expect("Failed to read highlights.scm");
 
-    let mut config = HighlightConfiguration::new(
-        language,
-        "quarto",
-        &highlights_query,
-        "",
-        "",
-    ).expect("Failed to create config");
+    let mut config = HighlightConfiguration::new(language, "quarto", &highlights_query, "", "")
+        .expect("Failed to create config");
 
     let scope_names: Vec<String> = config.names().iter().map(|s| s.to_string()).collect();
     let scope_refs: Vec<&str> = scope_names.iter().map(|s| s.as_str()).collect();
@@ -201,11 +212,23 @@ fn analyze_heading_captures() {
         match &event {
             HighlightEvent::Source { start, end } => {
                 let text = &source[*start..*end];
-                println!("{:indent$}Source[{}..{}]: {:?}", "", start, end, text, indent = depth * 2);
+                println!(
+                    "{:indent$}Source[{}..{}]: {:?}",
+                    "",
+                    start,
+                    end,
+                    text,
+                    indent = depth * 2
+                );
             }
             HighlightEvent::HighlightStart(scope) => {
                 let scope_name = config.names()[scope.0];
-                println!("{:indent$}▼ HighlightStart: @{}", "", scope_name, indent = depth * 2);
+                println!(
+                    "{:indent$}▼ HighlightStart: @{}",
+                    "",
+                    scope_name,
+                    indent = depth * 2
+                );
                 depth += 1;
             }
             HighlightEvent::HighlightEnd => {

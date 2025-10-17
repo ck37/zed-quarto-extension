@@ -1,0 +1,39 @@
+# Tree-sitter generated files
+node_modules/
+build/
+*.log
+*.node
+
+# Parser artifacts
+src/tree_sitter/
+
+# Compiled binaries
+*.o
+*.so
+*.dylib
+*.dll
+*.a
+*.wasm
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test artifacts
+test-results/
+coverage/
+test/tmp/
+
+# Package manager
+yarn.lock
+pnpm-lock.yaml
+
+# Claude Code configuration
+CLAUDE.md

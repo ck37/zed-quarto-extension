@@ -1,0 +1,175 @@
+==================
+Basic pipe table
+==================
+
+| Header 1 | Header 2 |
+|----------|----------|
+| Cell 1   | Cell 2   |
+
+---
+
+(document
+  (blank_line)
+  (pipe_table
+    (pipe_table_start)
+    (pipe_table_header
+      content: (table_cell)
+      content: (table_cell))
+    (pipe_table_delimiter
+      (table_delimiter_cell)
+      (table_delimiter_cell))
+    (pipe_table_row)))
+
+==================
+Pipe table with multiple rows
+==================
+
+| Name | Age |
+|------|-----|
+| Alice | 30 |
+| Bob   | 25 |
+| Charlie | 35 |
+
+---
+
+(document
+  (blank_line)
+  (pipe_table
+    (pipe_table_start)
+    (pipe_table_header
+      content: (table_cell)
+      content: (table_cell))
+    (pipe_table_delimiter
+      (table_delimiter_cell)
+      (table_delimiter_cell))
+    (pipe_table_row)
+    (pipe_table_row)
+    (pipe_table_row)))
+
+==================
+Pipe table with left alignment
+==================
+
+| Left |
+|:-----|
+| text |
+
+---
+
+(document
+  (blank_line)
+  (pipe_table
+    (pipe_table_start)
+    (pipe_table_header
+      content: (table_cell))
+    (pipe_table_delimiter
+      (table_delimiter_cell))
+    (pipe_table_row)))
+
+==================
+Pipe table with center alignment
+==================
+
+| Center |
+|:------:|
+| text   |
+
+---
+
+(document
+  (blank_line)
+  (pipe_table
+    (pipe_table_start)
+    (pipe_table_header
+      content: (table_cell))
+    (pipe_table_delimiter
+      (table_delimiter_cell))
+    (pipe_table_row)))
+
+==================
+Pipe table with right alignment
+==================
+
+| Right |
+|------:|
+|  text |
+
+---
+
+(document
+  (blank_line)
+  (pipe_table
+    (pipe_table_start)
+    (pipe_table_header
+      content: (table_cell))
+    (pipe_table_delimiter
+      (table_delimiter_cell))
+    (pipe_table_row)))
+
+==================
+Pipe table with mixed alignment
+==================
+
+| Left | Center | Right |
+|:-----|:------:|------:|
+| A    | B      | C     |
+
+---
+
+(document
+  (blank_line)
+  (pipe_table
+    (pipe_table_start)
+    (pipe_table_header
+      content: (table_cell)
+      content: (table_cell)
+      content: (table_cell))
+    (pipe_table_delimiter
+      (table_delimiter_cell)
+      (table_delimiter_cell)
+      (table_delimiter_cell))
+    (pipe_table_row)))
+
+==================
+Pipe table with empty cells
+==================
+
+| A | B |
+|---|---|
+|   | X |
+| Y |   |
+
+---
+
+(document
+  (blank_line)
+  (pipe_table
+    (pipe_table_start)
+    (pipe_table_header
+      content: (table_cell)
+      content: (table_cell))
+    (pipe_table_delimiter
+      (table_delimiter_cell)
+      (table_delimiter_cell))
+    (pipe_table_row)
+    (pipe_table_row)))
+
+==================
+Pipe table without rows
+==================
+
+| Header 1 | Header 2 |
+|----------|----------|
+
+---
+
+(document
+  (blank_line)
+  (pipe_table
+    (pipe_table_start)
+    (pipe_table_header
+      content: (table_cell)
+      content: (table_cell))
+    (pipe_table_delimiter
+      (table_delimiter_cell)
+      (table_delimiter_cell))))

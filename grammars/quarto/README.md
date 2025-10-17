@@ -1,9 +1,9 @@
 # tree-sitter-quarto
 
 [![CI](https://github.com/ck37/tree-sitter-quarto/workflows/CI/badge.svg)](https://github.com/ck37/tree-sitter-quarto/actions)
-[![Tests](https://img.shields.io/badge/tests-58%2F58%20passing-brightgreen)](https://github.com/ck37/tree-sitter-quarto/actions)
+[![Tests](https://img.shields.io/badge/tests-145%2F145%20passing-brightgreen)](https://github.com/ck37/tree-sitter-quarto/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
-[![tree-sitter](https://img.shields.io/badge/tree--sitter-0.21+-orange)](https://tree-sitter.github.io/)
+[![tree-sitter](https://img.shields.io/badge/tree--sitter-0.25.10-orange)](https://tree-sitter.github.io/)
 [![Node Version](https://img.shields.io/badge/node-%3E%3D16-brightgreen)](https://nodejs.org/)
 [![Status](https://img.shields.io/badge/status-alpha-yellow)](./docs/plan.md)
 [![Spec Coverage](https://img.shields.io/badge/spec%20coverage-98%25-brightgreen)](./openspec)
@@ -28,9 +28,9 @@ Existing parsers serve different purposes:
 - [tree-sitter-pandoc-markdown](https://github.com/ck37/tree-sitter-pandoc-markdown) - Great for Pandoc, but not Quarto-aware
 - [Quarto Markdown Parser](https://github.com/quarto-dev/quarto-markdown) - Official tree-sitter grammars exist but not production-ready until early 2026
 
-tree-sitter-quarto fills the gap by providing **production-ready semantic parsing** optimized for editor tooling as you author Quarto documents.
+tree-sitter-quarto fills the gap by providing production-ready semantic parsing optimized for editor tooling as you author Quarto documents.
 
-**Editor Support:** This parser enables first-class Quarto support in editors like [Zed](https://github.com/zed-industries/zed/issues/12406), Neovim, Helix, and VSCode.
+This parser enables first-class Quarto support in editors like [Zed](https://github.com/zed-industries/zed/issues/12406), Neovim, Helix, and VSCode.
 
 See [detailed comparison](./docs/comparison.md) for more information.
 
@@ -42,36 +42,48 @@ Fully implemented:
 - Chunk options - Parse `#| key: value` as structured data
 - Cross-references - Distinguish `@fig-plot` from `@smith2020` citations
 - Inline code cells - `` `{python} expr` `` with language injection
+- Inline attributes - Pandoc span syntax `[text]{.class}`, `[text]{#id .class key="value"}`
+- Inline formatting - Pandoc extensions for scientific/academic writing
+  - Strikethrough: `~~deleted text~~`
+  - Highlight: `==important text==`
+  - Subscript: `H~2~O`, `C~6~H~12~O~6~`
+  - Superscript: `x^2^`, `E=mc^2^`
 - Shortcodes - `{{< video url >}}` in block and inline contexts
 - Enhanced divs - Callouts, tabsets, conditional content
   - `::: {.callout-note}` - 5 types: note, warning, important, tip, caution
   - `::: {.panel-tabset}` - Tab structure with groups
   - `::: {.content-visible when-format="html"}` - Conditional content
-- Language injection - 15+ languages (Python, R, Julia, SQL, Bash, JS, Mermaid, etc.)
+- Footnotes - Full Pandoc footnote support with structured parsing
+  - Inline footnotes: `^[note text]`
+  - Footnote references: `[^1]`
+  - Footnote definitions: `[^1]: definition`
+  - Nested footnotes and formatting support
+- Language injection - Python, R, Julia, SQL, Bash, JavaScript/TypeScript, OJS
 - Full Pandoc Markdown - Headings, emphasis, links, images, tables, etc.
 
 Known limitations:
 
 - Generic fenced divs (`::: {.custom-class}`) don't parse - [technical details](./docs/generic-fenced-div-limitation.md)
+- Inline attributes: `[text]{.class}` at paragraph start creates cosmetic ERROR nodes - [technical details](./docs/inline-attributes-known-issues.md)
 - Multi-line chunk option values not supported
 - See [plan.md](./docs/plan.md) for complete list
 
 ## Relationship to Official Quarto Grammars
 
-The [quarto-markdown repository](https://github.com/quarto-dev/quarto-markdown) contains official tree-sitter grammars that are also intended for editor integration (RStudio, Positron, etc.). However, these grammars are **not yet production-ready** and are planned for early 2026.
+The [quarto-markdown repository](https://github.com/quarto-dev/quarto-markdown) contains official tree-sitter grammars that are also intended for editor integration (RStudio, Positron, etc.). However, these grammars are not yet production-ready and are planned for early 2026.
 
-**tree-sitter-quarto is a bridge solution:**
-- ✅ **Production-ready NOW** (2025) - All features implemented and tested
-- ✅ **Complete package** - Includes comprehensive query files for syntax highlighting
-- ✅ **Ready for editor integration** - Proven in real-world use
-- ⏳ **Migration path** - Plan to migrate to official grammars when they reach production status (2026+)
+tree-sitter-quarto is a bridge solution:
+- Production-ready NOW (2025) - All features implemented and tested
+- Complete package - Includes comprehensive query files for syntax highlighting
+- Ready for editor integration - Proven in real-world use
+- Migration path - Plan to migrate to official grammars when they reach production status (2026+)
 
-**Why official grammars will be better long-term:**
+Why official grammars will be better long-term:
 - Battle-tested in Posit's production editors (RStudio, Positron)
 - Official support and long-term maintenance
 - The "blessed" standard across Quarto/Posit ecosystem
 
-**Current recommendation:** Use tree-sitter-quarto for editor integration today, plan migration to official grammars in 2026+ when production-ready.
+Current recommendation: Use tree-sitter-quarto for editor integration today, plan migration to official grammars in 2026+ when production-ready.
 
 See [detailed comparison](./docs/comparison.md) for architecture differences and migration considerations.
 
@@ -87,7 +99,7 @@ format: html
 
 ## Results
 
-See @fig-plot for details.
+See @fig-plot for details. The chemical formula is H~2~O and the area is x^2^.
 
 ```{python}
 #| label: fig-plot
@@ -110,7 +122,9 @@ Output AST (simplified):
   (yaml_front_matter ...)
   (atx_heading ...)
   (paragraph
-    (cross_reference type:"fig" id:"plot"))
+    (cross_reference type:"fig" id:"plot")
+    (subscript "2")
+    (superscript "2"))
   (executable_code_cell
     language: "python"
     (chunk_options

@@ -1,0 +1,12 @@
+::: {.callout-note}
+This is a note callout.
+:::
+
+::: {.callout-warning}
+## Warning Title
+This is a warning message.
+:::
+
+::: {.callout-important collapse="true"}
+Collapsible important callout.
+:::

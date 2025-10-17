@@ -19,48 +19,50 @@ fn test_real_document_link() {
     println!("{}\n", tree.root_node().to_sexp());
 
     let highlights_query = std::fs::read_to_string(
-        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("languages/quarto/highlights.scm")
-    ).unwrap();
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("grammars/quarto/queries/zed/highlights.scm"),
+    )
+    .unwrap();
 
-    let mut config = HighlightConfiguration::new(
-        language,
-        "quarto",
-        &highlights_query,
-        "",
-        "",
-    ).unwrap();
+    let mut config =
+        HighlightConfiguration::new(language, "quarto", &highlights_query, "", "").unwrap();
 
     let scope_names: Vec<String> = config.names().iter().map(|s| s.to_string()).collect();
     let scope_refs: Vec<&str> = scope_names.iter().map(|s| s.as_str()).collect();
     config.configure(&scope_refs);
 
     let mut highlighter = Highlighter::new();
-    let events = highlighter.highlight(&config, source.as_bytes(), None, |_| None).unwrap();
+    let events = highlighter
+        .highlight(&config, source.as_bytes(), None, |_| None)
+        .unwrap();
 
     let mut event_list = vec![];
     for event in events {
         event_list.push(event.unwrap());
     }
 
-    // Check for link text and URL highlighting (using .markup suffix)
+    // Check for link text and URL highlighting (Zed uses @text.uri for links)
     let mut found_link_text = false;
     let mut found_link_uri = false;
 
     for event in &event_list {
         if let HighlightEvent::HighlightStart(scope) = event {
             let name = config.names()[scope.0];
-            if name.contains("link_text") {
+            if name.contains("link_text") || name.contains("text.reference") {
                 found_link_text = true;
-                println!("✓ Found @link_text.markup scope");
+                println!("✓ Found link text scope: {}", name);
             }
-            if name.contains("link_uri") {
+            if name.contains("link_uri") || name.contains("text.uri") {
                 found_link_uri = true;
-                println!("✓ Found @link_uri.markup scope");
+                println!("✓ Found link URI scope: {}", name);
             }
         }
     }
 
-    assert!(found_link_uri, "Link URL should be highlighted with @link_uri.markup");
+    assert!(
+        found_link_uri,
+        "Link URL should be highlighted with @text.uri or @link_uri.markup"
+    );
     if found_link_text {
         println!("✓ Link text is highlighted!");
     } else {

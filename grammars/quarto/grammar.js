@@ -39,15 +39,14 @@ module.exports = grammar({
   extras: $ => [/\s/],
 
   externals: $ => [
-    $.pipe_table_start,           // From pandoc-markdown
-    $._chunk_option_marker,       // Quarto: #| at start of cell
-    $._cell_boundary,             // Quarto: Track cell context
+    $.pipe_table_start,                // From pandoc-markdown
+    $._chunk_option_marker,            // Quarto: #| at start of cell
+    $._cell_boundary,                  // Quarto: Track cell context
+    $._chunk_option_continuation,      // Quarto: Multi-line chunk option continuation
   ],
 
   conflicts: $ => [
     [$._inline_element, $._link_text_element],
-    [$.pipe_table, $.paragraph],
-    [$.pipe_table_header, $.inline],
     [$.executable_code_cell, $.fenced_code_block],  // Quarto: {python} vs python
     [$.shortcode_block, $.shortcode_inline],        // Shortcode can be block or inline
     [$.inline_code_cell, $.code_span],              // `r expr` vs `code`
@@ -111,7 +110,10 @@ module.exports = grammar({
       field('language_specifier', seq(
         '{',
         field('language', alias(/[a-zA-Z][a-zA-Z0-9_-]*/, $.language_name)),
-        optional(field('attributes', $.attribute_list)),
+        optional(seq(
+          /[ \t]+/,
+          field('attributes', $.attribute_list)
+        )),
         '}'
       )),
       /\r?\n/,
@@ -124,23 +126,49 @@ module.exports = grammar({
     /**
      * Chunk Options
      *
+     * Single-line:
      * #| label: fig-plot
      * #| echo: false
-     * #| fig-cap: "Sample plot"
+     *
+     * Multi-line:
+     * #| fig-cap: |
+     * #|   This is a multi-line caption
+     * #|   spanning multiple lines
      *
      * Spec: openspec/specs/chunk-options/spec.md
      */
     chunk_options: $ => repeat1($.chunk_option),
 
-    chunk_option: $ => seq(
-      token(prec(2, '#|')),
-      optional(/[ \t]*/),
-      field('key', alias(/[a-zA-Z][a-zA-Z0-9-]*/, $.chunk_option_key)),
-      ':',
-      optional(seq(
+    chunk_option: $ => choice(
+      // Single-line chunk option
+      seq(
+        token(prec(2, '#|')),
         optional(/[ \t]*/),
-        field('value', alias(/[^\r\n]+/, $.chunk_option_value))
-      )),
+        field('key', alias(/[a-zA-Z][a-zA-Z0-9-]*/, $.chunk_option_key)),
+        ':',
+        optional(seq(
+          optional(/[ \t]*/),
+          field('value', alias(/[^\r\n|]+/, $.chunk_option_value))
+        )),
+        /\r?\n/
+      ),
+      // Multi-line chunk option with pipe continuation
+      seq(
+        token(prec(2, '#|')),
+        optional(/[ \t]*/),
+        field('key', alias(/[a-zA-Z][a-zA-Z0-9-]*/, $.chunk_option_key)),
+        ':',
+        optional(/[ \t]*/),
+        '|',
+        /\r?\n/,
+        repeat1($.chunk_option_continuation)
+      )
+    ),
+
+    chunk_option_continuation: $ => seq(
+      $._chunk_option_continuation,
+      optional(/[ \t]*/),
+      field('value', alias(/[^\r\n]+/, $.chunk_option_value)),
       /\r?\n/
     ),
 
@@ -405,13 +433,13 @@ module.exports = grammar({
       /\r?\n/
     ),
 
-    // Pipe Table
-    pipe_table: $ => prec.right(seq(
+    // Pipe Table (header + delimiter + zero or more rows)
+    pipe_table: $ => prec.dynamic(2, prec.right(seq(
       $.pipe_table_start,
       $.pipe_table_header,
       $.pipe_table_delimiter,
       repeat($.pipe_table_row)
-    )),
+    ))),
 
     pipe_table_header: $ => seq(
       token('|'),
@@ -431,27 +459,46 @@ module.exports = grammar({
       /\r?\n/
     ),
 
-    pipe_table_row: $ => seq(
-      token('|'),
+    // Note: pipe_table_row is wrapped in token() to ensure it's recognized as part
+    // of the table rather than starting a new paragraph. This means individual cells
+    // are not exposed as separate AST nodes, but the full row text is available.
+    pipe_table_row: $ => prec.dynamic(1, token(seq(
+      '|',
       repeat1(seq(
-        field('content', alias(/[^|\r\n]+/, $.table_cell)),
-        token('|')
+        /[^|\r\n]+/,
+        '|'
       )),
       /\r?\n/
-    ),
+    ))),
 
-    // Attribute List (for divs, cells, etc.)
+    // Attribute List (for divs, cells, links/spans, headings, etc.)
     attribute_list: $ => choice(
       seq(
         field('id', alias(/#[a-zA-Z][a-zA-Z0-9_-]*/, $.attribute_id)),
-        repeat(field('class', alias(/\.[a-zA-Z][a-zA-Z0-9_-]*/, $.attribute_class))),
-        repeat(field('attribute', $.key_value_attribute))
+        repeat(seq(
+          /[ \t]+/,
+          field('class', alias(/\.[a-zA-Z][a-zA-Z0-9_-]*/, $.attribute_class))
+        )),
+        repeat(seq(
+          /[ \t]+/,
+          field('attribute', $.key_value_attribute)
+        ))
       ),
       seq(
-        repeat1(field('class', alias(/\.[a-zA-Z][a-zA-Z0-9_-]*/, $.attribute_class))),
-        repeat(field('attribute', $.key_value_attribute))
+        field('class', alias(/\.[a-zA-Z][a-zA-Z0-9_-]*/, $.attribute_class)),
+        repeat(seq(
+          /[ \t]+/,
+          field('class', alias(/\.[a-zA-Z][a-zA-Z0-9_-]*/, $.attribute_class))
+        )),
+        repeat(seq(
+          /[ \t]+/,
+          field('attribute', $.key_value_attribute)
+        ))
       ),
-      repeat1(field('attribute', $.key_value_attribute))
+      repeat1(seq(
+        optional(/[ \t]+/),
+        field('attribute', $.key_value_attribute)
+      ))
     ),
 
     key_value_attribute: $ => seq(
@@ -471,23 +518,36 @@ module.exports = grammar({
     inline: $ => repeat1($._inline_element),
 
     _inline_element: $ => choice(
-      $.text,
+      $.inline_footnote,        // Pandoc: ^[note] - must come before text
+      $.footnote_reference,     // Pandoc: [^1] - must come before link
       $.inline_code_cell,       // Quarto: `{python} expr` - check before code_span
       $.code_span,
       $.inline_math,
       $.emphasis,
       $.strong_emphasis,
+      $.strikethrough,          // Pandoc: ~~text~~
+      $.highlight,              // Pandoc: ==text== - must come before equals_sign
+      $.subscript,              // Pandoc: H~2~O
+      $.superscript,            // Pandoc: x^2^
       $.link,
       $.image,
       $.citation,
       $.cross_reference,        // Quarto: @fig-plot
-      $.shortcode_inline
+      $.shortcode_inline,
+      $.equals_sign,            // Single = in equations (not part of ==)
+      $.text                    // text last - fallback for anything not matched
     ),
 
-    text: $ => /[^\r\n`*_\[@<${]+/,
+    text: $ => /[^\r\n`*_\[@<${^~=]+/,
+
+    // Single equals sign (for equations like E=mc^2^, not part of ==)
+    equals_sign: $ => '=',
 
     // Text inside link brackets - excludes ] to allow proper link parsing
-    link_text: $ => /[^\r\n`*_\[@<${\]]+/,
+    link_text: $ => /[^\r\n`*_\[@<${\]~=]+/,
+
+    // Text inside inline footnotes - excludes ] and ^ and [ to allow proper footnote parsing
+    footnote_text: $ => /[^\r\n`*_\[@<${\[\]^~=]+/,
 
     code_span: $ => seq(
       alias(token('`'), $.code_span_delimiter),
@@ -502,18 +562,83 @@ module.exports = grammar({
     ),
 
     emphasis: $ => prec.left(choice(
-      seq(token('*'), repeat1($._inline_element), token('*')),
-      seq(token('_'), repeat1($._inline_element), token('_'))
+      seq(alias(token('*'), $.emphasis_delimiter), repeat1($._inline_element), alias(token('*'), $.emphasis_delimiter)),
+      seq(alias(token('_'), $.emphasis_delimiter), repeat1($._inline_element), alias(token('_'), $.emphasis_delimiter))
     )),
 
     strong_emphasis: $ => prec.left(choice(
-      seq(token('**'), repeat1($._inline_element), token('**')),
-      seq(token('__'), repeat1($._inline_element), token('__'))
+      seq(alias(token('**'), $.strong_emphasis_delimiter), repeat1($._inline_element), alias(token('**'), $.strong_emphasis_delimiter)),
+      seq(alias(token('__'), $.strong_emphasis_delimiter), repeat1($._inline_element), alias(token('__'), $.strong_emphasis_delimiter))
     )),
+
+    /**
+     * Strikethrough (Pandoc extension)
+     *
+     * ~~deleted text~~
+     *
+     * Spec: openspec/specs/pandoc-inline-formatting/spec.md
+     */
+    strikethrough: $ => prec.left(seq(
+      alias(token('~~'), $.strikethrough_delimiter),
+      repeat1($._inline_element),
+      alias(token('~~'), $.strikethrough_delimiter)
+    )),
+
+    /**
+     * Highlight/Mark (Pandoc extension)
+     *
+     * ==highlighted text==
+     *
+     * Spec: openspec/specs/pandoc-inline-formatting/spec.md
+     */
+    highlight: $ => prec.left(seq(
+      alias(token('=='), $.highlight_delimiter),
+      repeat1($._inline_element),
+      alias(token('=='), $.highlight_delimiter)
+    )),
+
+    /**
+     * Subscript (Pandoc extension)
+     *
+     * H~2~O
+     *
+     * No whitespace allowed after opening ~ or before closing ~
+     * Spec: openspec/specs/pandoc-inline-formatting/spec.md
+     */
+    subscript: $ => seq(
+      alias(token('~'), $.subscript_delimiter),
+      alias(/[^\s~]+/, $.subscript_content),
+      alias(token('~'), $.subscript_delimiter)
+    ),
+
+    /**
+     * Superscript (Pandoc extension)
+     *
+     * x^2^
+     *
+     * No whitespace allowed after opening ^ or before closing ^
+     * Spec: openspec/specs/pandoc-inline-formatting/spec.md
+     */
+    superscript: $ => seq(
+      alias(token('^'), $.superscript_delimiter),
+      alias(/[^\s^]+/, $.superscript_content),
+      alias(token('^'), $.superscript_delimiter)
+    ),
 
     link: $ => seq(
       field('text', seq('[', repeat($._link_text_element), ']')),
-      field('destination', seq('(', alias(/[^)]+/, $.link_destination), ')'))
+      choice(
+        // Traditional link: [text](url)
+        field('destination', seq('(', alias(/[^)]+/, $.link_destination), ')')),
+        // Attributed span: [text]{attrs} - Pandoc inline attributes
+        seq(
+          '{',
+          optional(/[ \t]*/),
+          field('attributes', $.attribute_list),
+          optional(/[ \t]*/),
+          '}'
+        )
+      )
     ),
 
     _link_text_element: $ => choice(
@@ -523,10 +648,44 @@ module.exports = grammar({
       $.strong_emphasis
     ),
 
+    _inline_footnote_element: $ => choice(
+      $.footnote_text,
+      $.code_span,
+      $.emphasis,
+      $.strong_emphasis,
+      $.inline_footnote  // Allow nested inline footnotes
+    ),
+
     image: $ => seq(
       token('!'),
       field('alt', seq('[', alias(/[^\]]*/, $.image_alt), ']')),
       field('source', seq('(', alias(/[^)]+/, $.image_source), ')'))
+    ),
+
+    /**
+     * Inline Footnote
+     *
+     * ^[inline note content]
+     *
+     * Pandoc-style inline footnote. Content can include other inline elements including
+     * emphasis, strong emphasis, code spans, and nested inline footnotes.
+     */
+    inline_footnote: $ => prec(2, seq(
+      token('^['),
+      repeat1($._inline_footnote_element),
+      ']'
+    )),
+
+    /**
+     * Footnote Reference
+     *
+     * [^1], [^note]
+     *
+     * Reference to a footnote definition.
+     */
+    footnote_reference: $ => alias(
+      token(/\[\^[^\]]+\]/),
+      $.footnote_reference_marker
     ),
 
     /**

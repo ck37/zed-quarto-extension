@@ -2,11 +2,16 @@
 /target/
 **/target/
 /extension.wasm
-# Grammars - vendored tree-sitter-quarto with Zed-compatibility patches
-# The grammar source is committed to the repo (patched for Zed compatibility)
-# Only ignore temporary build artifacts
-/grammars/*.wasm
-/grammars/**/target/
-/grammars/**/node_modules/
+
+# Grammars
+# tree-sitter-pandoc-markdown: cloned by build.rs, not vendored
+/grammars/pandoc_markdown/
+
+# tree-sitter-quarto: vendored with Zed-compatibility patches
+# Grammar source IS committed, only ignore build artifacts
+/grammars/quarto/target/
+/grammars/quarto/node_modules/
+/grammars/quarto/**/*.wasm
+
 CLAUDE.md
 lcov.info

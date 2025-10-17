@@ -3,7 +3,8 @@ set -e
 
 echo "🧹 Cleaning build artifacts..."
 cargo clean
-rm -rf grammars/
+# Clean only build artifacts, not vendored grammar source
+rm -rf grammars/**/*.wasm grammars/**/target/ grammars/**/node_modules/
 
 echo "🧹 Cleaning Zed extension caches..."
 # Remove symlink if it exists
@@ -20,9 +21,6 @@ fi
 
 echo "🔨 Building extension..."
 cargo build --release
-
-echo "🧹 Cleaning grammars directory (Zed will rebuild it)..."
-rm -rf grammars/
 
 echo "✨ Ready to install in Zed!"
 echo ""

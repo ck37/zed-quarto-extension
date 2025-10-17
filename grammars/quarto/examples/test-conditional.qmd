@@ -1,0 +1,11 @@
+::: {.content-visible when-format="html"}
+This content is only visible in HTML output.
+:::
+
+::: {.content-hidden when-format="pdf"}
+This content is hidden in PDF output.
+:::
+
+::: {.content-visible when-profile="production"}
+This only shows in production builds.
+:::

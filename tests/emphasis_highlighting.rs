@@ -15,7 +15,7 @@ fn language() -> Language {
 }
 
 fn highlight_configuration() -> HighlightConfiguration {
-    let highlight_query = include_str!("../grammars/quarto/queries/highlights.scm");
+    let highlight_query = include_str!("../grammars/quarto/queries/zed/highlights.scm");
     let injection_query = include_str!("../grammars/quarto/queries/injections.scm");
     let locals_query = "";
 

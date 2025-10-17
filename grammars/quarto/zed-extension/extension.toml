@@ -1,0 +1,10 @@
+id = "quarto"
+name = "Quarto"
+description = "Quarto Markdown language support"
+version = "0.1.0"
+schema_version = 1
+authors = ["Chris Kennedy"]
+
+[language_servers.quarto-lsp]
+name = "Quarto LSP"
+language = "quarto"

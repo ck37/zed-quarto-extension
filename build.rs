@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process::Command;
 
 const REPO_URL: &str = "https://github.com/ck37/tree-sitter-pandoc-markdown";
@@ -191,7 +191,7 @@ fn main() {
     compile_quarto_grammar(&dir);
 }
 
-fn compile_quarto_grammar(dir: &PathBuf) {
+fn compile_quarto_grammar(dir: &Path) {
     let quarto_dir = dir.join("quarto");
     let src_dir = quarto_dir.join("src");
 
@@ -251,7 +251,7 @@ fn compile_quarto_grammar(dir: &PathBuf) {
     }
 }
 
-fn patch_quarto_queries(quarto_dir: &PathBuf) {
+fn patch_quarto_queries(quarto_dir: &Path) {
     let highlights_dest = quarto_dir.join("queries").join("highlights.scm");
     let injections_dest = quarto_dir.join("queries").join("injections.scm");
 
@@ -270,7 +270,9 @@ fn patch_quarto_queries(quarto_dir: &PathBuf) {
     if extension_highlights.exists() {
         std::fs::copy(&extension_highlights, &highlights_dest)
             .expect("failed to copy extension highlights.scm");
-        eprintln!("✓ Copied languages/quarto/highlights.scm → grammars/quarto/queries/highlights.scm");
+        eprintln!(
+            "✓ Copied languages/quarto/highlights.scm → grammars/quarto/queries/highlights.scm"
+        );
     } else {
         eprintln!("Warning: Could not find languages/quarto/highlights.scm");
     }
@@ -278,7 +280,9 @@ fn patch_quarto_queries(quarto_dir: &PathBuf) {
     if extension_injections.exists() {
         std::fs::copy(&extension_injections, &injections_dest)
             .expect("failed to copy extension injections.scm");
-        eprintln!("✓ Copied languages/quarto/injections.scm → grammars/quarto/queries/injections.scm");
+        eprintln!(
+            "✓ Copied languages/quarto/injections.scm → grammars/quarto/queries/injections.scm"
+        );
     }
 
     eprintln!("✓ Grammar now uses extension's Zed-compatible queries for testing");

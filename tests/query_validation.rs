@@ -6,7 +6,7 @@ use std::process::Command;
 #[test]
 fn highlights_query_is_valid_syntax() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
-    let highlights_path = manifest_dir.join("grammars/quarto/queries/highlights.scm");
+    let highlights_path = manifest_dir.join("grammars/quarto/queries/zed/highlights.scm");
     let grammar_dir = manifest_dir.join("grammars/quarto");
 
     // Grammar is now vendored in the repo, so just verify it exists
@@ -43,7 +43,7 @@ fn highlights_query_is_valid_syntax() {
 fn highlights_uses_zed_compatible_scopes() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
     let highlights =
-        std::fs::read_to_string(manifest_dir.join("grammars/quarto/queries/highlights.scm"))
+        std::fs::read_to_string(manifest_dir.join("grammars/quarto/queries/zed/highlights.scm"))
             .expect("Failed to read highlights.scm");
 
     // Check that we're using Zed-compatible scopes, not standard tree-sitter scopes

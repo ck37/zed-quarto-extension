@@ -1,0 +1,312 @@
+==================
+Simple class attribute
+==================
+
+[text]{.class}
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (link
+        (ERROR
+          (reference_label))
+        attributes: (attribute_list
+          class: (attribute_class))))))
+
+==================
+ID and class
+==================
+
+[highlighted]{#important .alert}
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (link
+        (ERROR
+          (reference_label))
+        attributes: (attribute_list
+          id: (attribute_id)
+          class: (attribute_class))))))
+
+==================
+Multiple classes
+==================
+
+[text]{.class1 .class2 .class3}
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (link
+        (ERROR
+          (reference_label))
+        attributes: (attribute_list
+          class: (attribute_class)
+          class: (attribute_class)
+          class: (attribute_class))))))
+
+==================
+ID with multiple classes
+==================
+
+[span]{#id .class1 .class2}
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (link
+        (ERROR
+          (reference_label))
+        attributes: (attribute_list
+          id: (attribute_id)
+          class: (attribute_class)
+          class: (attribute_class))))))
+
+==================
+Inline attributes in context
+==================
+
+Here is [highlighted text]{#id .alert} in a paragraph.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (link
+        text: (link_text)
+        attributes: (attribute_list
+          id: (attribute_id)
+          class: (attribute_class)))
+      (text))))
+
+==================
+Multiple attributed spans
+==================
+
+This has [first]{.a} and [second]{.b} spans.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (link
+        text: (link_text)
+        attributes: (attribute_list
+          class: (attribute_class)))
+      (text)
+      (link
+        text: (link_text)
+        attributes: (attribute_list
+          class: (attribute_class)))
+      (text))))
+
+==================
+Traditional link unchanged
+==================
+
+This is a [link](https://example.com) in text.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (link
+        text: (link_text)
+        destination: (link_destination))
+      (text))))
+
+==================
+Mix of links and spans
+==================
+
+A [link](url) and [span]{.class} together.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (link
+        text: (link_text)
+        destination: (link_destination))
+      (text)
+      (link
+        text: (link_text)
+        attributes: (attribute_list
+          class: (attribute_class)))
+      (text))))
+
+==================
+Span with code span inside
+==================
+
+Here is [`code`]{.highlight} text.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (link
+        text: (code_span
+          (code_span_delimiter)
+          (code_span_content)
+          (code_span_delimiter))
+        attributes: (attribute_list
+          class: (attribute_class)))
+      (text))))
+
+==================
+Span with emphasis inside
+==================
+
+Text with [*emphasized*]{.special} content.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (link
+        text: (emphasis
+          (emphasis_delimiter)
+          (text)
+          (emphasis_delimiter))
+        attributes: (attribute_list
+          class: (attribute_class)))
+      (text))))
+
+==================
+Span with strong emphasis inside
+==================
+
+Text with [**bold**]{.strong} content.
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (link
+        text: (strong_emphasis
+          (strong_emphasis_delimiter)
+          (text)
+          (strong_emphasis_delimiter))
+        attributes: (attribute_list
+          class: (attribute_class)))
+      (text))))
+
+==================
+Key-value attribute
+==================
+
+[styled]{style="color: red;"}
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (link
+        (ERROR
+          (reference_label))
+        attributes: (attribute_list
+          attribute: (key_value_attribute
+            key: (attribute_key)
+            value: (attribute_value)))))))
+
+==================
+Mixed attribute types
+==================
+
+[element]{#id .class key="value"}
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (link
+        (ERROR
+          (reference_label))
+        attributes: (attribute_list
+          id: (attribute_id)
+          class: (attribute_class)
+          attribute: (key_value_attribute
+            key: (attribute_key)
+            value: (attribute_value)))))))
+
+==================
+Attribute with single quotes
+==================
+
+[element]{title='Some Title'}
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (link
+        (ERROR
+          (reference_label))
+        attributes: (attribute_list
+          attribute: (key_value_attribute
+            key: (attribute_key)
+            value: (attribute_value)))))))
+
+==================
+Multiple key-value attributes
+==================
+
+[element]{width="100px" height="50px"}
+
+---
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (link
+        (ERROR
+          (reference_label))
+        attributes: (attribute_list
+          attribute: (key_value_attribute
+            key: (attribute_key)
+            value: (attribute_value))
+          attribute: (key_value_attribute
+            key: (attribute_key)
+            value: (attribute_value)))))))

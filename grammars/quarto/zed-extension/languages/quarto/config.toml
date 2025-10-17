@@ -1,0 +1,26 @@
+name = "Quarto"
+grammar = "quarto"
+path_suffixes = ["qmd"]
+line_comments = ["#"]
+block_comment = ["<!--", "-->"]
+
+[[brackets]]
+start = "["
+end = "]"
+close = true
+
+[[brackets]]
+start = "{"
+end = "}"
+close = true
+
+[[brackets]]
+start = "("
+end = ")"
+close = true
+
+[[brackets]]
+start = "`"
+end = "`"
+close = true
+newline = false

@@ -1,0 +1,405 @@
+================================================================================
+Strikethrough: Basic
+================================================================================
+
+This is ~~deleted text~~ in a paragraph.
+
+--------------------------------------------------------------------------------
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (strikethrough
+        (strikethrough_delimiter)
+        (text)
+        (strikethrough_delimiter))
+      (text))))
+
+================================================================================
+Strikethrough: With spaces
+================================================================================
+
+This is ~~deleted text with spaces~~ here.
+
+--------------------------------------------------------------------------------
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (strikethrough
+        (strikethrough_delimiter)
+        (text)
+        (strikethrough_delimiter))
+      (text))))
+
+================================================================================
+Strikethrough: Multiple in paragraph
+================================================================================
+
+First ~~deleted~~ and second ~~removed~~ text.
+
+--------------------------------------------------------------------------------
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (strikethrough
+        (strikethrough_delimiter)
+        (text)
+        (strikethrough_delimiter))
+      (text)
+      (strikethrough
+        (strikethrough_delimiter)
+        (text)
+        (strikethrough_delimiter))
+      (text))))
+
+================================================================================
+Strikethrough: Nested with bold
+================================================================================
+
+This is ~~**bold deleted**~~ text.
+
+--------------------------------------------------------------------------------
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (strikethrough
+        (strikethrough_delimiter)
+        (strong_emphasis
+          (strong_emphasis_delimiter)
+          (text)
+          (strong_emphasis_delimiter))
+        (strikethrough_delimiter))
+      (text))))
+
+================================================================================
+Highlight: Basic
+================================================================================
+
+This is ==highlighted text== in a paragraph.
+
+--------------------------------------------------------------------------------
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (highlight
+        (highlight_delimiter)
+        (text)
+        (highlight_delimiter))
+      (text))))
+
+================================================================================
+Highlight: With spaces
+================================================================================
+
+This is ==important highlighted text== here.
+
+--------------------------------------------------------------------------------
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (highlight
+        (highlight_delimiter)
+        (text)
+        (highlight_delimiter))
+      (text))))
+
+================================================================================
+Highlight: Nested with emphasis
+================================================================================
+
+This is ==*emphasized highlight*== text.
+
+--------------------------------------------------------------------------------
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (highlight
+        (highlight_delimiter)
+        (emphasis
+          (emphasis_delimiter)
+          (text)
+          (emphasis_delimiter))
+        (highlight_delimiter))
+      (text))))
+
+================================================================================
+Subscript: Chemical formula
+================================================================================
+
+H~2~O
+
+--------------------------------------------------------------------------------
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (subscript
+        (subscript_delimiter)
+        (subscript_content)
+        (subscript_delimiter))
+      (text))))
+
+================================================================================
+Subscript: Multiple in sequence
+================================================================================
+
+C~6~H~12~O~6~
+
+--------------------------------------------------------------------------------
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (subscript
+        (subscript_delimiter)
+        (subscript_content)
+        (subscript_delimiter))
+      (text)
+      (subscript
+        (subscript_delimiter)
+        (subscript_content)
+        (subscript_delimiter))
+      (text)
+      (subscript
+        (subscript_delimiter)
+        (subscript_content)
+        (subscript_delimiter)))))
+
+================================================================================
+Subscript: In sentence
+================================================================================
+
+The formula for water is H~2~O.
+
+--------------------------------------------------------------------------------
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (subscript
+        (subscript_delimiter)
+        (subscript_content)
+        (subscript_delimiter))
+      (text))))
+
+================================================================================
+Superscript: Basic exponent
+================================================================================
+
+x^2^
+
+--------------------------------------------------------------------------------
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (superscript
+        (superscript_delimiter)
+        (superscript_content)
+        (superscript_delimiter)))))
+
+================================================================================
+Superscript: In equation
+================================================================================
+
+E=mc^2^
+
+--------------------------------------------------------------------------------
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (equals_sign)
+      (text)
+      (superscript
+        (superscript_delimiter)
+        (superscript_content)
+        (superscript_delimiter)))))
+
+================================================================================
+Superscript: Multiple digits
+================================================================================
+
+10^100^
+
+--------------------------------------------------------------------------------
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (superscript
+        (superscript_delimiter)
+        (superscript_content)
+        (superscript_delimiter)))))
+
+================================================================================
+Superscript: In sentence
+================================================================================
+
+The area is x^2^ square units.
+
+--------------------------------------------------------------------------------
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (superscript
+        (superscript_delimiter)
+        (superscript_content)
+        (superscript_delimiter))
+      (text))))
+
+================================================================================
+Mixed formatting: All types together
+================================================================================
+
+Text with **bold**, *italic*, ~~strikethrough~~, ==highlight==, H~2~O, and x^2^.
+
+--------------------------------------------------------------------------------
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (strong_emphasis
+        (strong_emphasis_delimiter)
+        (text)
+        (strong_emphasis_delimiter))
+      (text)
+      (emphasis
+        (emphasis_delimiter)
+        (text)
+        (emphasis_delimiter))
+      (text)
+      (strikethrough
+        (strikethrough_delimiter)
+        (text)
+        (strikethrough_delimiter))
+      (text)
+      (highlight
+        (highlight_delimiter)
+        (text)
+        (highlight_delimiter))
+      (text)
+      (subscript
+        (subscript_delimiter)
+        (subscript_content)
+        (subscript_delimiter))
+      (text)
+      (superscript
+        (superscript_delimiter)
+        (superscript_content)
+        (superscript_delimiter))
+      (text))))
+
+================================================================================
+Adjacent to punctuation
+================================================================================
+
+End with ~~deletion~~. Start new sentence.
+
+--------------------------------------------------------------------------------
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (strikethrough
+        (strikethrough_delimiter)
+        (text)
+        (strikethrough_delimiter))
+      (text))))
+
+================================================================================
+Disambiguation: Subscript vs strikethrough
+================================================================================
+
+Single ~subscript~ versus ~~strikethrough~~.
+
+--------------------------------------------------------------------------------
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (text)
+      (subscript
+        (subscript_delimiter)
+        (subscript_content)
+        (subscript_delimiter))
+      (text)
+      (strikethrough
+        (strikethrough_delimiter)
+        (text)
+        (strikethrough_delimiter))
+      (text))))
+
+================================================================================
+Unicode content: Strikethrough
+================================================================================
+
+~~删除的文本~~
+
+--------------------------------------------------------------------------------
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (strikethrough
+        (strikethrough_delimiter)
+        (text)
+        (strikethrough_delimiter)))))
+
+================================================================================
+Unicode content: Highlight
+================================================================================
+
+==强调的文本==
+
+--------------------------------------------------------------------------------
+
+(document
+  (blank_line)
+  (paragraph
+    content: (inline
+      (highlight
+        (highlight_delimiter)
+        (text)
+        (highlight_delimiter)))))
