@@ -1,20 +1,60 @@
+; Quarto Syntax Highlighting for Zed Editor
+;
+; This file defines syntax highlighting using Zed-compatible scope names.
+; All scopes are validated against Zed's supported token types.
+;
+; ============================================================================
+; DOCUMENTATION & SCOPE REFERENCE
+; ============================================================================
+;
+; Complete list of Zed-supported scopes:
+;   docs/zed-syntax-scopes.md
+;   - 39 core token types (attribute, boolean, comment, emphasis, etc.)
+;   - Hierarchical scope patterns (emphasis.strong, punctuation.delimiter, etc.)
+;   - Language-specific conventions (.markup, .rust, etc.)
+;
+; Scope validation tests:
+;   tests/zed_scope_validation.rs
+;   - Automated validation that all scopes are Zed-compatible
+;   - Prevents nvim-treesitter @markup.* scopes
+;   - Ensures recommended markdown scopes are present
+;   Run: cargo test --test zed_scope_validation
+;
+; Scope usage summary:
+;   docs/scope-validation-summary.md
+;   - Analysis of all scopes used in this file
+;   - Historical fixes (e.g., @text.reference -> @link_text.markup)
+;   - Maintenance guidelines
+;
+; Original scope naming decision:
+;   docs/scope-naming-decision.md
+;
+; ============================================================================
+; KEY SCOPE CONVENTIONS
+; ============================================================================
+;
+; Zed uses different scope names than nvim-treesitter:
+;   Zed                    nvim-treesitter
+;   ----                   ---------------
+;   @title                 @markup.heading
+;   @emphasis              @markup.italic
+;   @emphasis.strong       @markup.bold
+;   @text.literal          @markup.raw.inline / @markup.raw.block
+;   @link_text.markup      @markup.link.label
+;   @link_uri.markup       @markup.link.url
+;   @comment               @markup.quote (for block quotes)
+;   @punctuation.special   @markup.list.marker (for lists)
+;   @string                @markup.math (for math content)
+;
+; IMPORTANT: This file must use Zed scopes, not nvim-treesitter scopes!
+;
+; ============================================================================
+; GRAMMAR INFORMATION
+; ============================================================================
+;
 ; Syntax highlighting queries for tree-sitter-quarto
-; Based on openspec/specs/language-injection/spec.md
-;
-; PATCHED FOR ZED COMPATIBILITY
-; This file has been modified from the upstream tree-sitter-quarto grammar to use
-; Zed-compatible scope names. The following substitutions have been made:
-;   @markup.heading -> @text.title
-;   @markup.italic -> @text.emphasis
-;   @markup.bold -> @emphasis.strong
-;   @markup.raw.* -> @text.literal
-;   @markup.link.text -> @text.reference
-;   @markup.link.url -> @text.uri
-;   @markup.quote -> @comment
-;   @markup.math.* -> @string
-;
-; Original source: https://github.com/ck37/tree-sitter-quarto
-; Commit: b1b4cbd88fc6f787c660bf52b0e23879a8fc66c2
+; Grammar: https://github.com/ck37/tree-sitter-quarto
+; Based on: openspec/specs/language-injection/spec.md
 
 ; ============================================================================
 ; QUARTO-SPECIFIC HIGHLIGHTS
@@ -64,17 +104,52 @@
 ; --------
 
 (atx_heading
-  (atx_heading_marker) @punctuation.special) @text.title
+  (atx_heading_marker) @punctuation.special
+  content: (inline) @text.title)
+
+; Also capture text inside heading inline content
+(atx_heading
+  content: (inline (text) @text.title))
+
+(atx_heading
+  content: (inline (_) @text.title))
 
 (setext_heading
-  (setext_heading_marker) @punctuation.special) @text.title
+  content: (inline) @text.title
+  (setext_heading_marker) @punctuation.special)
 
-; Emphasis
-; --------
+(setext_heading
+  content: (inline (text) @text.title))
 
+(setext_heading
+  content: (inline (_) @text.title))
+
+; Emphasis/Strong
+; ---------------
+
+; Capture both the parent node and child text explicitly
 (emphasis) @text.emphasis
+(emphasis (text) @text.emphasis)
+(emphasis (_) @text.emphasis)
 
 (strong_emphasis) @emphasis.strong
+(strong_emphasis (text) @emphasis.strong)
+(strong_emphasis (_) @emphasis.strong)
+
+; Pandoc Inline Formatting Extensions
+; ------------------------------------
+
+(strikethrough) @text.strike
+(strikethrough (text) @text.strike)
+
+(highlight) @text.highlight
+(highlight (text) @text.highlight)
+
+(subscript) @text.subscript
+(subscript (subscript_content) @text.subscript)
+
+(superscript) @text.super
+(superscript (superscript_content) @text.super)
 
 ; Code
 ; ----
@@ -92,13 +167,16 @@
 ; Links & Images
 ; --------------
 
+; Capture link components
 (link
-  text: (_) @text.reference
-  destination: (link_destination) @text.uri)
+  text: (link_text) @link_text.markup
+  destination: (link_destination) @link_uri.markup)
 
-(image
-  alt: (_) @text.reference
-  source: (image_source) @text.uri)
+(link (link_destination) @link_uri.markup)
+(link (link_text) @link_text.markup)
+
+; Images use different field names
+(image_source) @link_uri.markup
 
 "[" @punctuation.bracket
 "]" @punctuation.bracket
@@ -214,8 +292,8 @@
 ; ---------------
 
 (link_reference_definition
-  label: (_) @text.reference
-  destination: (link_destination) @text.uri)
+  label: (_) @link_text.markup
+  destination: (link_destination) @link_uri.markup)
 
 (link_title) @string
 
@@ -229,15 +307,16 @@
   "|" @punctuation.delimiter
   (table_delimiter_cell) @punctuation.special)
 
-(pipe_table_row
-  "|" @punctuation.delimiter)
+; Note: pipe_table_row is a token with no internal structure,
+; so we can't highlight individual delimiters within rows
+(pipe_table_row) @none
 
 (table_cell) @none
 
 ; Text
 ; ----
-
-(text) @text
+; NOTE: Catch-all (text) @text removed because it overrides parent scopes
+; Child text nodes inherit styling from their parent (emphasis, strong, heading, etc.)
 
 ; Blank Lines
 ; -----------

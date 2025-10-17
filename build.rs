@@ -4,6 +4,10 @@ use std::process::Command;
 const REPO_URL: &str = "https://github.com/ck37/tree-sitter-pandoc-markdown";
 const COMMIT: &str = "f2e5718a1b2190cf59dd22d9a97fc9b7329a25b6";
 
+// tree-sitter-quarto for automated highlighting tests
+const QUARTO_REPO_URL: &str = "https://github.com/ck37/tree-sitter-quarto";
+const QUARTO_COMMIT: &str = "96638a5eaba58df4cf2ac270af844d19d8fff083";
+
 fn main() {
     // Only compile the grammar for native tests, not for WASM
     let target = std::env::var("TARGET").unwrap_or_default();
@@ -182,4 +186,100 @@ fn main() {
     } else {
         panic!("Pandoc-markdown grammar source not found. Run: git clone --depth=1 --branch=feat/phase-1-pandoc-grammar https://github.com/ck37/tree-sitter-pandoc-markdown grammars/pandoc_markdown");
     }
+
+    // Also compile tree-sitter-quarto for heading_highlighting tests
+    compile_quarto_grammar(&dir);
+}
+
+fn compile_quarto_grammar(dir: &PathBuf) {
+    let quarto_dir = dir.join("quarto");
+    let src_dir = quarto_dir.join("src");
+
+    if !quarto_dir.join(".git").exists() {
+        eprintln!("Cloning tree-sitter-quarto repository...");
+        let status = Command::new("git")
+            .args(["clone", QUARTO_REPO_URL, quarto_dir.to_str().unwrap()])
+            .status()
+            .expect("failed to spawn git clone for quarto");
+
+        if !status.success() {
+            panic!("Could not clone tree-sitter-quarto repository");
+        }
+    }
+
+    eprintln!("Ensuring tree-sitter-quarto is at commit {QUARTO_COMMIT}...");
+
+    let _fetch_status = Command::new("git")
+        .current_dir(&quarto_dir)
+        .args(["fetch", "origin"])
+        .status();
+
+    let _clean_status = Command::new("git")
+        .current_dir(&quarto_dir)
+        .args(["reset", "--hard"])
+        .status();
+
+    let checkout_status = Command::new("git")
+        .current_dir(&quarto_dir)
+        .args(["checkout", QUARTO_COMMIT])
+        .status()
+        .expect("failed to checkout quarto grammar commit");
+
+    if !checkout_status.success() {
+        panic!("Could not checkout tree-sitter-quarto commit {QUARTO_COMMIT}");
+    }
+
+    if src_dir.join("parser.c").exists() {
+        // Patch the grammar's queries to use Zed-compatible scopes for tests
+        // This simulates what we want Zed to do: load our extension's queries instead of grammar's
+        patch_quarto_queries(&quarto_dir);
+
+        eprintln!("Compiling tree-sitter-quarto grammar...");
+
+        cc::Build::new()
+            .include(&src_dir)
+            .file(src_dir.join("parser.c"))
+            .file(src_dir.join("scanner.c"))
+            .flag_if_supported("-Wno-unused-parameter")
+            .flag_if_supported("-Wno-unused-function")
+            .flag_if_supported("-Wno-unused-const-variable")
+            .compile("tree-sitter-quarto");
+
+        println!("cargo:rerun-if-changed={}", src_dir.display());
+    } else {
+        eprintln!("Warning: tree-sitter-quarto grammar source not found, heading tests may fail");
+    }
+}
+
+fn patch_quarto_queries(quarto_dir: &PathBuf) {
+    let highlights_dest = quarto_dir.join("queries").join("highlights.scm");
+    let injections_dest = quarto_dir.join("queries").join("injections.scm");
+
+    if !highlights_dest.exists() {
+        eprintln!("Warning: Could not find tree-sitter-quarto queries/highlights.scm to patch");
+        return;
+    }
+
+    eprintln!("Copying extension's Zed-compatible queries over grammar's queries...");
+
+    // Copy our extension's queries (which use Zed-compatible scopes) over the grammar's queries
+    // This simulates what we want Zed to do
+    let extension_highlights = std::path::PathBuf::from("languages/quarto/highlights.scm");
+    let extension_injections = std::path::PathBuf::from("languages/quarto/injections.scm");
+
+    if extension_highlights.exists() {
+        std::fs::copy(&extension_highlights, &highlights_dest)
+            .expect("failed to copy extension highlights.scm");
+        eprintln!("✓ Copied languages/quarto/highlights.scm → grammars/quarto/queries/highlights.scm");
+    } else {
+        eprintln!("Warning: Could not find languages/quarto/highlights.scm");
+    }
+
+    if extension_injections.exists() {
+        std::fs::copy(&extension_injections, &injections_dest)
+            .expect("failed to copy extension injections.scm");
+        eprintln!("✓ Copied languages/quarto/injections.scm → grammars/quarto/queries/injections.scm");
+    }
+
+    eprintln!("✓ Grammar now uses extension's Zed-compatible queries for testing");
 }
