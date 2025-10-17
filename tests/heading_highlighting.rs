@@ -12,8 +12,8 @@ fn language() -> Language {
 }
 
 fn highlight_configuration() -> HighlightConfiguration {
-    let highlight_query = include_str!("../grammars/quarto/queries/zed/highlights.scm");
-    let injection_query = include_str!("../grammars/quarto/queries/injections.scm");
+    let highlight_query = include_str!("../grammars/quarto-vendored/queries/zed/highlights.scm");
+    let injection_query = include_str!("../grammars/quarto-vendored/queries/injections.scm");
     let locals_query = "";
 
     eprintln!("\n=== QUERIES BEING USED ===");
@@ -160,7 +160,7 @@ fn headers_are_highlighted() {
         eprintln!("   Actual:   @constant.builtin and @comment");
         eprintln!();
         eprintln!("   This means Zed is loading tree-sitter-quarto's queries/highlights.scm");
-        eprintln!("   instead of the extension's grammars/quarto/queries/zed/highlights.scm");
+        eprintln!("   instead of the extension's grammars/quarto-vendored/queries/zed/highlights.scm");
         eprintln!();
         eprintln!("   See docs/highlighting-failure-analysis.md for details.");
         eprintln!();

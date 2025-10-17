@@ -13,7 +13,7 @@ extern "C" {
 fn all_query_node_types_exist_in_grammar() {
     let language = unsafe { tree_sitter_quarto() };
     let highlights_query = std::fs::read_to_string(
-        Path::new(env!("CARGO_MANIFEST_DIR")).join("grammars/quarto/queries/zed/highlights.scm"),
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("grammars/quarto-vendored/queries/zed/highlights.scm"),
     )
     .expect("Failed to read highlights.scm");
 
@@ -35,7 +35,7 @@ fn all_query_node_types_exist_in_grammar() {
                 3. The grammar version matches what extension.toml expects\n\n\
                 To debug:\n\
                 - Run: tree-sitter parse <test-file> to see actual AST nodes\n\
-                - Run: tree-sitter query grammars/quarto/queries/zed/highlights.scm to validate query",
+                - Run: tree-sitter query grammars/quarto-vendored/queries/zed/highlights.scm to validate query",
                 e
             );
         }

@@ -115,7 +115,7 @@ npm install tree-sitter
 npm run build:wasm
 ```
 
-This requires `tree-sitter-cli` and the compiled grammar in `grammars/quarto/`.
+This requires `tree-sitter-cli` and the compiled grammar in `grammars/quarto-vendored/`.
 
 ### Tests fail after grammar update
 
