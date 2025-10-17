@@ -1,3 +1,4 @@
+# Extension metadata
 id = "quarto"
 name = "Quarto"
 version = "0.2.0"
@@ -5,8 +6,31 @@ schema_version = 1
 authors = ["Chris Kennedy <chrisken@gmail.com>"]
 description = "Quarto authoring for Zed with tree-sitter-quarto grammar"
 repository = "https://github.com/ck37/zed-quarto-extension"
+
+# Language configurations
+# The quarto language configuration is in languages/quarto/config.toml
+# It includes syntax highlighting queries at languages/quarto/highlights.scm (currently unused)
+# and injections.scm for embedded code blocks (Python, R, Julia, etc.)
 languages = ["languages/quarto"]
 
+# Grammar configuration for tree-sitter-quarto
+# IMPORTANT: This uses a VENDORED grammar approach
+# - The grammar source is checked into git at grammars/quarto/ (not gitignored)
+# - build.rs does NOT clone this grammar; it compiles the vendored source
+# - The repository and commit fields are still REQUIRED by Zed even for vendored grammars
+# - Zed will clone from the repository/commit when installing the extension
+# - The path field tells Zed where to find queries within the cloned grammar
+#
+# Query file resolution:
+# - Zed loads queries from: grammars/quarto/queries/highlights.scm (default location)
+# - The grammar repo also has: queries/zed/highlights.scm (Zed-compatible scopes)
+# - Currently we patch: queries/highlights.scm is a copy of queries/zed/highlights.scm
+# - This ensures Zed uses @text.* scopes instead of @markup.* scopes (which Zed themes don't support)
+#
+# Why vendored?
+# - Allows us to make Zed-specific patches (like query file overrides)
+# - Ensures reproducible builds independent of upstream changes
+# - Tests run against the exact vendored version
 [grammars.quarto]
 repository = "https://github.com/ck37/tree-sitter-quarto"
 commit = "c9f444e88fc6f787c660bf52b0e23879a8fc66c2"
