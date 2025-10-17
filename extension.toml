@@ -14,24 +14,22 @@ repository = "https://github.com/ck37/zed-quarto-extension"
 languages = ["languages/quarto"]
 
 # Grammar configuration for tree-sitter-quarto
-# IMPORTANT: This uses a VENDORED grammar approach
-# - The grammar source is checked into git at grammars/quarto/ (not gitignored)
-# - build.rs does NOT clone this grammar; it compiles the vendored source
-# - The repository and commit fields are still REQUIRED by Zed even for vendored grammars
-# - Zed will clone from the repository/commit when installing the extension
-# - The path field tells Zed where to find queries within the cloned grammar
+# NOTE: Zed does NOT support truly vendored grammars
+# - When repository/commit are specified, Zed ALWAYS clones from the repo
+# - The path field is for subdirectory within the repo (like tree-sitter-pandoc-markdown)
+# - Zed ignores any pre-existing files in grammars/quarto/
+#
+# Current approach:
+# - Zed clones tree-sitter-quarto from GitHub at specified commit
+# - Zed compiles the grammar and loads queries from the clone
+# - build.rs compiles vendored grammar source for local tests only
+# - Tests run against vendored version at grammars/quarto/ (for reproducibility)
 #
 # Query file resolution:
 # - Zed loads queries from: grammars/quarto/queries/highlights.scm (default location)
 # - The grammar repo also has: queries/zed/highlights.scm (Zed-compatible scopes)
-# - Currently we patch: queries/highlights.scm is a copy of queries/zed/highlights.scm
-# - This ensures Zed uses @text.* scopes instead of @markup.* scopes (which Zed themes don't support)
-#
-# Why vendored?
-# - Allows us to make Zed-specific patches (like query file overrides)
-# - Ensures reproducible builds independent of upstream changes
-# - Tests run against the exact vendored version
+# - We've patched: queries/highlights.scm is a copy of queries/zed/highlights.scm
+# - This ensures Zed uses @text.* scopes instead of @markup.* scopes
 [grammars.quarto]
 repository = "https://github.com/ck37/tree-sitter-quarto"
 commit = "c9f444e88fc6f787c660bf52b0e23879a8fc66c2"
-path = "grammars/quarto"
