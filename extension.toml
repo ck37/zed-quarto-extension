@@ -8,4 +8,6 @@ repository = "https://github.com/ck37/zed-quarto-extension"
 languages = ["languages/quarto"]
 
 [grammars.quarto]
+repository = "https://github.com/ck37/tree-sitter-quarto"
+commit = "c9f444e88fc6f787c660bf52b0e23879a8fc66c2"
 path = "grammars/quarto"
