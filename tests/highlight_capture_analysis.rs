@@ -55,7 +55,7 @@ fn analyze_emphasis_captures() {
 
     for event in events {
         let event = event.expect("Event failed");
-        event_list.push(event.clone());
+        event_list.push(event);
 
         match &event {
             HighlightEvent::Source { start, end } => {
@@ -207,7 +207,7 @@ fn analyze_heading_captures() {
 
     for event in events {
         let event = event.expect("Event failed");
-        event_list.push(event.clone());
+        event_list.push(event);
 
         match &event {
             HighlightEvent::Source { start, end } => {

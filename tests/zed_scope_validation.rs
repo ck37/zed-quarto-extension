@@ -293,10 +293,7 @@ fn is_scope_supported(scope: &str) -> bool {
     }
 
     // Special cases that should be allowed
-    match scope {
-        "text" | "none" | "parameter" => true,
-        _ => false,
-    }
+    matches!(scope, "text" | "none" | "parameter")
 }
 
 // Additional helper test to list all scopes we use
