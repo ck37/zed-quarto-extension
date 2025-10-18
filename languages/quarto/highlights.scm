@@ -14,13 +14,13 @@
 ; For Neovim users who prefer modern scopes: Use queries/nvim/highlights.scm
 ; which provides modern nvim-treesitter conventions (@markup.*).
 ;
-; Scope mapping (legacy -> modern):
+; Scope mapping (Zed -> modern nvim-treesitter):
 ;   @text.title -> @markup.heading
-;   @text.emphasis -> @markup.italic
+;   @emphasis -> @markup.italic
 ;   @emphasis.strong -> @markup.bold
 ;   @text.literal -> @markup.raw.inline / @markup.raw.block
-;   @text.reference -> @markup.link.label
-;   @text.uri -> @markup.link.url
+;   @link_text -> @markup.link.label
+;   @link_uri -> @markup.link.url
 ;   @comment (block quotes) -> @markup.quote
 ;   @punctuation.special (lists) -> @markup.list.marker
 ;   @string (math) -> @markup.math.inline / @markup.math.block
@@ -88,9 +88,16 @@
 ; Emphasis/Strong
 ; ---------------
 
-(emphasis) @text.emphasis
+; Highlight the delimiters
+(emphasis_delimiter) @punctuation.delimiter
+(strong_emphasis_delimiter) @punctuation.delimiter
 
-(strong_emphasis) @emphasis.strong
+; Highlight the content - using exact theme scope names
+(emphasis
+  (text) @emphasis)
+
+(strong_emphasis
+  (text) @emphasis.strong)
 
 ; Inline Formatting (Pandoc extensions)
 ; -------------------------------------
@@ -119,13 +126,17 @@
 ; Links & Images
 ; --------------
 
-(link
-  text: (_) @text.reference
-  destination: (link_destination) @text.uri)
+; Link text content - using exact theme scope names
+(link_text) @link_text
 
-(image
-  alt: (_) @text.reference
-  source: (image_source) @text.uri)
+; Link destination
+(link_destination) @link_uri
+
+; Image alt text
+(image_alt) @link_text
+
+; Image source
+(image_source) @link_uri
 
 "[" @punctuation.bracket
 "]" @punctuation.bracket
@@ -241,8 +252,8 @@
 ; ---------------
 
 (link_reference_definition
-  label: (_) @text.reference
-  destination: (link_destination) @text.uri)
+  label: (_) @link_text
+  destination: (link_destination) @link_uri)
 
 (link_title) @string
 
@@ -264,8 +275,9 @@
 
 ; Text
 ; ----
-
-(text) @text
+; NOTE: Removed catch-all (text) @text pattern to avoid double-captures.
+; Text nodes inside emphasis, strong, links, etc. are captured by their
+; specific patterns. Plain text doesn't need explicit highlighting.
 
 ; Blank Lines
 ; -----------
