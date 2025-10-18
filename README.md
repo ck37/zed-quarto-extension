@@ -41,8 +41,27 @@ tree-sitter-quarto provides unified grammar handling for both block and inline c
 
 ## Known Limitations
 
-- Preview/render workflows: Out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
-- Grammar completeness: tree-sitter-quarto is in alpha (58/58 tests passing). Some edge cases in Quarto/Pandoc syntax may not be fully supported yet. See the [grammar repository](https://github.com/ck37/tree-sitter-quarto) for current status.
+### Highlighting Limitations
+
+Some Pandoc extension features parse correctly but don't highlight in Zed due to theme limitations:
+
+- **Strikethrough** (`~~text~~`) - Not supported by Zed's theme system (`@text.strike` scope)
+- **Highlight/mark** (`==text==`) - Not supported (`@text.highlight` scope)
+- **Subscript** (`H~2~O`) - Not supported (`@text.subscript` scope)
+- **Superscript** (`x^2^`) - Not supported (`@text.super` scope)
+
+These features parse correctly and will highlight if/when Zed adds theme support for these scopes. See [`docs/pandoc-extensions-scope-issue.md`](docs/pandoc-extensions-scope-issue.md) for details.
+
+**Working features:**
+- ✅ Bold (`**text**`) and italic (`*text*`)
+- ✅ Links (`[text](url)`)
+- ✅ Code spans (`` `code` ``)
+- ✅ All Quarto-specific syntax (code cells, chunk options, cross-references, etc.)
+
+### Other Limitations
+
+- **Preview/render workflows**: Out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
+- **Grammar completeness**: tree-sitter-quarto is in alpha (58/58 tests passing). Some edge cases in Quarto/Pandoc syntax may not be fully supported yet. See the [grammar repository](https://github.com/ck37/tree-sitter-quarto) for current status.
 
 ## Contributing
 
