@@ -18,11 +18,10 @@
 (fenced_div) @indent
 
 ; ============================================================================
-; DEDENT
+; NOTE: Dedent queries removed
 ; ============================================================================
 
-; Closing delimiters
-[
-  (fenced_div_delimiter)
-  (code_fence_delimiter)
-] @dedent
+; Zed does not recognize dedent-related capture names in indent queries.
+; Previously, this file used closing delimiter queries with @_dedent,
+; but these were removed to eliminate warnings in Zed logs.
+; See tests/indents_query_validation.rs for details.

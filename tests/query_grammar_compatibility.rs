@@ -41,11 +41,11 @@ extern "C" {
 #[test]
 fn highlights_query_compatible_with_grammar() {
     let language = unsafe { tree_sitter_quarto() };
-    let highlights_path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("languages/quarto/highlights.scm");
+    let highlights_path =
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("languages/quarto/highlights.scm");
 
-    let highlights = std::fs::read_to_string(&highlights_path)
-        .expect("Failed to read highlights.scm");
+    let highlights =
+        std::fs::read_to_string(&highlights_path).expect("Failed to read highlights.scm");
 
     // Try to parse the query with the grammar
     let result = Query::new(&language, &highlights);
@@ -80,11 +80,11 @@ fn highlights_query_compatible_with_grammar() {
 #[test]
 fn injections_query_compatible_with_grammar() {
     let language = unsafe { tree_sitter_quarto() };
-    let injections_path = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("languages/quarto/injections.scm");
+    let injections_path =
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("languages/quarto/injections.scm");
 
-    let injections = std::fs::read_to_string(&injections_path)
-        .expect("Failed to read injections.scm");
+    let injections =
+        std::fs::read_to_string(&injections_path).expect("Failed to read injections.scm");
 
     let result = Query::new(&language, &injections);
 
@@ -99,10 +99,19 @@ fn injections_query_compatible_with_grammar() {
 #[test]
 fn all_scm_files_compatible_with_grammar() {
     let language = unsafe { tree_sitter_quarto() };
-    let quarto_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR"))
-        .join("languages/quarto");
+    let quarto_dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("languages/quarto");
 
-    let query_files = ["highlights.scm", "injections.scm", "folds.scm", "indents.scm", "locals.scm"];
+    let query_files = [
+        "highlights.scm",
+        "injections.scm",
+        "folds.scm",
+        "indents.scm",
+        "locals.scm",
+    ];
+
+    // Note: textobjects.scm, outline.scm, and tags.scm are not included because:
+    // - textobjects.scm: Not provided by tree-sitter-quarto upstream
+    // - outline.scm, tags.scm: Not yet implemented for tree-sitter-quarto
 
     for filename in query_files {
         let path = quarto_dir.join(filename);

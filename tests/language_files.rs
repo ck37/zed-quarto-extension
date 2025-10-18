@@ -66,8 +66,7 @@ fn language_config_exists() {
         "languages/quarto/config.toml is required for language registration"
     );
 
-    let config_content = std::fs::read_to_string(&config_path)
-        .expect("Failed to read config.toml");
+    let config_content = std::fs::read_to_string(&config_path).expect("Failed to read config.toml");
 
     // Verify it contains essential configuration
     assert!(
@@ -92,8 +91,8 @@ fn highlights_query_exists() {
          to provide highlight queries that map grammar nodes to semantic scopes."
     );
 
-    let highlights = std::fs::read_to_string(&highlights_path)
-        .expect("Failed to read highlights.scm");
+    let highlights =
+        std::fs::read_to_string(&highlights_path).expect("Failed to read highlights.scm");
 
     // Verify it's not empty and contains at least some queries
     assert!(
@@ -118,12 +117,13 @@ fn injections_query_exists() {
          inside Quarto documents."
     );
 
-    let injections = std::fs::read_to_string(&injections_path)
-        .expect("Failed to read injections.scm");
+    let injections =
+        std::fs::read_to_string(&injections_path).expect("Failed to read injections.scm");
 
     // Verify it contains language injections
     assert!(
-        injections.contains("#set! injection.language") || injections.contains("@injection.content"),
+        injections.contains("#set! injection.language")
+            || injections.contains("@injection.content"),
         "injections.scm should contain injection directives"
     );
 }
@@ -157,12 +157,20 @@ fn queries_compatible_with_grammar() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
     let highlights_path = manifest_dir.join("languages/quarto/highlights.scm");
 
-    let highlights = std::fs::read_to_string(&highlights_path)
-        .expect("Failed to read highlights.scm");
+    let highlights =
+        std::fs::read_to_string(&highlights_path).expect("Failed to read highlights.scm");
 
-    // Check that we're NOT using nvim-treesitter @markup.* scopes
+    // Check that we're NOT using nvim-treesitter @markup.* scopes in actual queries
     // (tree-sitter-quarto grammar has Zed scopes in queries/highlights.scm,
     //  but we also need them in the extension's languages/quarto/highlights.scm)
+    //
+    // Filter out comments before checking for nvim scopes
+    let query_lines: Vec<_> = highlights
+        .lines()
+        .filter(|line| !line.trim().starts_with(';'))
+        .collect();
+    let queries_only = query_lines.join("\n");
+
     let nvim_scopes = [
         "@markup.heading",
         "@markup.bold",
@@ -172,8 +180,8 @@ fn queries_compatible_with_grammar() {
 
     for scope in nvim_scopes {
         assert!(
-            !highlights.contains(scope),
-            "highlights.scm should NOT use nvim-treesitter scope: {}\n\
+            !queries_only.contains(scope),
+            "highlights.scm should NOT use nvim-treesitter scope in queries: {}\n\
              Use Zed-compatible scopes instead (@title, @emphasis.strong, @text.emphasis, @text.literal)",
             scope
         );
