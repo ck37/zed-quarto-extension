@@ -87,7 +87,7 @@ fn highlights_uses_zed_compatible_scopes() {
     // Verify we ARE using Zed-compatible scopes
     let required_scopes = [
         "@text.title",
-        "@text.emphasis",
+        "@emphasis", // Updated from @text.emphasis
         "@emphasis.strong",
         "@text.literal",
     ];
