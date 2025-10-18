@@ -33,6 +33,9 @@ languages = ["languages/quarto"]
 # 1. Update build.rs QUARTO_COMMIT constant to match
 # 2. Run tests to verify grammar clones and compiles correctly
 # 3. Clean and rebuild: cargo clean && cargo build --release
+#
+# NOTE: Highlighting improvements are proposed in issue #6
+# https://github.com/ck37/tree-sitter-quarto/issues/6
 [grammars.quarto]
 repository = "https://github.com/ck37/tree-sitter-quarto"
-rev = "9f7e5d2ef6af2af9dd47b259d9d50fa5d0e18638"
+rev = "c2c28fd2ebd026f23145171598dbfe664890beb2"

@@ -223,7 +223,13 @@
   (yaml_front_matter_start) @punctuation.delimiter
   (yaml_front_matter_delimiter) @punctuation.delimiter)
 
-(yaml_front_matter_content) @embedded
+; YAML Structure
+(yaml_key) @property
+(yaml_string_unquoted) @string
+(yaml_string_quoted) @string
+(yaml_number) @number
+(yaml_boolean) @boolean
+(yaml_null) @constant.builtin
 
 ; HTML
 ; ----

@@ -243,9 +243,12 @@
 ; YAML Front Matter
 ; -----------------
 
-((yaml_front_matter
-  (yaml_front_matter_content) @injection.content)
- (#set! injection.language "yaml"))
+; NOTE: Commented out because yaml_front_matter_content node doesn't exist in remote grammar c2c28fd
+; The remote grammar has structured YAML parsing instead
+; See: https://github.com/ck37/tree-sitter-quarto/issues/6
+; ((yaml_front_matter
+;   (yaml_front_matter_content) @injection.content)
+;  (#set! injection.language "yaml"))
 
 ; HTML Blocks
 ; -----------
