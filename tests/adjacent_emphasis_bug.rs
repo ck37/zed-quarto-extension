@@ -2,7 +2,6 @@
 ///
 /// Issue: The pattern *italic***bold***italic* breaks syntax highlighting
 /// in Zed after this line. This test checks if it's a grammar parsing error.
-
 use tree_sitter::{Language, Parser};
 
 #[link(name = "tree-sitter-quarto", kind = "static")]
@@ -17,7 +16,8 @@ fn test_adjacent_emphasis_parsing() {
     parser.set_language(&language).unwrap();
 
     // The problematic pattern from inline-highlighting.qmd line 155
-    let source = "Before line.\n\n*italic***bold***italic*\n\nAfter line with **bold** and *italic*.\n";
+    let source =
+        "Before line.\n\n*italic***bold***italic*\n\nAfter line with **bold** and *italic*.\n";
 
     let tree = parser.parse(source, None).unwrap();
     let root = tree.root_node();
@@ -32,7 +32,8 @@ fn test_adjacent_emphasis_parsing() {
             text.replace('\n', "\\n")
         };
 
-        println!("{}{} [{}..{}] \"{}\"",
+        println!(
+            "{}{} [{}..{}] \"{}\"",
             indent_str,
             node.kind(),
             node.start_position().row,
@@ -58,7 +59,11 @@ fn test_adjacent_emphasis_parsing() {
         fn find_errors(node: tree_sitter::Node, source: &str) {
             if node.is_error() {
                 let text = node.utf8_text(source.as_bytes()).unwrap_or("<invalid>");
-                println!("  ERROR node at row {}: {:?}", node.start_position().row, text);
+                println!(
+                    "  ERROR node at row {}: {:?}",
+                    node.start_position().row,
+                    text
+                );
             }
             if node.is_missing() {
                 println!("  MISSING node: {}", node.kind());
@@ -97,13 +102,18 @@ fn test_adjacent_emphasis_parsing() {
 
         count_nodes(root, &mut emphasis_count, &mut strong_count);
 
-        println!("\nFound: {} emphasis nodes, {} strong_emphasis nodes", emphasis_count, strong_count);
+        println!(
+            "\nFound: {} emphasis nodes, {} strong_emphasis nodes",
+            emphasis_count, strong_count
+        );
 
         // For *italic***bold***italic* we expect:
         // Either: 2 emphasis + 1 strong_emphasis (if parsed correctly)
         // Or: Something else (if parsed incorrectly)
 
-        println!("\nExpected: 2 emphasis + 1 strong_emphasis for the pattern *italic***bold***italic*");
+        println!(
+            "\nExpected: 2 emphasis + 1 strong_emphasis for the pattern *italic***bold***italic*"
+        );
 
         // Don't fail the test, just document what we found
         // The important thing is whether it has parse errors
