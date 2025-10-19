@@ -7,7 +7,7 @@ This directory contains technical documentation for the Zed Quarto extension.
 Essential reference documentation for using and developing the extension:
 
 ### Language Server & Features
-- **[LSP_STATUS.md](LSP_STATUS.md)** - Why there's no LSP, what the extension provides, and future possibilities
+- **[lsp-status.md](lsp-status.md)** - Why there's no LSP, what the extension provides, and future possibilities
 
 ### Architecture & Design
 - **[syntax-highlighting-architecture.md](syntax-highlighting-architecture.md)** - How syntax highlighting works (tree-sitter vs TextMate)
@@ -20,12 +20,12 @@ Essential reference documentation for using and developing the extension:
 
 ### Technical Reference
 - **[scope-reference.md](scope-reference.md)** - Comprehensive scope reference: supported scopes, limitations, Pandoc extensions
-- **[DEBUG_THEME.md](DEBUG_THEME.md)** - How to debug theme and scope issues
-- **[UPSTREAM_WARNINGS.md](UPSTREAM_WARNINGS.md)** - Upstream grammar warnings and issues
+- **[debug-theme.md](debug-theme.md)** - How to debug theme and scope issues
+- **[upstream-warnings.md](upstream-warnings.md)** - Upstream grammar warnings and issues
 
 ### Current Issues
-- **[NEXT_STEPS.md](NEXT_STEPS.md)** - Current priorities and next development steps
-- **[TRIPLE_ASTERISK_ISSUE.md](TRIPLE_ASTERISK_ISSUE.md)** - Known issue with triple asterisk bold+italic syntax
+- **[next-steps.md](next-steps.md)** - Current priorities and next development steps
+- **[triple-asterisk-issue.md](triple-asterisk-issue.md)** - Known issue with triple asterisk bold+italic syntax
 
 ### Testing & Development
 - **[manual-test-steps.md](manual-test-steps.md)** - Manual testing procedures

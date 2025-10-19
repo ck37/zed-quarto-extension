@@ -26,7 +26,7 @@ Syntax highlighting powered by [`tree-sitter-quarto`](https://github.com/ck37/tr
 - **Tables**: pipe tables with alignment markers
 - **Embedded language injections**: Python, R, Julia, SQL, JavaScript, TypeScript, Bash code chunks
 
-> **Note**: This extension provides syntax highlighting only. For language server features (completions, hover, diagnostics), see [`docs/LSP_STATUS.md`](docs/LSP_STATUS.md) for the current state and options.
+> **Note**: This extension provides syntax highlighting only. For language server features (completions, hover, diagnostics), see [`docs/lsp-status.md`](docs/lsp-status.md) for the current state and options.
 
 ## Known Limitations
 

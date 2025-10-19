@@ -180,5 +180,5 @@ When resuming, start with:
 ```bash
 cd "/Users/ck432/Partners HealthCare Dropbox/Chris Kennedy/Code/zed-quarto-extension"
 git status
-cat NEXT_STEPS.md
+cat docs/next-steps.md
 ```

@@ -87,7 +87,7 @@ Quarto documents (`.qmd`) are **not** standard Markdown. They use Pandoc Markdow
 - `@punctuation.special` - Markdown markers (headings, lists, etc.)
 
 ### Language Server Status
-**This extension does not provide language server support.** Quarto does not have a built-in language server. Users can configure external tools for linting/formatting if needed. See `docs/LSP_STATUS.md` for details.
+**This extension does not provide language server support.** Quarto does not have a built-in language server. Users can configure external tools for linting/formatting if needed. See `docs/lsp-status.md` for details.
 
 ## Important Constraints
 
