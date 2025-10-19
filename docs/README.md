@@ -18,23 +18,17 @@ Essential reference documentation for using and developing the extension:
 - **[grammar-feature-needs.md](grammar-feature-needs.md)** - Missing Pandoc features and future enhancements
 - **[tree-sitter-quarto-plan.md](tree-sitter-quarto-plan.md)** - Implementation details for tree-sitter-quarto
 
-### Limitations & Issues
-- **[pandoc-extensions-scope-issue.md](pandoc-extensions-scope-issue.md)** - Why strikethrough, highlight, subscript, superscript don't highlight
-- **[NEXT_STEPS.md](NEXT_STEPS.md)** - Current priorities and next development steps
-- **[TRIPLE_ASTERISK_ISSUE.md](TRIPLE_ASTERISK_ISSUE.md)** - Known issue with triple asterisk bold+italic syntax
-
 ### Technical Reference
-- **[zed-syntax-scopes.md](zed-syntax-scopes.md)** - Complete list of Zed-supported scopes
-- **[zed-theme-scope-limitations.md](zed-theme-scope-limitations.md)** - Zed theme system limitations
+- **[scope-reference.md](scope-reference.md)** - Comprehensive scope reference: supported scopes, limitations, Pandoc extensions
 - **[DEBUG_THEME.md](DEBUG_THEME.md)** - How to debug theme and scope issues
 - **[UPSTREAM_WARNINGS.md](UPSTREAM_WARNINGS.md)** - Upstream grammar warnings and issues
 
+### Current Issues
+- **[NEXT_STEPS.md](NEXT_STEPS.md)** - Current priorities and next development steps
+- **[TRIPLE_ASTERISK_ISSUE.md](TRIPLE_ASTERISK_ISSUE.md)** - Known issue with triple asterisk bold+italic syntax
+
 ### Testing & Development
 - **[manual-test-steps.md](manual-test-steps.md)** - Manual testing procedures
-- **[tree-sitter-0.25-migration.md](tree-sitter-0.25-migration.md)** - Tree-sitter 0.25 upgrade notes
-- **[tree-sitter-quarto-multi-editor-proposal.md](tree-sitter-quarto-multi-editor-proposal.md)** - Proposal for multi-editor grammar support
-- **[wasm-testing-design.md](wasm-testing-design.md)** - WASM testing infrastructure
-- **[wasm-test-fixes.md](wasm-test-fixes.md)** - WASM compilation fixes
 
 ## Historical Documentation
 

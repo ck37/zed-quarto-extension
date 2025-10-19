@@ -48,6 +48,12 @@ This directory contains historical documentation from the migration from `tree-s
 - **zed-query-loading-test.md** - Query loading mechanism tests
 - **zed-query-loading-test-results.md** - Test results
 
+### Technical Implementation
+- **tree-sitter-0.25-migration.md** - Tree-sitter 0.25 API migration (Oct 17, 2025)
+- **tree-sitter-quarto-multi-editor-proposal.md** - Historical proposal for multi-editor query support
+- **wasm-testing-design.md** - WASM testing infrastructure design
+- **wasm-test-fixes.md** - WASM integration test fixes (Oct 17, 2025)
+
 ## Current Implementation
 
 For current documentation about how the extension works post-migration, see:
