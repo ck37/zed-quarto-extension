@@ -31,6 +31,17 @@ cp target/wasm32-wasip2/release/quarto_zed.wasm extension.wasm
 
 **Why archived**: Completely obsolete. References `grammars/pandoc_markdown_inline/` which no longer exists since we migrated to tree-sitter-quarto (single unified grammar).
 
+### update-grammar.sh
+**Purpose**: Vendor tree-sitter-quarto grammar locally and patch it with Zed-compatible scopes
+
+**Why archived**: Designed for vendoring approach which was abandoned. The script would:
+1. Clone grammar to grammars/quarto/
+2. Apply sed patches to convert @markup.* scopes to @text.*
+3. Remove unsupported language injections
+4. Add extension-specific queries
+
+**Why not needed**: tree-sitter-quarto now has Zed-compatible scopes built into the grammar by default. Zed fetches the grammar directly from GitHub per extension.toml configuration. No local vendoring or patching required.
+
 ## Historical Context
 
 These scripts addressed the issue where:
