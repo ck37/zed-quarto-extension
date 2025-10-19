@@ -3,7 +3,7 @@
 /// This test extracts all @scope captures from highlights.scm and validates them against
 /// the canonical list of scopes supported by Zed's theme system.
 ///
-/// Reference: docs/zed-syntax-scopes.md
+/// Reference: docs/scope-reference.md
 use std::collections::HashSet;
 use std::path::Path;
 
@@ -128,7 +128,7 @@ fn all_scopes_are_zed_compatible() {
         }
 
         eprintln!("\nThese scopes are not in Zed's supported scope list.");
-        eprintln!("See docs/zed-syntax-scopes.md for the complete list of supported scopes.");
+        eprintln!("See docs/scope-reference.md for the complete list of supported scopes.");
         eprintln!("\nCommon mistakes:");
         eprintln!("  @text.title -> use @title or @title.markup");
         eprintln!("  @text.emphasis -> use @emphasis");
@@ -179,7 +179,7 @@ fn no_nvim_treesitter_scopes() {
     assert!(
         found_nvim.is_empty(),
         "highlights.scm contains nvim-treesitter @markup.* scopes: {:?}\n\
-         Zed doesn't support these. See docs/zed-syntax-scopes.md for Zed-compatible scopes.",
+         Zed doesn't support these. See docs/scope-reference.md for Zed-compatible scopes.",
         found_nvim
     );
 }
@@ -230,11 +230,11 @@ fn uses_recommended_markdown_scopes() {
 fn documents_all_used_scopes() {
     let manifest_dir = Path::new(env!("CARGO_MANIFEST_DIR"));
     let highlights_path = manifest_dir.join("grammars/quarto/queries/highlights.scm");
-    let docs_path = manifest_dir.join("docs/zed-syntax-scopes.md");
+    let docs_path = manifest_dir.join("docs/scope-reference.md");
 
     let highlights =
         std::fs::read_to_string(&highlights_path).expect("Failed to read highlights.scm");
-    let docs = std::fs::read_to_string(&docs_path).expect("Failed to read zed-syntax-scopes.md");
+    let docs = std::fs::read_to_string(&docs_path).expect("Failed to read scope-reference.md");
 
     let scopes = extract_scopes(&highlights);
     let unique_scopes: HashSet<_> = scopes.iter().map(|s| s.as_str()).collect();
@@ -252,7 +252,7 @@ fn documents_all_used_scopes() {
         sorted.sort();
 
         eprintln!(
-            "\n⚠️  Warning: These scopes are used but not documented in docs/zed-syntax-scopes.md:"
+            "\n⚠️  Warning: These scopes are used but not documented in docs/scope-reference.md:"
         );
         for scope in sorted {
             eprintln!("  @{}", scope);
