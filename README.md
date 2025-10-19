@@ -17,46 +17,22 @@ Zed will automatically compile the extension and its grammars.
 
 ## Features
 
-- Quarto-aware syntax highlighting powered by [`tree-sitter-quarto`](https://github.com/ck37/tree-sitter-quarto)
-  - Quarto-specific features: executable code cells, chunk options (`#| key: value`), inline code cells, cross-references
-  - Pandoc extensions: fenced divs, attribute lists, citations, shortcodes
-  - Core Markdown: headings, links, code blocks, lists, emphasis, YAML front matter
-  - Math support: inline (`$...$`) and display (`$$...$$`) with LaTeX syntax
-  - Pipe tables with alignment markers
-  - Footnotes and cross-references
-- Embedded language injections for Quarto code chunks (Python, R, Julia, SQL, JavaScript, TypeScript, Bash)
+Syntax highlighting powered by [`tree-sitter-quarto`](https://github.com/ck37/tree-sitter-quarto):
+
+- **Quarto-specific**: executable code cells, chunk options (`#| key: value`), inline code cells, cross-references
+- **Pandoc extensions**: fenced divs, attribute lists, citations, shortcodes, strikethrough (`~~text~~`), subscript (`H~2~O`), superscript (`x^2^`), highlight (`==text==`), underline (`[text]{.underline}`)
+- **Core Markdown**: headings, bold (`**text**`), italic (`*text*`), links (`[text](url)`), inline code (`` `code` ``), code blocks, lists, YAML front matter
+- **Math support**: inline (`$...$`) and display (`$$...$$`) with LaTeX syntax
+- **Tables**: pipe tables with alignment markers
+- **Embedded language injections**: Python, R, Julia, SQL, JavaScript, TypeScript, Bash code chunks
 
 > **Note**: This extension provides syntax highlighting only. For language server features (completions, hover, diagnostics), see [`docs/LSP_STATUS.md`](docs/LSP_STATUS.md) for the current state and options.
-
-## Highlighting Features
-
-tree-sitter-quarto provides unified grammar handling for both block and inline content:
-
-- Bold (`**text**`, `__text__`)
-- Italic (`*text*`, `_text_`)
-- Bold+italic (`***text***`)
-- Inline code (`` `code` ``)
-- Links (`[text](url)`)
-- Pandoc extensions: strikethrough (`~~text~~`), subscript (`H~2~O`), superscript (`x^2^`), highlight (`==text==`), underline (`[text]{.underline}`)
 
 ## Known Limitations
 
 ### Highlighting Limitations
 
-Some Pandoc extension features parse correctly but don't highlight in Zed due to theme limitations:
-
-- **Strikethrough** (`~~text~~`) - Not supported by Zed's theme system (`@text.strike` scope)
-- **Highlight/mark** (`==text==`) - Not supported (`@text.highlight` scope)
-- **Subscript** (`H~2~O`) - Not supported (`@text.subscript` scope)
-- **Superscript** (`x^2^`) - Not supported (`@text.super` scope)
-
-These features parse correctly and will highlight if/when Zed adds theme support for these scopes. See [`docs/pandoc-extensions-scope-issue.md`](docs/pandoc-extensions-scope-issue.md) for details.
-
-**Working features:**
-- ✅ Bold (`**text**`) and italic (`*text*`)
-- ✅ Links (`[text](url)`)
-- ✅ Code spans (`` `code` ``)
-- ✅ All Quarto-specific syntax (code cells, chunk options, cross-references, etc.)
+Some Pandoc extensions parse correctly but don't highlight in Zed due to theme limitations: strikethrough (`@text.strike`), highlight/mark (`@text.highlight`), subscript (`@text.subscript`), and superscript (`@text.super`). These will highlight if/when Zed adds theme support. See [`docs/pandoc-extensions-scope-issue.md`](docs/pandoc-extensions-scope-issue.md) for details.
 
 ### Other Limitations
 
