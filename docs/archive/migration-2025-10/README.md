@@ -19,6 +19,7 @@ This directory contains historical documentation from the migration from `tree-s
 - **investigation-notes-2025-10-17.md** - Investigation findings during migration
 - **bold-highlighting-investigation/** - Detailed investigation of bold/italic highlighting issues
 - **bold-italic-highlighting-debugging.md** - Additional debugging notes
+- **manual-test-steps.md** - Manual testing procedures for bold/italic highlighting debugging
 
 ### Grammar Updates
 - **tree-sitter-quarto-update-2025-10-17.md** - Grammar update notes (v1)

@@ -27,9 +27,6 @@ Essential reference documentation for using and developing the extension:
 - **[next-steps.md](next-steps.md)** - Current priorities and next development steps
 - **[triple-asterisk-issue.md](triple-asterisk-issue.md)** - Known issue with triple asterisk bold+italic syntax
 
-### Testing & Development
-- **[manual-test-steps.md](manual-test-steps.md)** - Manual testing procedures
-
 ## Historical Documentation
 
 Documentation from the October 2025 migration from tree-sitter-pandoc-markdown to tree-sitter-quarto:
