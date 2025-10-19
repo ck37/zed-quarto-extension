@@ -17,28 +17,23 @@ cp target/wasm32-wasip2/release/quarto_zed.wasm extension.wasm
 
 ### Installing Dev Extension in Zed
 
-**IMPORTANT**: Zed's grammar compiler conflicts with local development artifacts. Always clean before installing:
-
 ```bash
-# Use the install script (recommended)
-./install-dev.sh
-
-# Or manually
-cargo clean
-rm -rf grammars/
+# Build WASM
 cargo build --release --target wasm32-wasip2
 cp target/wasm32-wasip2/release/quarto_zed.wasm extension.wasm
-# Then in Zed: Cmd+Shift+P -> "zed: install dev extension" -> select this directory
+
+# Install in Zed
+# Cmd+Shift+P -> "zed: install dev extension" -> select this directory
 ```
 
-**Why this is needed**: The `grammars/` directory is created during local development (`cargo build`, `cargo test`) for native compilation. Zed compiles grammars independently from `extension.toml` and gets confused by these artifacts. The directory is in `.gitignore` and not committed.
+**Note**: The `grammars/` directory is created during local development (`cargo build`, `cargo test`) for native test compilation. Zed fetches grammars independently from GitHub according to `extension.toml`. The `grammars/` directory is in `.gitignore` and not committed.
 
 ### Grammar Updates
 
-The pandoc-markdown grammar is fetched and compiled by `build.rs` at build time. To update to a new commit:
+The tree-sitter-quarto grammar is fetched and compiled by `build.rs` at build time for tests. To update to a new commit:
 
-1. Update the `COMMIT` constant in `build.rs`
-2. Update the `commit` field in `extension.toml` under `[grammars.pandoc_markdown]`
+1. Update the `QUARTO_COMMIT` constant in `build.rs`
+2. Update the `rev` field in `extension.toml` under `[grammars.quarto]`
 3. Run `cargo build` to fetch and compile the new grammar version
 
 ## Testing
@@ -47,7 +42,7 @@ The test suite validates syntax highlighting coverage and configuration.
 
 ### Highlight Coverage Test (`tests/highlights.rs`)
 
-- Links to compiled pandoc-markdown grammar (native only)
+- Links to compiled tree-sitter-quarto grammar (native only)
 - Parses fixture files from `tests/fixtures/`
 - Runs tree-sitter-highlight with extension's queries
 - Validates that highlighting produces output without errors
@@ -70,17 +65,17 @@ The test suite validates syntax highlighting coverage and configuration.
 
 To add highlighting for new syntax constructs:
 
-1. **Verify grammar support**: Check if `tree-sitter-pandoc-markdown` exposes the construct as a named node. If not, coordinate with grammar upstream.
+1. **Verify grammar support**: Check if `tree-sitter-quarto` exposes the construct as a named node. If not, coordinate with grammar upstream at https://github.com/ck37/tree-sitter-quarto.
 2. **Add highlight query**: Edit `languages/quarto/highlights.scm` to map the new node type to an appropriate semantic scope.
 3. **Test coverage**: Add a fixture file in `tests/fixtures/` demonstrating the syntax, then run `cargo test` to verify.
 
 ### Updating the Grammar
 
-When upstream `tree-sitter-pandoc-markdown` adds new features:
+When upstream `tree-sitter-quarto` adds new features:
 
 1. Identify the commit hash to update to
-2. Update `build.rs` COMMIT constant
-3. Update `extension.toml` grammar commit
+2. Update `build.rs` QUARTO_COMMIT constant
+3. Update `extension.toml` grammar rev field under `[grammars.quarto]`
 4. Run `cargo clean && cargo build` to fetch and compile
 5. Update `highlights.scm` if new node types are exposed
 6. Add test fixtures and validate with `cargo test`
@@ -102,9 +97,9 @@ When upstream `tree-sitter-pandoc-markdown` adds new features:
 - Extension provides only syntax highlighting via grammar
 
 **Build System** (`build.rs`):
-- Clones `tree-sitter-pandoc-markdown` from GitHub at specific commit
+- Clones `tree-sitter-quarto` from GitHub at specific commit
 - Compiles C grammar using `cc` crate for native test builds only (skips WASM)
-- Grammar source lives in `grammars/pandoc_markdown/tree-sitter-pandoc-markdown/`
+- Grammar source lives in `grammars/quarto/`
 
 **Language Configuration** (`languages/quarto/`):
 - `config.toml`: Language metadata (file extension `.qmd`, comment syntax, tab settings)
@@ -114,15 +109,15 @@ When upstream `tree-sitter-pandoc-markdown` adds new features:
 - `outline.scm`: Document outline/structure queries
 
 **Extension Manifest** (`extension.toml`):
-- Declares grammar source (repo URL, commit, path)
-- Requires process:exec capability for spawning language server
+- Declares grammar source (repo URL, commit)
+- Zed fetches and compiles grammar from GitHub
 
 ### Highlighting Architecture
 
 The extension uses tree-sitter queries to map parsed nodes to semantic highlight scopes:
 
-1. `tree-sitter-pandoc-markdown` parses `.qmd` files and produces AST nodes like `(fenced_div)`, `(citation)`, `(attribute_list)`, `(yaml_front_matter)`
-2. `highlights.scm` maps these nodes to semantic scopes like `@markup.raw.block`, `@string.special.symbol`, `@attribute`
+1. `tree-sitter-quarto` parses `.qmd` files and produces AST nodes like `(fenced_div)`, `(citation)`, `(attribute_list)`, `(yaml_front_matter)`
+2. `highlights.scm` maps these nodes to semantic scopes like `@text.title`, `@text.emphasis`, `@emphasis.strong`
 3. Zed's theme applies colors based on these semantic scopes
 4. `injections.scm` triggers nested parsing for embedded languages (e.g., Python code in fenced blocks)
 
@@ -161,6 +156,6 @@ The extension uses tree-sitter queries to map parsed nodes to semantic highlight
 └── README.md                     # User-facing documentation
 ```
 
-## Building a Quarto Grammar
+## Contributing to tree-sitter-quarto
 
-If you're interested in helping create a dedicated `tree-sitter-quarto` grammar, see [`docs/tree-sitter-quarto-plan.md`](docs/tree-sitter-quarto-plan.md) for implementation details. This would benefit the entire Quarto ecosystem across all editors.
+If you're interested in helping improve the `tree-sitter-quarto` grammar, see the [grammar repository](https://github.com/ck37/tree-sitter-quarto) and [`docs/tree-sitter-quarto-plan.md`](docs/tree-sitter-quarto-plan.md) for implementation details. Improvements benefit the entire Quarto ecosystem across all editors.
