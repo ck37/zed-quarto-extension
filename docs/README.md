@@ -29,11 +29,20 @@ Essential reference documentation for using and developing the extension:
 
 ## Historical Documentation
 
-Documentation from the October 2025 migration from tree-sitter-pandoc-markdown to tree-sitter-quarto:
+Historical documentation from the October 2025 migration (investigation notes, debugging sessions, obsolete scripts) was archived and later removed to keep the repository focused on current information.
 
-- **[archive/migration-2025-10/](archive/migration-2025-10/)** - Investigation notes, debugging sessions, and implementation details from the migration
+To access historical migration documentation, see commit `1596a3a` in git history:
 
-These files document the development process and troubleshooting steps. They're preserved for historical reference but may contain outdated information about the current implementation.
+```bash
+# View archive README
+git show 1596a3a:docs/archive/migration-2025-10/README.md
+
+# List all archived files
+git ls-tree -r 1596a3a:docs/archive/migration-2025-10/
+
+# View a specific archived file
+git show 1596a3a:docs/archive/migration-2025-10/[filename]
+```
 
 ## Quick Links
 
