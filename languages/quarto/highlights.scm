@@ -88,9 +88,39 @@
 ; Emphasis/Strong
 ; ---------------
 
-; Highlight the delimiters
-(emphasis_delimiter) @punctuation.delimiter
-(strong_emphasis_delimiter) @punctuation.delimiter
+; Emphasis delimiter scopes - matches tree-sitter-markdown-inline for consistency
+;
+; SCOPE CHOICE: @punctuation.delimiter.emphasis
+; Source: https://github.com/tree-sitter-grammars/tree-sitter-markdown/blob/master/tree-sitter-markdown-inline/queries/highlights.scm
+;
+; This qualified scope (not just @punctuation.delimiter) provides:
+; - Consistency with Zed's built-in Markdown highlighting
+; - Hierarchical fallback: tries .emphasis first, then .delimiter, then base
+; - Theme flexibility: allows themes to style emphasis markers differently
+;
+; In One Dark theme:
+; - @punctuation.delimiter.emphasis → falls back to @punctuation.delimiter (#b2b9c6ff, light gray)
+; - vs emphasis content → @emphasis (#74ade8ff, blue) or @emphasis.strong (#bf956aff, orange)
+; - Result: Subtle but present distinction (markers slightly lighter than text)
+;
+; ALTERNATIVE CONSIDERED: @comment
+; Using @comment would make markers more visually distinct (dim gray #5d636fff vs bright blue/orange)
+; matching the UX of modern editors (VSCode, Obsidian) which dim/de-emphasize syntax markers.
+; However, this approach:
+; - Is semantically incorrect (markers aren't comments)
+; - Doesn't match standard Markdown highlighting in Zed
+; - Could break with themes that style comments unexpectedly
+;
+; For more visual distinction, theme authors should define @punctuation.delimiter.emphasis
+; with dimmer colors rather than having the grammar use semantically incorrect scopes.
+;
+; References:
+; - docs/markdown-scope-compatibility.md - detailed scope analysis
+; - docs/one-dark-scope-analysis.md - theme color breakdown
+; - docs/emphasis-delimiter-limitation.md - theme support discussion
+
+(emphasis_delimiter) @punctuation.delimiter.emphasis
+(strong_emphasis_delimiter) @punctuation.delimiter.emphasis
 
 ; Highlight the content - using exact theme scope names
 (emphasis

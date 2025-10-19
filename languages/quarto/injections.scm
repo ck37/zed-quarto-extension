@@ -146,95 +146,127 @@
 ; Python
 ((fenced_code_block
   info: (info_string) @_lang
-  (#eq? @_lang "python"))
- (#set! injection.language "python"))
+  (#eq? @_lang "python")
+  (code_line) @injection.content)
+ (#set! injection.language "python")
+ (#set! injection.combined))
 
 ; R
 ((fenced_code_block
   info: (info_string) @_lang
-  (#eq? @_lang "r"))
- (#set! injection.language "r"))
+  (#eq? @_lang "r")
+  (code_line) @injection.content)
+ (#set! injection.language "r")
+ (#set! injection.combined))
 
 ; Julia
 ((fenced_code_block
   info: (info_string) @_lang
-  (#eq? @_lang "julia"))
- (#set! injection.language "julia"))
+  (#eq? @_lang "julia")
+  (code_line) @injection.content)
+ (#set! injection.language "julia")
+ (#set! injection.combined))
 
 ; JavaScript
 ((fenced_code_block
   info: (info_string) @_lang
-  (#eq? @_lang "javascript"))
- (#set! injection.language "javascript"))
+  (#eq? @_lang "javascript")
+  (code_line) @injection.content)
+ (#set! injection.language "javascript")
+ (#set! injection.combined))
 
 ((fenced_code_block
   info: (info_string) @_lang
-  (#eq? @_lang "js"))
- (#set! injection.language "javascript"))
+  (#eq? @_lang "js")
+  (code_line) @injection.content)
+ (#set! injection.language "javascript")
+ (#set! injection.combined))
 
 ; TypeScript
 ((fenced_code_block
   info: (info_string) @_lang
-  (#eq? @_lang "typescript"))
- (#set! injection.language "typescript"))
+  (#eq? @_lang "typescript")
+  (code_line) @injection.content)
+ (#set! injection.language "typescript")
+ (#set! injection.combined))
 
 ((fenced_code_block
   info: (info_string) @_lang
-  (#eq? @_lang "ts"))
- (#set! injection.language "typescript"))
+  (#eq? @_lang "ts")
+  (code_line) @injection.content)
+ (#set! injection.language "typescript")
+ (#set! injection.combined))
 
 ; Bash
 ((fenced_code_block
   info: (info_string) @_lang
-  (#eq? @_lang "bash"))
- (#set! injection.language "bash"))
+  (#eq? @_lang "bash")
+  (code_line) @injection.content)
+ (#set! injection.language "bash")
+ (#set! injection.combined))
 
 ((fenced_code_block
   info: (info_string) @_lang
-  (#eq? @_lang "sh"))
- (#set! injection.language "bash"))
+  (#eq? @_lang "sh")
+  (code_line) @injection.content)
+ (#set! injection.language "bash")
+ (#set! injection.combined))
 
 ; SQL
 ((fenced_code_block
   info: (info_string) @_lang
-  (#eq? @_lang "sql"))
- (#set! injection.language "sql"))
+  (#eq? @_lang "sql")
+  (code_line) @injection.content)
+ (#set! injection.language "sql")
+ (#set! injection.combined))
 
 ; JSON
 ((fenced_code_block
   info: (info_string) @_lang
-  (#eq? @_lang "json"))
- (#set! injection.language "json"))
+  (#eq? @_lang "json")
+  (code_line) @injection.content)
+ (#set! injection.language "json")
+ (#set! injection.combined))
 
 ; YAML
 ((fenced_code_block
   info: (info_string) @_lang
-  (#eq? @_lang "yaml"))
- (#set! injection.language "yaml"))
+  (#eq? @_lang "yaml")
+  (code_line) @injection.content)
+ (#set! injection.language "yaml")
+ (#set! injection.combined))
 
 ; TOML
 ((fenced_code_block
   info: (info_string) @_lang
-  (#eq? @_lang "toml"))
- (#set! injection.language "toml"))
+  (#eq? @_lang "toml")
+  (code_line) @injection.content)
+ (#set! injection.language "toml")
+ (#set! injection.combined))
 
 ; HTML
 ((fenced_code_block
   info: (info_string) @_lang
-  (#eq? @_lang "html"))
- (#set! injection.language "html"))
+  (#eq? @_lang "html")
+  (code_line) @injection.content)
+ (#set! injection.language "html")
+ (#set! injection.combined))
 
 ; CSS
 ((fenced_code_block
   info: (info_string) @_lang
-  (#eq? @_lang "css"))
- (#set! injection.language "css"))
+  (#eq? @_lang "css")
+  (code_line) @injection.content)
+ (#set! injection.language "css")
+ (#set! injection.combined))
 
 ; Markdown
 ((fenced_code_block
   info: (info_string) @_lang
-  (#eq? @_lang "markdown"))
- (#set! injection.language "markdown"))
+  (#eq? @_lang "markdown")
+  (code_line) @injection.content)
+ (#set! injection.language "markdown")
+ (#set! injection.combined))
 
 ; ============================================================================
 ; OTHER EMBEDDED CONTENT
@@ -242,13 +274,7 @@
 
 ; YAML Front Matter
 ; -----------------
-
-; NOTE: Commented out because yaml_front_matter_content node doesn't exist in remote grammar c2c28fd
-; The remote grammar has structured YAML parsing instead
-; See: https://github.com/ck37/tree-sitter-quarto/issues/6
-; ((yaml_front_matter
-;   (yaml_front_matter_content) @injection.content)
-;  (#set! injection.language "yaml"))
+; (YAML is now parsed structurally, no injection needed)
 
 ; HTML Blocks
 ; -----------

@@ -1,0 +1,76 @@
+---
+title: "Language Injection Test"
+format: html
+---
+
+# Language Injection Test
+
+This file tests syntax highlighting for various languages.
+
+## Python (Should Work)
+
+```python
+import numpy as np
+import pandas as pd
+
+def hello():
+    print("Hello from Python")
+    return 42
+```
+
+## R (Testing)
+
+```r
+# R code
+library(ggplot2)
+x <- c(1, 2, 3, 4, 5)
+mean(x)
+
+plot <- ggplot(data) +
+  geom_point(aes(x, y))
+```
+
+## SQL (Testing)
+
+```sql
+-- SQL query
+SELECT id, name, email
+FROM users
+WHERE active = true
+ORDER BY created_at DESC
+LIMIT 100;
+```
+
+## JavaScript (Should Work)
+
+```javascript
+const x = 42;
+const greeting = "Hello";
+
+function sayHello(name) {
+  console.log(`${greeting}, ${name}!`);
+}
+```
+
+## Quarto Executable Cells
+
+### Python Executable
+
+```{python}
+import numpy as np
+result = np.array([1, 2, 3])
+print(result.mean())
+```
+
+### R Executable
+
+```{r}
+x <- c(1, 2, 3)
+mean(x)
+```
+
+### SQL Executable
+
+```{sql}
+SELECT * FROM users LIMIT 10;
+```
