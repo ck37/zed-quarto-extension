@@ -42,7 +42,7 @@ fn bold_text_is_highlighted() {
             }
 
             // Check if we captured the delimiters
-            if capture_name == "punctuation.delimiter" && (node_text == "**") {
+            if capture_name == "punctuation.delimiter.emphasis" && (node_text == "**") {
                 delimiter_captured = true;
             }
         }
@@ -54,7 +54,7 @@ fn bold_text_is_highlighted() {
     );
     assert!(
         delimiter_captured,
-        "highlights.scm should capture ** delimiters with @punctuation.delimiter"
+        "highlights.scm should capture ** delimiters with @punctuation.delimiter.emphasis"
     );
 }
 
@@ -91,7 +91,7 @@ fn italic_text_is_highlighted() {
             }
 
             // Check if we captured the delimiters
-            if capture_name == "punctuation.delimiter" && (node_text == "*") {
+            if capture_name == "punctuation.delimiter.emphasis" && (node_text == "*") {
                 delimiter_captured = true;
             }
         }
@@ -103,7 +103,7 @@ fn italic_text_is_highlighted() {
     );
     assert!(
         delimiter_captured,
-        "highlights.scm should capture * delimiters with @punctuation.delimiter"
+        "highlights.scm should capture * delimiters with @punctuation.delimiter.emphasis"
     );
 }
 
