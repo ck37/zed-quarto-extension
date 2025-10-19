@@ -1,6 +1,6 @@
 # Grammar Feature Needs for Zed Quarto Extension
 
-This document outlines missing features in `tree-sitter-pandoc-markdown` that would significantly improve syntax highlighting and language support for Quarto documents in Zed.
+This document outlines missing features in `tree-sitter-quarto` that would significantly improve syntax highlighting and language support for Quarto documents in Zed.
 
 ## Status Overview
 
@@ -179,15 +179,13 @@ For each new feature:
 - [Pandoc Manual - Pandoc's Markdown](https://pandoc.org/MANUAL.html#pandocs-markdown)
 - [Quarto Documentation](https://quarto.org/docs/guide/)
 - [Tree-sitter Grammar Development](https://tree-sitter.github.io/tree-sitter/creating-parsers)
-- [tree-sitter-pandoc-markdown Repository](https://github.com/ck37/tree-sitter-pandoc-markdown)
+- [tree-sitter-quarto Repository](https://github.com/ck37/tree-sitter-quarto)
 
 ---
 
 ## Notes
 
 - Features are ordered by **impact on Quarto authoring experience** rather than parsing complexity
-- Most critical Pandoc Markdown features are now implemented (Phase 1 complete)
+- Most critical Pandoc Markdown and Quarto-specific features are now implemented
 - Remaining features are lower priority alternatives to already-supported syntax
-- Quarto-specific features may ultimately be implemented in a future `tree-sitter-quarto` grammar or via downstream tooling
-- Current grammar version: `ck37/tree-sitter-pandoc-markdown@77de308` (Phase 1 + triple asterisk support)
-- **Known limitation**: Full inline grammar highlighting pending Zed PR [#40063](https://github.com/zed-industries/zed/pull/40063) to support extension-to-extension grammar injection. Current workaround uses built-in markdown-inline (~70% coverage). See `docs/bold-highlighting-investigation/` and README
+- Current grammar: [`tree-sitter-quarto`](https://github.com/ck37/tree-sitter-quarto) (migrated October 2025)

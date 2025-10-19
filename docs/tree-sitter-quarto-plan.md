@@ -1,29 +1,29 @@
-# tree-sitter-quarto Implementation Plan
+# tree-sitter-quarto Implementation
 
-This document provides a detailed implementation guide for creating a dedicated `tree-sitter-quarto` grammar.
+This document describes the implementation of the dedicated `tree-sitter-quarto` grammar.
+
+## Status: ✅ Complete (October 2025)
+
+The extension now uses [`tree-sitter-quarto`](https://github.com/ck37/tree-sitter-quarto) for comprehensive Quarto syntax highlighting.
 
 ## Overview
 
-With the Pandoc grammar enriched (Phase 1 complete), we can proceed with a dedicated `tree-sitter-quarto` that:
+With the Pandoc grammar enriched (Phase 1 complete), we created a dedicated `tree-sitter-quarto` that:
 
-- Provides first-class support for all remaining Quarto syntax
-- Enables proper highlighting of Quarto-only features (chunk options, execution directives, layout rules)
-- Allows the grammar to be adopted by other editors (Neovim, Helix, etc.)
-- Potentially lives in the official `tree-sitter-grammars` organization
-- Is maintained in collaboration with the Quarto project
+- ✅ Provides first-class support for Quarto syntax
+- ✅ Enables proper highlighting of Quarto-only features (chunk options, execution directives)
+- ✅ Can be adopted by other editors (Neovim, Helix, etc.)
+- 📋 Future: Potentially lives in the official `tree-sitter-grammars` organization
 
-## Implementation Steps
+## Implementation Approach
 
-### 1. Initialize grammar repository
+### 1. Grammar Repository
 
-```bash
-npm install -g tree-sitter-cli
-tree-sitter init quarto
-```
+Created at: https://github.com/ck37/tree-sitter-quarto
 
-### 2. Inherit from tree-sitter-markdown
+### 2. Extends tree-sitter-markdown
 
-Add as git submodule and extend:
+The grammar inherits from tree-sitter-markdown and extends it:
 
 ```javascript
 // In grammar.js
@@ -56,27 +56,26 @@ module.exports = grammar(markdown, {
 });
 ```
 
-### 3. Define all Quarto syntax
+### 3. Quarto Syntax Support
 
+✅ Implemented:
 - YAML frontmatter with Quarto-specific keys
 - Div blocks with attributes `:::{.class #id}`
 - Callouts `:::{.callout-note}`, `:::{.callout-warning}`
 - Shortcodes `{{< include file.qmd >}}`
-- Code chunks with Quarto execution options
+- Code chunks with Quarto execution options (`#| key: value`)
 - Cross-references `@fig-plot`, `@tbl-data`
 - Citations `@smith2024`
+- Inline code cells
+- Bold, italic, and other inline formatting
 
-### 4. Create comprehensive test suite
+### 4. Test Suite
 
-Cover all Quarto syntax constructs.
+✅ Comprehensive test suite covering all Quarto syntax constructs (58/58 tests passing)
 
-### 5. Publish to npm
+### 5. Extension Integration
 
-Propose to Quarto team for official adoption.
-
-### 6. Update this extension
-
-Switch from `tree-sitter-pandoc-markdown` to `tree-sitter-quarto`.
+✅ This extension now uses `tree-sitter-quarto` (migrated in commit 1877b3a)
 
 ## Repository Structure
 
@@ -95,32 +94,31 @@ tree-sitter-quarto/
 └── package.json
 ```
 
-## Quarto-Specific Syntax to Implement
+## Implemented Quarto-Specific Syntax
 
-The dedicated grammar focuses on Quarto-only constructs that remain after Phase 1:
+The dedicated grammar supports Quarto-only constructs:
 
-1. **Executable chunk option lines** – `#| echo: false`, `#| warning: false`, multi-line option blocks.
-2. **Cell attribute blocks & layout directives** – column layout helpers, margins, and other Quarto-specific attribute cascades.
-3. **Extended shortcodes & publishing directives** – e.g., `{{< layout >}}`, conditional rendering helpers not part of upstream Pandoc.
-4. **Execution metadata plumbing** – links between YAML front matter defaults and chunk-level overrides.
-5. **Rich embedded language hooks** – Quarto's fenced cells that carry execution semantics beyond standard fenced blocks.
+1. ✅ **Executable chunk option lines** – `#| echo: false`, `#| warning: false`, multi-line option blocks
+2. ✅ **Quarto shortcodes** – `{{< include file.qmd >}}`, `{{< pagebreak >}}`, etc.
+3. ✅ **Cross-references** – `@fig-plot`, `@tbl-data`
+4. ✅ **Inline code cells** – `` `{r} code` ``
+5. ✅ **Rich embedded language hooks** – Quarto's fenced cells with execution semantics
 
-## Key Considerations
+## Key Features
 
-- Must maintain compatibility with base markdown syntax
-- Should handle mixed content (markdown + code in multiple languages)
-- Needs injection queries for embedded languages (R, Python, Julia, etc.)
-- Must support incremental parsing for large documents
+- ✅ Maintains compatibility with base markdown syntax
+- ✅ Handles mixed content (markdown + code in multiple languages)
+- ✅ Injection queries for embedded languages (R, Python, Julia, SQL, JavaScript, TypeScript, Bash, etc.)
+- ✅ Supports incremental parsing for large documents
+- ✅ Uses Zed-compatible scopes for theme support
 
-## Next Steps
+## Future Work
 
-1. **Create repository** under tree-sitter-grammars or as independent project
-2. **Develop grammar** using tree-sitter-markdown as foundation
-3. **Write comprehensive tests** covering all Quarto syntax
-4. **Submit to tree-sitter-grammars** for official adoption
-5. **Coordinate with Quarto team** for official support
-6. **Update this extension** to use tree-sitter-quarto once ready
+1. 📋 **Publish to npm** for wider adoption
+2. 📋 **Submit to tree-sitter-grammars** for official adoption
+3. 📋 **Coordinate with Quarto team** for official support
+4. 📋 **Additional Pandoc features** – See [`grammar-feature-needs.md`](grammar-feature-needs.md)
 
 ## Contributing
 
-If you're interested in helping create `tree-sitter-quarto`, that would be a valuable contribution to the entire Quarto ecosystem across all editors. See the [Grammar Roadmap](grammar-roadmap.md) for context on how this fits into the overall development plan.
+If you're interested in helping improve `tree-sitter-quarto`, that would be a valuable contribution to the entire Quarto ecosystem across all editors. See the [Grammar Roadmap](grammar-roadmap.md) for context.

@@ -4,7 +4,7 @@
 
 **Quarto does not provide a built-in language server.** Running `quarto language-server` returns an error because this command doesn't exist in the Quarto CLI.
 
-> **Note**: This extension focuses on providing excellent syntax highlighting using [`tree-sitter-pandoc-markdown`](https://github.com/ck37/tree-sitter-pandoc-markdown). Phase 1 of the grammar is now complete, supporting most Pandoc markdown features that Quarto relies on.
+> **Note**: This extension focuses on providing excellent syntax highlighting using [`tree-sitter-quarto`](https://github.com/ck37/tree-sitter-quarto). The grammar supports Quarto-specific features, Pandoc markdown extensions, and core Markdown syntax.
 
 ## What is a Language Server?
 
@@ -108,7 +108,7 @@ Quarto LSP Server
 
 ## What This Extension Provides
 
-✅ **Syntax Highlighting** via `tree-sitter-pandoc-markdown` (Phase 1 complete):
+✅ **Syntax Highlighting** via `tree-sitter-quarto`:
 - **Core Markdown**: Headings, links, code blocks, lists, YAML front matter
 - **Math**: Inline (`$...$`) and display (`$$...$$`) with LaTeX syntax
 - **Tables**: Pipe tables with alignment markers
@@ -140,7 +140,7 @@ If there's strong demand, the Zed community could collaborate on a standalone im
 ## Recommendations
 
 **Using This Extension:**
-1. ✅ **Excellent syntax highlighting** for Quarto/Pandoc markdown (Phase 1 complete)
+1. ✅ **Excellent syntax highlighting** for Quarto/Pandoc markdown
 2. ✅ **Language injections** provide syntax highlighting within code chunks
 3. ⚠️ **No code intelligence** - For LSP features within code chunks, use:
    - **Python chunks**: Open in Python-aware editor with Pyright/pylance

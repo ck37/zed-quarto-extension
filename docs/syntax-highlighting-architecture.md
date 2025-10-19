@@ -19,23 +19,24 @@
 
 ## Current State
 
-Our extension now ships with the upstream [`tree-sitter-pandoc-markdown` feat/phase-1-pandoc-grammar branch](https://github.com/ck37/tree-sitter-pandoc-markdown/tree/feat/phase-1-pandoc-grammar), enabling **Pandoc-aware highlighting** that understands Quarto-relevant constructs such as fenced divs, citations, shortcodes, chunk options, YAML front matter, math, pipe tables, and footnotes. Phase 1 is now complete! Remaining features are tracked in [`grammar-feature-needs.md`](grammar-feature-needs.md).
+Our extension uses [`tree-sitter-quarto`](https://github.com/ck37/tree-sitter-quarto), enabling comprehensive syntax highlighting for Quarto documents including **Quarto-specific features** (executable code cells, chunk options, inline code cells, cross-references), **Pandoc extensions** (fenced divs, citations, shortcodes, attribute lists), and **core Markdown** (headings, bold, italic, links, code blocks, lists). Remaining features are tracked in [`grammar-feature-needs.md`](grammar-feature-needs.md).
 
-## Why tree-sitter-pandoc-markdown?
+## Why tree-sitter-quarto?
 
-Quarto documents (`.qmd`) are **not** plain Markdown—they're based on [Pandoc's Markdown](https://pandoc.org/MANUAL.html#pandocs-markdown), which includes additional syntax:
+Quarto documents (`.qmd`) are **not** plain Markdown—they're based on [Pandoc's Markdown](https://pandoc.org/MANUAL.html#pandocs-markdown) with Quarto-specific extensions:
 
+- **Quarto code cells**: Executable code blocks with `#| option: value` syntax
 - **Div blocks**: `:::` with attributes like `{.class #id}`
 - **Citations**: `@citation` references
 - **Shortcodes**: `{{< shortcode >}}` syntax
-- **Fenced divs**: Extended YAML frontmatter
-- **Code chunks**: Special attributes beyond standard fenced code blocks
+- **Cross-references**: `@fig-plot`, `@tbl-data`
+- **Extended YAML frontmatter**: Quarto-specific metadata
 
 ## TextMate vs Tree-sitter
 
 The [official Quarto VSCode extension](https://github.com/quarto-dev/quarto/tree/main/apps/vscode) uses **TextMate grammars** (`.tmLanguage` files), which are regex-based pattern matching systems. However, **Zed only supports tree-sitter grammars**, which are proper parsers.
 
-Since there is no official `tree-sitter-quarto` grammar yet, we use [`tree-sitter-pandoc-markdown`](https://github.com/ck37/tree-sitter-pandoc-markdown), which extends `tree-sitter-markdown` with Pandoc-specific features that Quarto is built upon.
+We use [`tree-sitter-quarto`](https://github.com/ck37/tree-sitter-quarto), which extends `tree-sitter-markdown` with both Pandoc-specific features and Quarto-only syntax.
 
 This approach provides:
 - Proper parsing of Quarto/Pandoc syntax constructs

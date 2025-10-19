@@ -17,29 +17,27 @@ This document outlines the staged approach to building comprehensive Quarto supp
 - Provides immediate value to all editors using `tree-sitter-pandoc-markdown`
 - Maintains strict Pandoc compatibility
 - Establishes foundation for Quarto-specific extensions
-- Remaining features tracked in [`grammar-feature-needs.md`](grammar-feature-needs.md)
 
-## Phase 2 – Build `tree-sitter-quarto` on top of those improvements
+## Phase 2 – Build `tree-sitter-quarto`
 
 **Goal**: Create a dedicated Quarto grammar that extends Pandoc markdown with Quarto-only syntax.
 
-**Status**: 📋 Planned
+**Status**: ✅ Complete! (Migrated in commit 1877b3a)
 
-**Target features**:
-- Layer Quarto-only syntax (chunk option comment lines `#|`, cell attribute blocks, layout/new shortcode directives, execution option cascades) that are out of scope for Pandoc itself
-- Provide semantic nodes that unlock Quarto-specific tooling without fragmenting the Pandoc ecosystem
-
-**Why a separate grammar?**
-Even after Phase 1, Quarto introduces syntax (e.g., executable option lines, cell attribute cascades) that goes beyond Pandoc's spec. Capturing those semantics cleanly warrants a separate grammar that can depend on—but not compromise—the upstream Pandoc parser.
+**Accomplished**:
+- Created dedicated [`tree-sitter-quarto`](https://github.com/ck37/tree-sitter-quarto) grammar
+- Supports Quarto-specific syntax (chunk option comment lines `#|`, cell attributes, Quarto-specific shortcodes)
+- Extends tree-sitter-markdown with both Pandoc and Quarto features
+- Extension now uses tree-sitter-quarto for comprehensive Quarto support
+- Grammar uses Zed-compatible scopes (`@text.*`, `@emphasis.*`) for theme support
 
 **Benefits**:
 - First-class support for all Quarto-specific syntax
 - Can be adopted by other editors (Neovim, Helix, etc.)
-- Maintained in collaboration with the Quarto project
-- Potentially lives in the official `tree-sitter-grammars` organization
+- Unified grammar for Quarto documents
 
-For implementation details, see [`tree-sitter-quarto-plan.md`](tree-sitter-quarto-plan.md).
+**Remaining work**: Feature enhancements tracked in [`grammar-feature-needs.md`](grammar-feature-needs.md)
 
-## Why This Staged Approach?
+## Historical Note
 
-This plan avoids duplicating work, gives near-term wins for existing editors, and positions a Quarto grammar to focus solely on features Pandoc cannot represent.
+This extension initially used `tree-sitter-pandoc-markdown` (dual grammar: block + inline) as an interim solution. As of October 2025, we've successfully migrated to `tree-sitter-quarto`, which provides unified Quarto-aware syntax highlighting. See [`tree-sitter-quarto-plan.md`](tree-sitter-quarto-plan.md) for the implementation approach taken.
