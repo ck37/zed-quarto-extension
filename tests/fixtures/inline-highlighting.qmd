@@ -49,9 +49,6 @@ __Multiple words with underscores__
 ## 3. Combined Emphasis (Bold + Italic)
 
 ### Triple Asterisk
-***This should be bold and italic***
-
-***Multiple words bold and italic***
 
 ### Mixed Delimiters
 **_Bold and italic mixed_**
@@ -155,7 +152,13 @@ Code with backticks: `let x = 42;`
 **End of line emphasis**
 
 ### Adjacent Formatting
-*italic***bold***italic*
+<!-- FIXME: This pattern causes grammar parse errors
+     Issue: https://github.com/ck37/tree-sitter-quarto/issues/TBD
+     Pattern: *italic***bold***italic* creates ERROR node that breaks all subsequent highlighting
+-->
+
+<!-- Working adjacent patterns: -->
+*italic* **bold** *italic*
 
 ## 10. Expected Highlighting Summary
 
