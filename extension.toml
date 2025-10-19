@@ -1,18 +1,41 @@
+# Extension metadata
 id = "quarto"
 name = "Quarto"
-version = "0.1.0"
+version = "0.2.0"
 schema_version = 1
 authors = ["Chris Kennedy <chrisken@gmail.com>"]
-description = "Quarto authoring for Zed with Pandoc-aware syntax highlighting"
+description = "Quarto authoring for Zed with tree-sitter-quarto grammar"
 repository = "https://github.com/ck37/zed-quarto-extension"
-languages = ["languages/quarto", "languages/pandoc_markdown_inline"]
 
-[grammars.pandoc_markdown]
-repository = "https://github.com/ck37/tree-sitter-pandoc-markdown"
-commit = "f2e5718a1b2190cf59dd22d9a97fc9b7329a25b6"
-path = "tree-sitter-pandoc-markdown"
+# Language configurations
+# The quarto language configuration is in languages/quarto/config.toml
+# It includes syntax highlighting queries at languages/quarto/highlights.scm (currently unused)
+# and injections.scm for embedded code blocks (Python, R, Julia, etc.)
+languages = ["languages/quarto"]
 
-[grammars.pandoc_markdown_inline]
-repository = "https://github.com/ck37/tree-sitter-pandoc-markdown"
-commit = "f2e5718a1b2190cf59dd22d9a97fc9b7329a25b6"
-path = "tree-sitter-pandoc-markdown-inline"
+# Grammar configuration for tree-sitter-quarto
+# Zed grammar configuration uses repository + rev fields per docs:
+# https://github.com/zed-industries/zed/blob/main/docs/src/extensions/languages.md
+#
+# Development approach:
+# - For production: use GitHub repository URL with specific commit SHA
+# - For local dev: can use file:// URL to load from local filesystem
+# - build.rs clones grammar to grammars/quarto/ for local tests (same commit as Zed uses)
+# - Tests run against cloned version for consistency with Zed's runtime behavior
+#
+# Query file resolution:
+# - Zed loads queries from: queries/highlights.scm (in grammar repo)
+# - Grammar repo's queries/highlights.scm uses Zed-compatible scopes (@text.*, @emphasis.strong)
+# - Grammar repo's queries/nvim/highlights.scm preserves modern scopes (@markup.*)
+# - This ensures Zed themes can style the syntax correctly without extension overrides
+#
+# IMPORTANT: When changing the repository or rev below:
+# 1. Update build.rs QUARTO_COMMIT constant to match
+# 2. Run tests to verify grammar clones and compiles correctly
+# 3. Clean and rebuild: cargo clean && cargo build --release
+#
+# NOTE: Highlighting improvements are proposed in issue #6
+# https://github.com/ck37/tree-sitter-quarto/issues/6
+[grammars.quarto]
+repository = "https://github.com/ck37/tree-sitter-quarto"
+rev = "4012bc7d9930654c81f1ade1d2070e0b951aa689"

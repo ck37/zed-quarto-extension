@@ -1,0 +1,191 @@
+---
+title: "Inline Highlighting Test Fixture"
+author: "Test Suite"
+format: html
+---
+
+# Inline Highlighting Test Cases
+
+This fixture tests all inline formatting patterns to validate syntax highlighting.
+
+## 1. Emphasis (Italic)
+
+### Single Asterisk Emphasis
+*This text should be italic*
+
+*Multiple words in italic text*
+
+*Italic with special-characters and numbers 123*
+
+### Single Underscore Emphasis
+_This text should also be italic_
+
+_Multiple words with underscores_
+
+### Emphasis with Nested Elements
+*Italic text with `inline code` inside*
+
+*Italic with [a link](https://example.com) inside*
+
+## 2. Strong Emphasis (Bold)
+
+### Double Asterisk Strong
+**This text should be bold**
+
+**Multiple words in bold text**
+
+**Bold with special-characters and numbers 456**
+
+### Double Underscore Strong
+__This text should also be bold__
+
+__Multiple words with underscores__
+
+### Strong with Nested Elements
+**Bold text with `inline code` inside**
+
+**Bold with [a link](https://example.com) inside**
+
+## 3. Combined Emphasis (Bold + Italic)
+
+### Triple Asterisk
+
+### Mixed Delimiters
+**_Bold and italic mixed_**
+
+*__Also bold and italic__*
+
+## 4. Headings
+
+### ATX Headings (Content Should Be Highlighted)
+
+# Level 1 Heading Text
+## Level 2 Heading Text
+### Level 3 Heading Text
+#### Level 4 Heading Text
+##### Level 5 Heading Text
+###### Level 6 Heading Text
+
+### Multi-Word Headings
+# This is a multi-word heading with spaces
+
+## Heading with special-characters and numbers 789
+
+### Setext Headings
+
+Setext Level 1 Heading
+======================
+
+Setext Level 2 Heading
+----------------------
+
+## 5. Pandoc Inline Formatting Extensions
+
+### Strikethrough
+~~This text should have strikethrough styling~~
+
+~~Multiple words with strikethrough~~
+
+### Highlight
+==This text should be highlighted==
+
+==Multiple words highlighted==
+
+### Subscript
+H~2~O should show subscript 2
+
+Chemical formula: C~6~H~12~O~6~
+
+### Superscript
+E=mc^2^ should show superscript 2
+
+Math expression: x^2^ + y^2^ = z^2^
+
+## 6. Complex Nested Cases
+
+### Emphasis Inside Strong
+**Bold with *italic inside* the bold**
+
+### Strong Inside Emphasis
+*Italic with **bold inside** the italic*
+
+### Multiple Inline Elements
+This paragraph has *italic*, **bold**, `code`, [links](https://example.com), and ~~strikethrough~~ all together.
+
+### Emphasis with Citations
+*Italic text with a citation @smith2024 inside*
+
+**Bold text with [@jones2023] citation**
+
+### Emphasis with Cross-References
+*See @fig-plot for details*
+
+**Table @tbl-data shows results**
+
+## 7. Code Spans (For Comparison)
+
+Inline `code spans` should be highlighted differently.
+
+Code with backticks: `let x = 42;`
+
+## 8. Links (For Comparison)
+
+[Link text should be highlighted](https://example.com)
+
+![Image alt text](image.png)
+
+## 9. Edge Cases
+
+### Empty Emphasis
+** **
+
+* *
+
+### Single Character
+*a*
+
+**b**
+
+### Emphasis at Line Boundaries
+*Start of line emphasis*
+
+**End of line emphasis**
+
+### Adjacent Formatting
+<!-- FIXME: This pattern causes grammar parse errors
+     Issue: https://github.com/ck37/tree-sitter-quarto/issues/TBD
+     Pattern: *italic***bold***italic* creates ERROR node that breaks all subsequent highlighting
+-->
+
+<!-- Working adjacent patterns: -->
+*italic* **bold** *italic*
+
+## 10. Expected Highlighting Summary
+
+<!-- This section documents expected behavior -->
+
+**EXPECTED BEHAVIOR:**
+
+1. **Emphasis** (`*text*` or `_text_`):
+   - Content "text" → `@text.emphasis` scope
+   - Delimiters `*` or `_` → `@punctuation.delimiter` scope
+
+2. **Strong** (`**text**` or `__text__`):
+   - Content "text" → `@emphasis.strong` scope
+   - Delimiters `**` or `__` → `@punctuation.delimiter` scope
+
+3. **Headings** (`# Text`):
+   - Content "Text" → `@text.title` scope
+   - Marker `#` → `@punctuation.special` scope
+
+4. **Strikethrough** (`~~text~~`):
+   - Content "text" → `@text.strike` scope
+
+5. **Highlight** (`==text==`):
+   - Content "text" → `@text.highlight` scope
+
+6. **Subscript** (`~text~`):
+   - Content "text" → `@text.subscript` scope
+
+7. **Superscript** (`^text^`):
+   - Content "text" → `@text.super` scope

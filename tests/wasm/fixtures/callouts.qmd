@@ -1,0 +1,34 @@
+---
+title: "Callouts and Divs"
+---
+
+## Callouts
+
+::: {.callout-note}
+This is a note callout.
+:::
+
+::: {.callout-warning}
+## Warning Title
+Be careful with this!
+:::
+
+::: {.callout-important}
+This is important information.
+:::
+
+## Conditional Content
+
+::: {.content-visible when-format="html"}
+This only appears in HTML output.
+:::
+
+## Tabsets
+
+::: {.panel-tabset}
+### Tab 1
+Content for tab 1.
+
+### Tab 2
+Content for tab 2.
+:::

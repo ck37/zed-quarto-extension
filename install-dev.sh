@@ -3,7 +3,8 @@ set -e
 
 echo "🧹 Cleaning build artifacts..."
 cargo clean
-rm -rf grammars/
+# Clean only build artifacts, not vendored grammar source
+rm -rf grammars/**/*.wasm grammars/**/target/ grammars/**/node_modules/
 
 echo "🧹 Cleaning Zed extension caches..."
 # Remove symlink if it exists
@@ -18,11 +19,11 @@ if [ -d ~/Library/Application\ Support/Zed/extensions/work/quarto ]; then
     echo "  ✓ Removed work directory"
 fi
 
-echo "🔨 Building extension..."
-cargo build --release
+echo "🔨 Building extension WASM..."
+cargo build --release --target wasm32-wasip2
 
-echo "🧹 Cleaning grammars directory (Zed will rebuild it)..."
-rm -rf grammars/
+echo "📦 Copying WASM to extension.wasm..."
+cp target/wasm32-wasip2/release/quarto_zed.wasm extension.wasm
 
 echo "✨ Ready to install in Zed!"
 echo ""

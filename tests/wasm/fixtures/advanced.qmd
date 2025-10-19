@@ -1,0 +1,60 @@
+---
+title: "Advanced Features"
+bibliography: references.bib
+---
+
+## Citations and Cross-References
+
+Multiple studies show that cross-references like @fig-analysis and @tbl-results work well. See also @smith2020 and @jones2021.
+
+## Inline Attributes
+
+Here is [highlighted text]{.alert .important} with attributes.
+
+Traditional [links](https://example.com) still work.
+
+## Shortcodes
+
+{{< video https://www.youtube.com/watch?v=example >}}
+
+{{< include _content.qmd >}}
+
+## Footnotes
+
+This has an inline footnote^[This is the note content].
+
+Reference footnote[^1] also works.
+
+[^1]: This is a reference footnote.
+
+## Multiple Code Languages
+
+```{r}
+#| label: fig-r-plot
+library(ggplot2)
+ggplot(mtcars, aes(x=wt, y=mpg)) + geom_point()
+```
+
+```{julia}
+#| label: julia-calc
+using Statistics
+mean([1, 2, 3, 4, 5])
+```
+
+```{sql}
+SELECT * FROM users WHERE active = true;
+```
+
+## R Code with Chunk Options
+
+```{r}
+#| label: complex-chunk
+#| echo: false
+#| warning: false
+#| message: false
+#| fig-cap: "A complex figure"
+#| fig-width: 8
+#| fig-height: 6
+
+summary(mtcars)
+```

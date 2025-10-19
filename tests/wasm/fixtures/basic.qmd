@@ -1,0 +1,43 @@
+---
+title: "Basic Quarto Document"
+format: html
+---
+
+## Introduction
+
+This is a basic Quarto document with common features.
+
+### Code Chunks
+
+Here's a Python code chunk:
+
+```{python}
+#| label: fig-plot
+#| echo: false
+
+import matplotlib.pyplot as plt
+plt.plot([1, 2, 3, 4])
+plt.show()
+```
+
+### Cross-References
+
+See @fig-plot for the visualization.
+
+### Inline Code
+
+The result is `{python} 2 + 2`.
+
+### Lists
+
+- Item 1
+- Item 2
+  - Nested item
+
+### Emphasis
+
+This is *italic* and **bold** text.
+
+### Links
+
+Visit [Quarto](https://quarto.org) for more info.

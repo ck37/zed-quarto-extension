@@ -10,8 +10,9 @@ Thank you for your interest in contributing! This guide covers development setup
 # Run all tests (includes highlight coverage)
 cargo test --workspace --all-features
 
-# Build the extension (produces extension.wasm)
-cargo build --release
+# Build the extension for Zed (produces extension.wasm)
+cargo build --release --target wasm32-wasip2
+cp target/wasm32-wasip2/release/quarto_zed.wasm extension.wasm
 ```
 
 ### Installing Dev Extension in Zed
@@ -25,7 +26,8 @@ cargo build --release
 # Or manually
 cargo clean
 rm -rf grammars/
-cargo build --release
+cargo build --release --target wasm32-wasip2
+cp target/wasm32-wasip2/release/quarto_zed.wasm extension.wasm
 # Then in Zed: Cmd+Shift+P -> "zed: install dev extension" -> select this directory
 ```
 

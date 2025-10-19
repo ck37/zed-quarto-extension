@@ -1,77 +1,66 @@
-; Pandoc Markdown Folding Queries
-; Defines foldable regions for better document navigation
+; Code folding queries for tree-sitter-quarto
+; Defines regions that can be folded in editors
 
 ; ============================================================================
-; Headings
+; QUARTO-SPECIFIC FOLDS
 ; ============================================================================
 
-; Fold headings with their content
-; Note: The heading itself is not folded, only its content
-(atx_heading) @fold
+; Executable Code Cells
+; ---------------------
 
-(setext_heading) @fold
-
-; ============================================================================
-; Code Blocks
-; ============================================================================
-
-; Fold fenced code blocks
-(fenced_code_block) @fold
-
-; Fold raw blocks
-(raw_block) @fold
+(executable_code_cell
+  (code_fence_delimiter) @fold
+  (#set! fold.endAt lastChild))
 
 ; ============================================================================
-; Containers
+; PANDOC MARKDOWN FOLDS
 ; ============================================================================
 
-; Fold fenced divs (Pandoc containers)
-(fenced_div) @fold
+; Fenced Code Blocks
+; ------------------
 
-; Fold block quotes
+(fenced_code_block
+  (code_fence_delimiter) @fold
+  (#set! fold.endAt lastChild))
+
+; Fenced Divs
+; -----------
+
+(fenced_div
+  (fenced_div_delimiter) @fold
+  (#set! fold.endAt lastChild))
+
+; Block Quotes
+; ------------
+
 (block_quote) @fold
 
-; ============================================================================
 ; Lists
-; ============================================================================
+; -----
 
-; Fold lists (both ordered and unordered)
-(list) @fold
+(ordered_list) @fold
 
-; Optionally fold individual list items with nested content
-; (list_item) @fold
+(unordered_list) @fold
 
-; ============================================================================
-; Front Matter & Metadata
-; ============================================================================
+; HTML Blocks
+; -----------
 
-; Fold YAML front matter
-(yaml_front_matter) @fold
-
-; Fold percent metadata
-(percent_metadata) @fold
-
-; ============================================================================
-; Definitions
-; ============================================================================
-
-; Fold long footnote definitions
-(footnote_definition) @fold
-
-; Link reference definitions don't typically need folding (single line)
-; But included for completeness
-; (link_reference_definition) @fold
-
-; ============================================================================
-; Tables
-; ============================================================================
-
-; Fold tables (when supported)
-(pipe_table) @fold
-
-; ============================================================================
-; HTML
-; ============================================================================
-
-; Fold HTML blocks
 (html_block) @fold
+
+; Raw Blocks
+; ----------
+
+(raw_block) @fold
+
+; Display Math
+; ------------
+
+(display_math) @fold
+
+; ============================================================================
+; HEADING-BASED FOLDING
+; ============================================================================
+
+; Note: Heading-based folding (sections) typically requires editor-specific
+; configuration and may not be fully supported via tree-sitter queries alone.
+; Most editors handle this through their own folding logic based on heading levels.

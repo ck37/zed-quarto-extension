@@ -2,6 +2,15 @@
 /target/
 **/target/
 /extension.wasm
-/grammars/
+
+# Grammars
+# tree-sitter-pandoc-markdown: cloned by build.rs, not vendored
+/grammars/pandoc_markdown/
+
+# tree-sitter-quarto: cloned by build.rs for tests, also cloned by Zed when installing
+# Don't commit - it's fetched from GitHub at the commit specified in extension.toml
+/grammars/quarto/
+/grammars/**/*.wasm
+
 CLAUDE.md
 lcov.info

@@ -1,115 +1,336 @@
-; Pandoc markdown highlights (from tree-sitter-pandoc-markdown)
+; Quarto Syntax Highlighting (tree-sitter-quarto)
 ;
-; NOTE: This file uses Zed's legacy scope names (@text.*, @emphasis.strong) instead of
-; modern nvim-treesitter conventions (@markup.*) because Zed's themes don't yet support
-; the newer scopes. See docs/scope-naming-decision.md for rationale and migration path.
+; This file uses Zed-compatible legacy scope names (@text.*, @emphasis.strong)
+; as the default for broad editor compatibility. These scopes work with:
+; - Zed editor (primary reason for this choice)
+; - Helix editor (supports both legacy and modern)
+; - Older editors and themes
+;
+; IMPORTANT: This is a pragmatic decision due to Zed's architectural limitation:
+; Zed cannot override grammar queries at the extension level when grammars are
+; loaded via repository reference. Making Zed scopes the default enables
+; tree-sitter-quarto to work in Zed without workarounds.
+;
+; For Neovim users who prefer modern scopes: Use queries/nvim/highlights.scm
+; which provides modern nvim-treesitter conventions (@markup.*).
+;
+; Scope mapping (Zed -> modern nvim-treesitter):
+;   @text.title -> @markup.heading
+;   @emphasis -> @markup.italic
+;   @emphasis.strong -> @markup.bold
+;   @text.literal -> @markup.raw.inline / @markup.raw.block
+;   @link_text -> @markup.link.label
+;   @link_uri -> @markup.link.url
+;   @comment (block quotes) -> @markup.quote
+;   @punctuation.special (lists) -> @markup.list.marker
+;   @string (math) -> @markup.math.inline / @markup.math.block
+;
+; Reference: https://github.com/ck37/zed-quarto-extension/blob/main/docs/scope-naming-decision.md
+
+; Syntax highlighting queries for tree-sitter-quarto
+; Based on openspec/specs/language-injection/spec.md
+
+; ============================================================================
+; QUARTO-SPECIFIC HIGHLIGHTS
+; ============================================================================
+
+; Executable Code Cells
+; ----------------------
+
+(executable_code_cell
+  (code_fence_delimiter) @punctuation.delimiter)
+
+(executable_code_cell
+  (language_name) @function.builtin)
+
+; Chunk Options
+; -------------
+
+(chunk_option_key) @property
+
+(chunk_option_value) @string
+
+"#|" @punctuation.special
+
+; Cross-References (Quarto-specific)
+; -----------------------------------
+
+(cross_reference
+  "@" @punctuation.special
+  type: (reference_type) @constant.builtin
+  "-" @punctuation.delimiter
+  id: (reference_id) @variable.parameter)
+
+; Inline Code Cells
+; -----------------
+
+(inline_code_cell
+  (language_name) @function.builtin)
+
+(inline_cell_delimiter) @punctuation.bracket
+(inline_cell_brace) @punctuation.bracket
+
+; ============================================================================
+; PANDOC MARKDOWN HIGHLIGHTS
+; ============================================================================
+
+; Headings
+; --------
 
 (atx_heading
-  (inline) @text.title)
-
-(atx_heading_marker) @punctuation.special
+  (atx_heading_marker) @punctuation.special
+  content: (inline) @text.title)
 
 (setext_heading
-  (inline) @text.title)
+  content: (inline) @text.title
+  (setext_heading_marker) @punctuation.special)
 
-(setext_heading_marker) @punctuation.special
+; Emphasis/Strong
+; ---------------
+
+; Emphasis delimiter scopes - matches tree-sitter-markdown-inline for consistency
+;
+; SCOPE CHOICE: @punctuation.delimiter.emphasis
+; Source: https://github.com/tree-sitter-grammars/tree-sitter-markdown/blob/master/tree-sitter-markdown-inline/queries/highlights.scm
+;
+; This qualified scope (not just @punctuation.delimiter) provides:
+; - Consistency with Zed's built-in Markdown highlighting
+; - Hierarchical fallback: tries .emphasis first, then .delimiter, then base
+; - Theme flexibility: allows themes to style emphasis markers differently
+;
+; In One Dark theme:
+; - @punctuation.delimiter.emphasis → falls back to @punctuation.delimiter (#b2b9c6ff, light gray)
+; - vs emphasis content → @emphasis (#74ade8ff, blue) or @emphasis.strong (#bf956aff, orange)
+; - Result: Subtle but present distinction (markers slightly lighter than text)
+;
+; ALTERNATIVE CONSIDERED: @comment
+; Using @comment would make markers more visually distinct (dim gray #5d636fff vs bright blue/orange)
+; matching the UX of modern editors (VSCode, Obsidian) which dim/de-emphasize syntax markers.
+; However, this approach:
+; - Is semantically incorrect (markers aren't comments)
+; - Doesn't match standard Markdown highlighting in Zed
+; - Could break with themes that style comments unexpectedly
+;
+; For more visual distinction, theme authors should define @punctuation.delimiter.emphasis
+; with dimmer colors rather than having the grammar use semantically incorrect scopes.
+;
+; References:
+; - docs/markdown-scope-compatibility.md - detailed scope analysis
+; - docs/one-dark-scope-analysis.md - theme color breakdown
+; - docs/emphasis-delimiter-limitation.md - theme support discussion
+
+(emphasis_delimiter) @punctuation.delimiter.emphasis
+(strong_emphasis_delimiter) @punctuation.delimiter.emphasis
+
+; Highlight the content - using exact theme scope names
+(emphasis
+  (text) @emphasis)
+
+(strong_emphasis
+  (text) @emphasis.strong)
+
+; Inline Formatting (Pandoc extensions)
+; -------------------------------------
+
+(strikethrough) @text.strike
+
+(highlight) @text.highlight
+
+(subscript) @text.subscript
+
+(superscript) @text.super
+
+; Code
+; ----
+
+(code_span) @text.literal
+
+(code_span_delimiter) @punctuation.delimiter
 
 (fenced_code_block) @text.literal
-(fenced_code_block_delimiter) @punctuation.delimiter
-(code_fence_content) @text.literal
-(code_fence_line_text) @text.literal
-(chunk_option) @comment
 
-(yaml_front_matter_start) @punctuation.special
-(yaml_front_matter_delimiter) @punctuation.special
-(yaml_front_matter_content) @comment
+(code_fence_delimiter) @punctuation.delimiter
 
-(inline_math
-  (math_content)? @string)
+(info_string) @label
 
-(display_math
-  (math_content)? @string)
+; Links & Images
+; --------------
 
-(math_delimiter) @punctuation.special
+; Link text content - using exact theme scope names
+(link_text) @link_text
 
-(footnote_label) @text.reference
-(footnote_reference) @text.reference
-(inline_footnote) @comment
+; Link destination
+(link_destination) @link_uri
 
-(pipe_table_header_cell) @text.title
+; Image alt text
+(image_alt) @link_text
 
-(pipe_table_cell) @string
+; Image source
+(image_source) @link_uri
 
-(pipe_table_alignment_marker) @punctuation.special
+"[" @punctuation.bracket
+"]" @punctuation.bracket
+"(" @punctuation.bracket
+")" @punctuation.bracket
+"!" @punctuation.special
 
-(fenced_div_delimiter) @punctuation.special
+; Citations (Pandoc)
+; ------------------
+
+(citation
+  "@" @punctuation.special
+  key: (citation_key) @variable.parameter)
+
+; Block Quotes
+; ------------
+
+(block_quote) @comment
+(block_quote_marker) @punctuation.special
+
+; Lists
+; -----
 
 (list_marker) @punctuation.special
-(block_quote_marker) @punctuation.special
+
+(ordered_list_item
+  (list_marker) @punctuation.special)
+
+(unordered_list_item
+  (list_marker) @punctuation.special)
+
+; Thematic Breaks
+; ---------------
+
 (thematic_break) @punctuation.special
 
-; Note: DO NOT capture emphasis, strong_emphasis, or code_span in block grammar
-; These inline formatting nodes are handled by the inline grammar via injection
-; See languages/pandoc_markdown_inline/highlights.scm
+; Fenced Divs
+; -----------
 
-; Other inline formatting
-(strikethrough) @text.strike
-(highlight) @text.highlight
-(subscript) @text.subscript
-(superscript) @text.super
-(underline) @text.underline
+(fenced_div
+  (fenced_div_delimiter) @punctuation.delimiter)
 
-(link
-  (link_text) @text.reference
-  (link_destination) @text.uri)
+(fenced_div
+  attributes: (attribute_list) @attribute)
 
-(link
-  (link_label) @text.reference)
+; Attributes
+; ----------
 
-(html_open_tag) @tag
-(html_close_tag) @tag
-(html_block_content) @text.literal
+(attribute_id) @attribute
+(attribute_class) @attribute
+(attribute_key) @property
+(attribute_value) @string
 
-(image
-  (link_text) @text.reference
-  (link_destination)? @text.uri)
+; Shortcodes
+; ----------
 
-(image
-  (link_label) @text.reference)
+(shortcode_block
+  (shortcode_open) @punctuation.special
+  (shortcode_name) @function
+  (shortcode_arguments) @parameter
+  (shortcode_close) @punctuation.special)
+
+(shortcode_inline
+  (shortcode_open) @punctuation.special
+  (shortcode_name) @function
+  (shortcode_arguments) @parameter
+  (shortcode_close) @punctuation.special)
+
+; Math
+; ----
+
+(inline_math
+  (math_delimiter) @punctuation.delimiter
+  (math_content) @string)
+
+(display_math
+  (math_delimiter) @punctuation.delimiter
+  (math_content) @string)
+
+; YAML Front Matter
+; -----------------
+
+(yaml_front_matter
+  (yaml_front_matter_start) @punctuation.delimiter
+  (yaml_front_matter_delimiter) @punctuation.delimiter)
+
+; YAML Structure
+(yaml_key) @property
+(yaml_string_unquoted) @string
+(yaml_string_quoted) @string
+(yaml_number) @number
+(yaml_boolean) @boolean
+(yaml_null) @constant.builtin
+
+; HTML
+; ----
+
+(html_block
+  (html_open_tag) @tag
+  (html_close_tag) @tag)
+
+(html_block_content) @embedded
+
+; Raw Blocks
+; ----------
+
+(raw_block
+  (raw_block_delimiter) @punctuation.delimiter)
+
+(raw_block_content) @embedded
+
+; Footnotes
+; ---------
+
+(footnote_definition
+  (footnote_marker) @punctuation.special)
+
+; Link References
+; ---------------
 
 (link_reference_definition
-  (link_label) @text.reference
-  (link_destination)? @text.uri
-  (link_title)? @string)
+  label: (_) @link_text
+  destination: (link_destination) @link_uri)
 
-(autolink) @text.uri
+(link_title) @string
 
-; Quarto / Pandoc specific constructs
-(citation_group) @text.reference
-(citation) @text.reference
-(cross_reference) @text.reference
-(shortcode) @constant.macro
+; Pipe Tables
+; -----------
 
-(html_inline) @tag
+(pipe_table_header
+  "|" @punctuation.delimiter)
 
-(language) @type
-(attribute_span
-  (inline)? @text)
-(attribute_span
-  (attribute_list) @property)
+(pipe_table_delimiter
+  "|" @punctuation.delimiter
+  (table_delimiter_cell) @punctuation.special)
 
-(attribute_list) @property
-(info_string_text) @string
+; Note: pipe_table_row is a token with no internal structure,
+; so we can't highlight individual delimiters within rows
+(pipe_table_row) @none
 
-; Raw blocks and raw inline content (Pandoc-specific)
-(raw_block) @text.literal
-(raw_block_delimiter) @punctuation.delimiter
-(raw_block_content) @text.literal
-(raw_inline) @text.literal
-(raw_inline_content) @text.literal
-(raw_format) @property
+(table_cell) @none
 
-; Percent metadata
-(percent_metadata_title) @text.title
-(percent_metadata_author) @comment
-(percent_metadata_date) @comment
+; Text
+; ----
+; NOTE: Removed catch-all (text) @text pattern to avoid double-captures.
+; Text nodes inside emphasis, strong, links, etc. are captured by their
+; specific patterns. Plain text doesn't need explicit highlighting.
+
+; Blank Lines
+; -----------
+
+(blank_line) @none
+
+; ============================================================================
+; PRIORITY RULES
+; ============================================================================
+
+; Higher priority for Quarto constructs
+((cross_reference) @constant.builtin
+  (#set! "priority" 110))
+
+((executable_code_cell
+  (language_name) @function.builtin)
+  (#set! "priority" 110))
+
+((chunk_option_key) @property
+  (#set! "priority" 110))

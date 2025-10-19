@@ -1,0 +1,23 @@
+{
+  "name": "zed-quarto-extension",
+  "version": "0.2.0",
+  "description": "Quarto extension for Zed editor with tree-sitter-quarto grammar",
+  "private": true,
+  "scripts": {
+    "build:wasm": "cd grammars/quarto && tree-sitter build --wasm && mv tree-sitter-quarto.wasm ../../tests/wasm/",
+    "test:wasm": "node --test tests/wasm/*.test.js",
+    "test": "npm run test:wasm"
+  },
+  "devDependencies": {
+    "web-tree-sitter": "^0.25.10",
+    "tree-sitter-cli": "^0.25.10"
+  },
+  "peerDependencies": {
+    "tree-sitter": "^0.21.0"
+  },
+  "peerDependenciesMeta": {
+    "tree-sitter": {
+      "optional": true
+    }
+  }
+}
