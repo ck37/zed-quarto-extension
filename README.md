@@ -37,7 +37,7 @@ Some Pandoc extensions parse correctly but don't highlight in Zed due to theme l
 ### Other Limitations
 
 - **Preview/render workflows**: Out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
-- **Grammar completeness**: tree-sitter-quarto is in alpha (58/58 tests passing). Some edge cases in Quarto/Pandoc syntax may not be fully supported yet. See the [grammar repository](https://github.com/ck37/tree-sitter-quarto) for current status.
+- **Grammar completeness**: tree-sitter-quarto is in active development (202/202 tests passing). Some edge cases in Quarto/Pandoc syntax may not be fully supported yet. See the [grammar repository](https://github.com/ck37/tree-sitter-quarto) for current status.
 
 ## Contributing
 
