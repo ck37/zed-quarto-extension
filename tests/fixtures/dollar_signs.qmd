@@ -1,0 +1,26 @@
+---
+title: "Dollar Sign Test"
+---
+
+# Dollar Signs in Regular Text
+
+All major components are now ordered and on their way. The Keychron Q8 fully assembled keyboard ($160) is shipping from Keychron and should arrive in 4-6 business days. The Canjoy wrist pads ($10), silicone bumpers ($9), Official Keychron carrying case ($25-30), and Keybridg aluminum platform ($30) are all ordered and arriving soon. The Keybridg should arrive first, likely on Thursday. You've also ordered neodymium magnets ($25) which you may or may not need depending on how well the wrist pads grip your MacBook's surface.
+
+## Different Dollar Sign Contexts
+
+- Simple dollar amount: $50
+- Range: $25-30
+- In parentheses: ($160)
+- Multiple in sentence: The $10 item and the $20 item cost $30 total.
+
+## Math Context (LaTeX)
+
+Inline math: $x^2 + y^2 = z^2$
+
+Display math:
+
+$$
+E = mc^2
+$$
+
+Mixed: The equation $E = mc^2$ shows energy ($E$) equals mass times speed of light squared.
