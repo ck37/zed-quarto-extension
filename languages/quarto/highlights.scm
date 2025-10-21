@@ -81,9 +81,17 @@
   (atx_heading_marker) @punctuation.special
   content: (inline) @text.title)
 
+; Heading attributes (Pandoc extension)
+(atx_heading
+  attributes: (attribute_list) @attribute)
+
 (setext_heading
   content: (inline) @text.title
   (setext_heading_marker) @punctuation.special)
+
+; Setext heading attributes (Pandoc extension)
+(setext_heading
+  attributes: (attribute_list) @attribute)
 
 ; Emphasis/Strong
 ; ---------------

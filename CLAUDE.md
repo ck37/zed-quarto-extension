@@ -117,7 +117,8 @@ Quarto documents are **not** standard Markdown. They're Pandoc Markdown, which i
 - **Citations:** `@smith2024` and `[@smith2024]` syntax
 - **Cross-references:** `@fig-plot`, `@tbl-data`
 - **Shortcodes:** `{{< include file.qmd >}}`
-- **Attribute lists:** `{.class #id key=value}` on various elements
+- **Attribute lists:** `{.class #id key=value}` on various elements including headings
+- **Heading attributes:** `## Title {.unnumbered}` or `## Section {#custom-id .class}`
 - **Extended YAML front matter:** More metadata than standard Markdown
 
 The extension uses `tree-sitter-quarto`, which supports Quarto-specific syntax, Pandoc extensions, and core Markdown features. See `docs/grammar-feature-needs.md` for feature coverage and `docs/grammar-roadmap.md` for development history.

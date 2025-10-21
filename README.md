@@ -20,7 +20,7 @@ Zed will automatically compile the extension and its grammars.
 Syntax highlighting powered by [`tree-sitter-quarto`](https://github.com/ck37/tree-sitter-quarto):
 
 - **Quarto-specific**: executable code cells, chunk options (`#| key: value`), inline code cells, cross-references
-- **Pandoc extensions**: fenced divs, attribute lists, citations, shortcodes, strikethrough (`~~text~~`), subscript (`H~2~O`), superscript (`x^2^`), highlight (`==text==`), underline (`[text]{.underline}`)
+- **Pandoc extensions**: fenced divs, attribute lists, heading attributes (`## Title {.unnumbered}`), citations, shortcodes, strikethrough (`~~text~~`), subscript (`H~2~O`), superscript (`x^2^`), highlight (`==text==`), underline (`[text]{.underline}`)
 - **Core Markdown**: headings, bold (`**text**`), italic (`*text*`), links (`[text](url)`), inline code (`` `code` ``), code blocks, lists, YAML front matter
 - **Math support**: inline (`$...$`) and display (`$$...$$`) with LaTeX syntax
 - **Tables**: pipe tables with alignment markers
