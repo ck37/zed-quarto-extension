@@ -261,13 +261,8 @@
   (yaml_front_matter_start) @punctuation.delimiter
   (yaml_front_matter_delimiter) @punctuation.delimiter)
 
-; YAML Structure
-(yaml_key) @property
-(yaml_string_unquoted) @string
-(yaml_string_quoted) @string
-(yaml_number) @number
-(yaml_boolean) @boolean
-(yaml_null) @constant.builtin
+; YAML content is now parsed via language injection (see injections.scm)
+; tree-sitter-yaml handles all YAML syntax highlighting
 
 ; HTML
 ; ----

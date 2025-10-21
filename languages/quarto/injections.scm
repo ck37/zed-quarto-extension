@@ -274,7 +274,11 @@
 
 ; YAML Front Matter
 ; -----------------
-; (YAML is now parsed structurally, no injection needed)
+
+((yaml_front_matter
+  content: (yaml_content) @injection.content)
+ (#set! injection.language "yaml")
+ (#set! injection.combined))
 
 ; HTML Blocks
 ; -----------
