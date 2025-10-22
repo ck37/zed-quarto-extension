@@ -21,7 +21,7 @@ Syntax highlighting powered by [`tree-sitter-quarto`](https://github.com/ck37/tr
 
 - **Quarto-specific**: executable code cells, chunk options (`#| key: value`), inline code cells, cross-references
 - **Pandoc extensions**: fenced divs, attribute lists, heading attributes (`## Title {.unnumbered}`), citations, shortcodes, strikethrough (`~~text~~`), subscript (`H~2~O`), superscript (`x^2^`), highlight (`==text==`), underline (`[text]{.underline}`)
-- **Core Markdown**: headings, bold (`**text**`), italic (`*text*`), links (`[text](url)`), inline code (`` `code` ``), code blocks, lists, YAML front matter
+- **Core Markdown**: headings, bold (`**text**`), italic (`*text*`), links (`[text](url)`), inline code (`` `code` ``), code blocks, lists, YAML front matter (full spec support via language injection)
 - **Math support**: inline (`$...$`) and display (`$$...$$`) with LaTeX syntax
 - **Tables**: pipe tables with alignment markers
 - **Embedded language injections**: Python, R, Julia, SQL, JavaScript, TypeScript, Bash code chunks
@@ -37,7 +37,7 @@ Some Pandoc extensions parse correctly but don't highlight in Zed due to theme l
 ### Other Limitations
 
 - **Preview/render workflows**: Out of scope for this extension—use the Quarto CLI or VSCode extension for visual editing and preview.
-- **Grammar completeness**: tree-sitter-quarto is in active development (202/202 tests passing). Some edge cases in Quarto/Pandoc syntax may not be fully supported yet. See the [grammar repository](https://github.com/ck37/tree-sitter-quarto) for current status.
+- **Grammar completeness**: tree-sitter-quarto is in active development (203/203 tests passing). Some edge cases in Quarto/Pandoc syntax may not be fully supported yet. See the [grammar repository](https://github.com/ck37/tree-sitter-quarto) for current status.
 
 ## Contributing
 
