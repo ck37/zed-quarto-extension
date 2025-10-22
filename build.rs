@@ -6,7 +6,7 @@ const COMMIT: &str = "f2e5718a1b2190cf59dd22d9a97fc9b7329a25b6";
 
 // tree-sitter-quarto for automated highlighting tests
 const QUARTO_REPO_URL: &str = "https://github.com/ck37/tree-sitter-quarto";
-const QUARTO_COMMIT: &str = "91d8de3f3eef8131b7b8d97e172d14a2466272b7";
+const QUARTO_COMMIT: &str = "acaaaff1fe10780f496fb122e0de32bd8d7191d6";
 
 fn main() {
     // Only compile the grammar for native tests, not for WASM

@@ -38,4 +38,4 @@ languages = ["languages/quarto"]
 # https://github.com/ck37/tree-sitter-quarto/issues/6
 [grammars.quarto]
 repository = "https://github.com/ck37/tree-sitter-quarto"
-rev = "91d8de3f3eef8131b7b8d97e172d14a2466272b7"
+rev = "acaaaff1fe10780f496fb122e0de32bd8d7191d6"

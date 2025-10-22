@@ -1,0 +1,10 @@
+---
+title: "Table with Currency Range Test"
+---
+
+## Pricing Comparison
+
+| Thermostat | Pricing Breakdown | **TOTAL COST** | vs Nest |
+|------------|-------------------|----------------|---------|
+| Nest 4th Gen | 3 150 + 5 280 | 1,850 | Baseline |
+| Honeywell T9 | 8 170-200 | $1,360-$1,600 | Save $250-490 ✓ |

@@ -306,9 +306,10 @@
   "|" @punctuation.delimiter
   (table_delimiter_cell) @punctuation.special)
 
-; Note: pipe_table_row is a token with no internal structure,
-; so we can't highlight individual delimiters within rows
-(pipe_table_row) @none
+; Pipe table rows - individual cells are exposed as table_cell nodes
+; Delimiters are atomic tokens, cells contain raw text (no inline parsing yet)
+(pipe_table_row
+  "|" @punctuation.delimiter)
 
 (table_cell) @none
 
