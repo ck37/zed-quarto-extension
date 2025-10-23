@@ -17,7 +17,9 @@ Zed will automatically compile the extension and its grammars.
 
 ## Features
 
-Syntax highlighting powered by [`tree-sitter-quarto`](https://github.com/ck37/tree-sitter-quarto):
+### Syntax Highlighting
+
+Powered by [`tree-sitter-quarto`](https://github.com/ck37/tree-sitter-quarto):
 
 - **Quarto-specific**: executable code cells, chunk options (`#| key: value`), inline code cells, cross-references
 - **Pandoc extensions**: fenced divs, attribute lists, heading attributes (`## Title {.unnumbered}`), citations, shortcodes, strikethrough (`~~text~~`), subscript (`H~2~O`), superscript (`x^2^`), highlight (`==text==`), underline (`[text]{.underline}`)
@@ -26,7 +28,22 @@ Syntax highlighting powered by [`tree-sitter-quarto`](https://github.com/ck37/tr
 - **Tables**: pipe tables with alignment markers
 - **Embedded language injections**: Python, R, Julia, SQL, JavaScript, TypeScript, Bash code chunks
 
-> **Note**: This extension provides syntax highlighting only. For language server features (completions, hover, diagnostics), see [`docs/lsp-status.md`](docs/lsp-status.md) for the current state and options.
+### Preview Command
+
+Preview your Quarto documents in your default browser:
+
+1. Open a `.qmd` file in Zed
+2. Open the Assistant panel (Cmd+? or Ctrl+?)
+3. Type `/quarto-preview` and press Enter
+4. Your document will render and open in your browser with live reload
+
+**Requirements:**
+- [Quarto CLI](https://quarto.org/docs/get-started/) must be installed and available in your PATH
+- The document must be saved to disk before previewing
+
+**Note**: The preview opens in your browser (not in-editor) because Zed's extension API doesn't currently support custom preview panes. This matches how `quarto preview` normally works. For more details, see [`openspec/changes/add-quarto-preview/design.md`](openspec/changes/add-quarto-preview/design.md).
+
+> **Note**: This extension provides syntax highlighting and preview only. For language server features (completions, hover, diagnostics), see [`docs/lsp-status.md`](docs/lsp-status.md) for the current state and options.
 
 ## Known Limitations
 

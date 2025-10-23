@@ -1,0 +1,36 @@
+---
+title: "Test Document for Preview"
+author: "Test"
+format: html
+---
+
+# Introduction
+
+This is a test Quarto document used for testing the preview functionality.
+
+## Features
+
+- Markdown formatting
+- Code chunks
+- Math equations
+
+## Code Example
+
+```{python}
+#| echo: true
+print("Hello from Quarto!")
+```
+
+## Math
+
+Inline math: $E = mc^2$
+
+Display math:
+
+$$
+\int_0^\infty e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
+$$
+
+## Conclusion
+
+This document tests that the preview command can handle a typical Quarto document.

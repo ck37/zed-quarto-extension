@@ -39,3 +39,9 @@ languages = ["languages/quarto"]
 [grammars.quarto]
 repository = "https://github.com/ck37/tree-sitter-quarto"
 rev = "acaaaff1fe10780f496fb122e0de32bd8d7191d6"
+
+# Slash Commands
+# Quarto preview command for rendering documents in browser
+[slash_commands.quarto-preview]
+description = "Preview the current Quarto document in browser"
+requires_argument = false
