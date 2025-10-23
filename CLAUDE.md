@@ -55,6 +55,18 @@ cp target/wasm32-wasip2/release/quarto_zed.wasm extension.wasm
 - **Documentation files**: Create in `docs/` directory, NOT in `/tmp`
 - Analysis, investigation, and debugging documents belong in `docs/`
 
+## Development Workflow Requirements
+
+**CRITICAL: Test Before Commit**
+- **ALWAYS run `cargo test --workspace --all-features` before committing code changes**
+- **ALWAYS run tests before pushing to remote**
+- This applies to:
+  - New code
+  - Modified code
+  - Restored/recovered files
+  - Any file changes that could affect functionality
+- No exceptions - verify tests pass before git commit and git push
+
 ## Architecture
 
 ### Extension Structure
