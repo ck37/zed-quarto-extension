@@ -82,19 +82,19 @@ impl QuartoExtension {
         {
             #[cfg(target_family = "unix")]
             {
-                return std::process::Command::new("which")
+                std::process::Command::new("which")
                     .arg("quarto")
                     .output()
                     .map(|output| output.status.success())
-                    .unwrap_or(false);
+                    .unwrap_or(false)
             }
             #[cfg(target_family = "windows")]
             {
-                return std::process::Command::new("where")
+                std::process::Command::new("where")
                     .arg("quarto")
                     .output()
                     .map(|output| output.status.success())
-                    .unwrap_or(false);
+                    .unwrap_or(false)
             }
         }
         #[cfg(target_arch = "wasm32")]
