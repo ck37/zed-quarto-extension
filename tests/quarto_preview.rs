@@ -2,11 +2,9 @@
 ///
 /// Note: These are unit tests for the logic. Full integration tests require
 /// the Quarto CLI to be installed and a real Zed extension environment.
-
 #[cfg(test)]
 mod tests {
     use std::fs;
-    use std::path::PathBuf;
 
     #[test]
     fn test_qmd_file_extension_validation() {
